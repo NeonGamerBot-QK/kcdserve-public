@@ -45,10 +45,6 @@ gem "devise"
 gem "omniauth-google-oauth2"
 gem "pundit"
 
-# UI and styling
-gem "bootstrap", "~> 5.3"
-gem "sassc-rails"
-
 # PDF generation
 gem "prawn"
 gem "prawn-table"
@@ -89,3 +85,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
