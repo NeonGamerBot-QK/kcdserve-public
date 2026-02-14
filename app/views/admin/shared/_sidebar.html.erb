@@ -1,0 +1,37 @@
+<div class="bg-dark text-white d-flex flex-column p-3" style="width: 250px; min-height: 100vh;">
+  <h4 class="mb-3"><%= link_to "KCDServe Admin", admin_root_path, class: "text-white text-decoration-none" %></h4>
+  <hr class="border-secondary">
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <%= link_to admin_root_path, class: "nav-link text-white #{'active' if controller_name == 'dashboard'}" do %>
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link_to admin_users_path, class: "nav-link text-white #{'active' if controller_name == 'users'}" do %>
+        <i class="bi bi-people me-2"></i> Users
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link_to admin_service_hours_path, class: "nav-link text-white #{'active' if controller_name == 'service_hours'}" do %>
+        <i class="bi bi-clock-history me-2"></i> Service Hours
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link_to admin_categories_path, class: "nav-link text-white #{'active' if controller_name == 'categories'}" do %>
+        <i class="bi bi-tags me-2"></i> Categories
+      <% end %>
+    </li>
+    <li class="nav-item">
+      <%= link_to admin_reports_path, class: "nav-link text-white #{'active' if controller_name == 'reports'}" do %>
+        <i class="bi bi-bar-chart me-2"></i> Reports
+      <% end %>
+    </li>
+  </ul>
+  <hr class="border-secondary">
+  <div>
+    <%= link_to root_path, class: "nav-link text-white" do %>
+      <i class="bi bi-arrow-left me-2"></i> Back to Site
+    <% end %>
+  </div>
+</div>

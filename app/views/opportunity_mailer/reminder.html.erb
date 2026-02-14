@@ -1,0 +1,15 @@
+<h2>Upcoming Opportunity Reminder</h2>
+<p>Hi <%= @user.first_name %>,</p>
+
+<p>This is a reminder that you are signed up for:</p>
+
+<h3><%= @opportunity.title %></h3>
+<ul>
+  <li><strong>Date:</strong> <%= @opportunity.date.strftime("%B %d, %Y") %></li>
+  <li><strong>Location:</strong> <%= @opportunity.location || "TBD" %></li>
+  <% if @opportunity.start_time %>
+    <li><strong>Time:</strong> <%= @opportunity.start_time.strftime("%I:%M %p") %></li>
+  <% end %>
+</ul>
+
+<p>We look forward to seeing you there!</p>

@@ -1,14 +1,63 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # Devise authentication routes with OmniAuth callbacks
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks"
+  }
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Public-facing routes
+  root "pages#home"
+  get "dashboard", to: "pages#dashboard"
+
+  # Volunteer opportunities (public index/show, authenticated actions)
+  resources :opportunities, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    member do
+      post :signup
+      delete :withdraw
+    end
+  end
+
+  # Service hour submissions
+  resources :service_hours do
+    member do
+      patch :review
+    end
+  end
+
+  # Groups
+  resources :groups do
+    member do
+      post :join
+      delete :leave
+      post :add_member
+      delete :remove_member
+    end
+  end
+
+  # Volunteer profiles
+  resources :profiles, only: [:show, :edit, :update]
+
+  # Service resume PDF download
+  get "resume/:id", to: "resumes#show", as: :resume
+
+  # Admin namespace
+  namespace :admin do
+    root "dashboard#index"
+    resources :users, only: [:index, :show, :edit, :update, :destroy]
+    resources :categories, except: [:show]
+    resources :service_hours, only: [:index, :show] do
+      member do
+        patch :review
+      end
+    end
+    resources :reports, only: [:index] do
+      collection do
+        get :export_csv
+      end
+    end
+  end
+
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

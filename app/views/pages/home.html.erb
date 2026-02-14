@@ -1,0 +1,38 @@
+<div class="text-center py-5">
+  <h1 class="display-4 fw-bold">Make a Difference in Your Community</h1>
+  <p class="lead text-muted">Track your volunteer hours, discover opportunities, and build your service resume.</p>
+  <div class="mt-4">
+    <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg me-2" %>
+    <%= link_to "Browse Opportunities", opportunities_path, class: "btn btn-outline-primary btn-lg" %>
+  </div>
+</div>
+
+<% if @upcoming_opportunities.any? %>
+  <hr class="my-5">
+  <h2 class="text-center mb-4">Upcoming Opportunities</h2>
+  <div class="row g-4">
+    <% @upcoming_opportunities.each do |opportunity| %>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title"><%= opportunity.title %></h5>
+            <p class="text-muted">
+              <i class="bi bi-calendar me-1"></i> <%= opportunity.date.strftime("%B %d, %Y") %>
+            </p>
+            <p class="text-muted">
+              <i class="bi bi-geo-alt me-1"></i> <%= opportunity.location || "TBD" %>
+            </p>
+            <% if opportunity.category %>
+              <span class="badge" style="background-color: <%= opportunity.category.color %>;">
+                <%= opportunity.category.name %>
+              </span>
+            <% end %>
+          </div>
+          <div class="card-footer bg-transparent">
+            <%= link_to "View Details", opportunity_path(opportunity), class: "btn btn-sm btn-outline-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

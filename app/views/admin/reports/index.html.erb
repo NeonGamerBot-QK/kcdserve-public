@@ -1,0 +1,76 @@
+<h1 class="mb-4">Reports & Analytics</h1>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <%= form_with(url: admin_reports_path, method: :get, local: true, class: "row g-3 align-items-end") do %>
+      <div class="col-md-4">
+        <label class="form-label">Start Date</label>
+        <input type="date" name="start_date" value="<%= params[:start_date] %>" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">End Date</label>
+        <input type="date" name="end_date" value="<%= params[:end_date] %>" class="form-control">
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <%= link_to "Reset", admin_reports_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Export CSV", export_csv_admin_reports_path, class: "btn btn-outline-success" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Total Approved Hours: <%= @total_hours.to_f.round(1) %></h5></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Monthly Trend</h5></div>
+      <div class="card-body">
+        <%= line_chart @monthly_trend, colors: ["#0d6efd"] %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Hours by Category</h5></div>
+      <div class="card-body">
+        <%= pie_chart @hours_by_category %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @hours_by_group.any? %>
+  <div class="card mb-4">
+    <div class="card-header"><h5 class="mb-0">Hours by Group</h5></div>
+    <div class="card-body">
+      <%= bar_chart @hours_by_group, colors: ["#198754"] %>
+    </div>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header"><h5 class="mb-0">Top 25 Volunteers</h5></div>
+  <div class="card-body">
+    <table class="table table-sm">
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Hours</th></tr></thead>
+      <tbody>
+        <% @top_volunteers.each_with_index do |v, i| %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td><%= link_to v.full_name, admin_user_path(v) %></td>
+            <td><%= v.email %></td>
+            <td><%= v.total_hours.to_f.round(1) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

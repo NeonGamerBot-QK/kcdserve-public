@@ -1,0 +1,11 @@
+<h2>New Service Hour Submission</h2>
+<p><strong><%= @user.full_name %></strong> has submitted a service hour entry for review.</p>
+
+<ul>
+  <li><strong>Date:</strong> <%= @service_hour.service_date.strftime("%B %d, %Y") %></li>
+  <li><strong>Hours:</strong> <%= @service_hour.hours %></li>
+  <li><strong>Category:</strong> <%= @service_hour.category.name %></li>
+  <li><strong>Description:</strong> <%= @service_hour.description %></li>
+</ul>
+
+<p>Please review this submission in the admin dashboard.</p>

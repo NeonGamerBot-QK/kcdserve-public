@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Groups</h1>
+  <% if user_signed_in? && current_user.admin_or_above? %>
+    <%= link_to "New Group", new_group_path, class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<div class="row g-4">
+  <% @groups.each do |group| %>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <% if group.logo.attached? %>
+              <%= image_tag group.logo, class: "rounded-circle me-3", style: "width: 50px; height: 50px; object-fit: cover;" %>
+            <% else %>
+              <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                <%= group.name[0] %>
+              </div>
+            <% end %>
+            <div>
+              <h5 class="mb-0"><%= group.name %></h5>
+              <% if group.leader %>
+                <small class="text-muted">Led by <%= group.leader.full_name %></small>
+              <% end %>
+            </div>
+          </div>
+          <p class="text-muted"><%= truncate(group.description, length: 100) %></p>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted"><i class="bi bi-people me-1"></i> <%= group.member_count %> members</span>
+          </div>
+        </div>
+        <div class="card-footer bg-transparent">
+          <%= link_to "View Group", group_path(group), class: "btn btn-sm btn-outline-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @groups.empty? %>
+  <div class="text-center py-5">
+    <i class="bi bi-people display-1 text-muted"></i>
+    <p class="lead text-muted mt-3">No groups yet.</p>
+  </div>
+<% end %>
+
+<div class="mt-4">
+  <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+</div>

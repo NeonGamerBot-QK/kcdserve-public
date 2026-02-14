@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>Volunteer Opportunities</h1>
+  <% if user_signed_in? && current_user.admin_or_above? %>
+    <%= link_to "New Opportunity", new_opportunity_path, class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<div class="row g-4">
+  <% @opportunities.each do |opportunity| %>
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <% if opportunity.photos.attached? %>
+          <%= image_tag opportunity.photos.first, class: "card-img-top", style: "height: 200px; object-fit: cover;" %>
+        <% end %>
+        <div class="card-body">
+          <h5 class="card-title"><%= opportunity.title %></h5>
+          <p class="text-muted mb-1">
+            <i class="bi bi-calendar me-1"></i> <%= opportunity.date.strftime("%B %d, %Y") %>
+          </p>
+          <p class="text-muted mb-2">
+            <i class="bi bi-geo-alt me-1"></i> <%= opportunity.location || "TBD" %>
+          </p>
+          <% if opportunity.category %>
+            <span class="badge" style="background-color: <%= opportunity.category.color %>;">
+              <%= opportunity.category.name %>
+            </span>
+          <% end %>
+          <% if opportunity.max_volunteers %>
+            <span class="badge bg-secondary">
+              <%= opportunity.spots_remaining %> spots left
+            </span>
+          <% end %>
+        </div>
+        <div class="card-footer bg-transparent">
+          <%= link_to "View Details", opportunity_path(opportunity), class: "btn btn-sm btn-outline-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @opportunities.empty? %>
+  <div class="text-center py-5">
+    <i class="bi bi-calendar-x display-1 text-muted"></i>
+    <p class="lead text-muted mt-3">No upcoming opportunities at the moment.</p>
+  </div>
+<% end %>
+
+<div class="mt-4">
+  <%== pagy_bootstrap_nav(@pagy) if @pagy.pages > 1 %>
+</div>

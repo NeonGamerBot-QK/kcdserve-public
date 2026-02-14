@@ -1,0 +1,16 @@
+<h2>Service Hour Review Update</h2>
+<p>Hi <%= @user.first_name %>,</p>
+
+<p>Your service hour submission for <strong><%= @service_hour.service_date.strftime("%B %d, %Y") %></strong> has been
+  <strong><%= @service_hour.status %></strong>.</p>
+
+<ul>
+  <li><strong>Hours:</strong> <%= @service_hour.hours %></li>
+  <li><strong>Category:</strong> <%= @service_hour.category.name %></li>
+</ul>
+
+<% if @service_hour.admin_comment.present? %>
+  <p><strong>Admin Comment:</strong> <%= @service_hour.admin_comment %></p>
+<% end %>
+
+<p>Thank you for your service!</p>

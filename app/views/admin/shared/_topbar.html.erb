@@ -1,0 +1,8 @@
+<nav class="navbar navbar-light bg-light border-bottom px-4">
+  <span class="navbar-text">
+    Signed in as <strong><%= current_user.full_name %></strong> (<%= current_user.role.humanize %>)
+  </span>
+  <div>
+    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+</nav>

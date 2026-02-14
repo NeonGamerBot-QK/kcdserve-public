@@ -1,0 +1,104 @@
+<h1 class="mb-4">Admin Dashboard</h1>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card text-center bg-primary text-white">
+      <div class="card-body">
+        <h3><%= @total_users %></h3>
+        <p class="mb-0">Total Users</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center bg-success text-white">
+      <div class="card-body">
+        <h3><%= @total_hours.to_f.round(1) %></h3>
+        <p class="mb-0">Approved Hours</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center bg-warning text-dark">
+      <div class="card-body">
+        <h3><%= @pending_reviews %></h3>
+        <p class="mb-0">Pending Reviews</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center bg-info text-white">
+      <div class="card-body">
+        <h3><%= @total_opportunities %></h3>
+        <p class="mb-0">Opportunities</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Hours by Month</h5></div>
+      <div class="card-body">
+        <%= column_chart @hours_by_month, colors: ["#0d6efd"] %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Hours by Category</h5></div>
+      <div class="card-body">
+        <%= pie_chart @hours_by_category %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Top Volunteers</h5></div>
+      <div class="card-body">
+        <table class="table table-sm">
+          <thead><tr><th>#</th><th>Volunteer</th><th>Hours</th></tr></thead>
+          <tbody>
+            <% @top_volunteers.each_with_index do |v, i| %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><%= link_to v.full_name, admin_user_path(v) %></td>
+                <td><%= v.total_hours.to_f.round(1) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Pending Reviews</h5>
+        <%= link_to "View All", admin_service_hours_path(status: :pending), class: "btn btn-sm btn-outline-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @recent_submissions.any? %>
+          <table class="table table-sm">
+            <thead><tr><th>Volunteer</th><th>Hours</th><th>Date</th><th></th></tr></thead>
+            <tbody>
+              <% @recent_submissions.each do |sh| %>
+                <tr>
+                  <td><%= sh.user.full_name %></td>
+                  <td><%= sh.hours %></td>
+                  <td><%= sh.service_date.strftime("%m/%d") %></td>
+                  <td><%= link_to "Review", admin_service_hour_path(sh), class: "btn btn-sm btn-outline-warning" %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="text-muted">No pending reviews. Nice work!</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

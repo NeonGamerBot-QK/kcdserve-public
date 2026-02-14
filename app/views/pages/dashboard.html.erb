@@ -1,0 +1,95 @@
+<h1 class="mb-4">Welcome back, <%= current_user.first_name %>!</h1>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="card text-center bg-primary text-white">
+      <div class="card-body">
+        <h3><%= @total_hours %></h3>
+        <p class="mb-0">Approved Hours</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center bg-warning text-dark">
+      <div class="card-body">
+        <h3><%= @pending_count %></h3>
+        <p class="mb-0">Pending Reviews</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center bg-success text-white">
+      <div class="card-body">
+        <h3><%= @groups.count %></h3>
+        <p class="mb-0">Groups</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center bg-info text-white">
+      <div class="card-body">
+        <h3><%= @upcoming_signups.count %></h3>
+        <p class="mb-0">Upcoming Events</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Hours</h5>
+        <%= link_to "Log Hours", new_service_hour_path, class: "btn btn-sm btn-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @recent_hours.any? %>
+          <table class="table table-sm">
+            <thead>
+              <tr><th>Date</th><th>Hours</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <% @recent_hours.each do |sh| %>
+                <tr>
+                  <td><%= link_to sh.service_date.strftime("%m/%d/%Y"), service_hour_path(sh) %></td>
+                  <td><%= sh.hours %></td>
+                  <td>
+                    <span class="badge bg-<%= sh.approved? ? 'success' : sh.pending? ? 'warning' : 'danger' %>">
+                      <%= sh.status.humanize %>
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="text-muted">No service hours logged yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Upcoming Opportunities</h5>
+      </div>
+      <div class="card-body">
+        <% if @upcoming_signups.any? %>
+          <ul class="list-group list-group-flush">
+            <% @upcoming_signups.each do |opp| %>
+              <li class="list-group-item d-flex justify-content-between">
+                <div>
+                  <strong><%= link_to opp.title, opportunity_path(opp) %></strong>
+                  <br><small class="text-muted"><%= opp.date.strftime("%B %d, %Y") %></small>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted">No upcoming events.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
