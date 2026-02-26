@@ -52,11 +52,11 @@ bin/rails server
 
 ### Default Accounts (after seeding)
 
-| Role | Email | Password |
-|------|-------|----------|
-| Super Admin | admin@kcdserve.com | password123 |
-| Admin | admin2@kcdserve.com | password123 |
-| Volunteer | volunteer1@kcdserve.com | password123 |
+| Role        | Email                   | Password    |
+| ----------- | ----------------------- | ----------- |
+| Super Admin | admin@kcdserve.com      | password123 |
+| Admin       | admin2@kcdserve.com     | password123 |
+| Volunteer   | volunteer1@kcdserve.com | password123 |
 
 ### Google OAuth Setup
 
