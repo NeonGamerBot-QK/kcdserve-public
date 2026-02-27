@@ -1,0 +1,12 @@
+# Environment variables (contains secrets)
+.env
+.env*
+
+# Rails master key (NEVER commit this)
+config/master.key
+
+# Logs
+log/
+
+# Temp files and caches
+tmp/
