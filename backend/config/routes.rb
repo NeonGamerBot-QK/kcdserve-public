@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  # Devise authentication routes with OmniAuth callbacks
-  devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks"
-  }
+  # Devise authentication routes
+  if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present?
+    devise_for :users, controllers: {
+      omniauth_callbacks: "users/omniauth_callbacks"
+    }
+  else
+    devise_for :users, controllers: {
+      registrations: "users/registrations"
+    }
+  end
 
   # Public-facing routes
   root "pages#home"
   get "dashboard", to: "pages#dashboard"
 
   # Volunteer opportunities (public index/show, authenticated actions)
-  resources :opportunities, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+  resources :opportunities, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
     member do
       post :signup
       delete :withdraw
@@ -36,7 +42,7 @@ Rails.application.routes.draw do
   end
 
   # Volunteer profiles
-  resources :profiles, only: [:show, :edit, :update]
+  resources :profiles, only: [ :show, :edit, :update ]
 
   # Service resume PDF download
   get "resume/:id", to: "resumes#show", as: :resume
@@ -44,14 +50,14 @@ Rails.application.routes.draw do
   # Admin namespace
   namespace :admin do
     root "dashboard#index"
-    resources :users, only: [:index, :show, :edit, :update, :destroy]
-    resources :categories, except: [:show]
-    resources :service_hours, only: [:index, :show] do
+    resources :users, only: [ :index, :show, :edit, :update, :destroy ]
+    resources :categories, except: [ :show ]
+    resources :service_hours, only: [ :index, :show ] do
       member do
         patch :review
       end
     end
-    resources :reports, only: [:index] do
+    resources :reports, only: [ :index ] do
       collection do
         get :export_csv
       end

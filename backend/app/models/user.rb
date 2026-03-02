@@ -1,7 +1,10 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:google_oauth2]
+         :recoverable, :rememberable, :validatable
+
+  if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present?
+    devise :omniauthable, omniauth_providers: [ :google_oauth2 ]
+  end
 
   # Roles enum: volunteer=0, group_leader=1, admin=2, super_admin=3
   enum :role, { volunteer: 0, group_leader: 1, admin: 2, super_admin: 3 }
