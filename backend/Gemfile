@@ -36,6 +36,7 @@ gem "kamal", require: false
 
 # Letter opener for development emails
 gem "letter_opener"
+gem "letter_opener_web"
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false

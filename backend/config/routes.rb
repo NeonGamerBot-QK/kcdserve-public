@@ -71,6 +71,7 @@ Rails.application.routes.draw do
   # Flipper UI (only in development)
   if Rails.env.development?
     mount Flipper::UI.app(Flipper) => "/flipper"
+    mount LetterOpenerWeb::Engine, at: "/mail"
   end
 
   # Health check

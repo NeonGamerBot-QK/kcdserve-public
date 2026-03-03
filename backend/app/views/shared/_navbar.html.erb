@@ -14,7 +14,7 @@
         <li class="nav-item">
           <%= link_to "Groups", groups_path, class: "nav-link" %>
         </li>
-        <% if user_signed_in? %>
+        <% if user_signed_in? && current_user.is_a?(User) %>
           <li class="nav-item">
             <%= link_to "My Hours", service_hours_path, class: "nav-link" %>
           </li>
@@ -25,7 +25,7 @@
       </ul>
 
       <ul class="navbar-nav">
-        <% if user_signed_in? %>
+        <% if user_signed_in? && current_user.is_a?(User) %>
           <% if current_user.admin_or_above? %>
             <li class="nav-item">
               <%= link_to "Admin", admin_root_path, class: "nav-link" %>

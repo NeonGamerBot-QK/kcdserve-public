@@ -61,7 +61,7 @@
     <% end %>
 
     <% if current_user.admin_or_above? && @service_hour.pending? %>
-      <div class="card">
+      <div class="card" style="border: 3px dashed orange;">
         <div class="card-header"><h5 class="mb-0">Review</h5></div>
         <div class="card-body">
           <%= form_with(url: review_service_hour_path(@service_hour), method: :patch, local: true) do |f| %>
