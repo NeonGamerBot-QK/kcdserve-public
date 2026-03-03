@@ -1,5 +1,6 @@
 <h1 class="mb-4">Admin Dashboard</h1>
 
+<%# === Summary stat cards === %>
 <div class="row g-4 mb-4">
   <div class="col-md-3">
     <div class="card text-center bg-primary text-white">
@@ -35,15 +36,40 @@
   </div>
 </div>
 
+<%# === Active users & total hours highlight === %>
 <div class="row g-4 mb-4">
   <div class="col-md-6">
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0">Hours by Month</h5></div>
+    <div class="card text-center border-primary">
       <div class="card-body">
-        <%= column_chart @hours_by_month, colors: ["#0d6efd"] %>
+        <h2 class="text-primary"><%= @active_users %></h2>
+        <p class="mb-0 text-muted">Active Volunteers <small>(last 30 days)</small></p>
       </div>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="card text-center border-success">
+      <div class="card-body">
+        <h2 class="text-success"><%= number_with_delimiter(@total_hours.to_f.round(1)) %></h2>
+        <p class="mb-0 text-muted">Total Approved Hours</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# === Service hours by month chart === %>
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Service Hours by Month</h5></div>
+      <div class="card-body">
+        <%= column_chart @hours_by_month, colors: ["#0d6efd"], xtitle: "Month", ytitle: "Hours" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# === Category breakdown: pie chart + submission count table === %>
+<div class="row g-4 mb-4">
   <div class="col-md-6">
     <div class="card">
       <div class="card-header"><h5 class="mb-0">Hours by Category</h5></div>
@@ -52,8 +78,44 @@
       </div>
     </div>
   </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Service Category Breakdown</h5></div>
+      <div class="card-body">
+        <table class="table table-sm">
+          <thead><tr><th>Category</th><th>Submissions</th><th>Hours</th></tr></thead>
+          <tbody>
+            <% @hours_by_category.each do |category_name, hours| %>
+              <tr>
+                <td><%= category_name %></td>
+                <td><%= @category_submission_counts[category_name] || 0 %></td>
+                <td><%= hours.to_f.round(1) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
+<%# === Geolocation: hours by location === %>
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Service Hours by Location</h5></div>
+      <div class="card-body">
+        <% if @hours_by_location.any? %>
+          <%= bar_chart @hours_by_location, colors: ["#198754"], xtitle: "Hours", ytitle: "Location" %>
+        <% else %>
+          <p class="text-muted mb-0">No location data available yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# === Top volunteers & pending reviews === %>
 <div class="row g-4">
   <div class="col-md-6">
     <div class="card">
