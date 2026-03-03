@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   # Public-facing routes
   root "pages#home"
+  get "auth/magic_login", to: "magic_links#show"
+  post "auth/magic_login", to: "magic_links#create"
   post "dev_login", to: "dev_login#create" if Rails.env.development?
   post "dev_promote", to: "dev_login#promote" if Rails.env.development?
   get "dashboard", to: "pages#dashboard"

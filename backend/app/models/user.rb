@@ -6,6 +6,16 @@ class User < ApplicationRecord
     devise :omniauthable, omniauth_providers: [ :google_oauth2 ]
   end
 
+  def send_magic_link
+    token = SecureRandom.urlsafe_base64(32)
+    update!(magic_link_token: token, magic_link_sent_at: Time.current)
+    MagicLinkMailer.magic_link(self, token).deliver_now
+  end
+
+  def magic_link_valid?
+    magic_link_sent_at && magic_link_sent_at > 15.minutes.ago
+  end
+
   # Roles enum: volunteer=0, group_leader=1, admin=2, super_admin=3
   enum :role, { volunteer: 0, group_leader: 1, admin: 2, super_admin: 3 }
 

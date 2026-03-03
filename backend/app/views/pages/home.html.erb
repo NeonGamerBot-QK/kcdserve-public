@@ -4,6 +4,25 @@
   </div>
 <% end %>
 
+<div class="row justify-content-center my-5">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title text-center">Sign in with Magic Link</h5>
+        <%= form_with(url: auth_magic_login_path, local: true) do |f| %>
+          <div class="mb-3">
+            <%= f.label :email, "Email address", class: "form-label" %>
+            <%= f.email_field :email, class: "form-control", placeholder: "you@example.com", required: true %>
+          </div>
+          <div class="d-grid">
+            <%= f.submit "Send Login Link", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="text-center py-5">
   <h1 class="display-4 fw-bold">Make a Difference in Your Community</h1>
   <p class="lead text-muted">Track your volunteer hours, discover opportunities, and build your service resume.</p>
