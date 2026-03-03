@@ -7,7 +7,8 @@ puts "Seeding database..."
 
 # Create categories
 categories = [
-  { name: "Community Service", description: "General community service and volunteer work", color: "#17a2b8" }
+  { name: "Community Service", description: "General community service and volunteer work", color: "#17a2b8" }, 
+  { name: "Steam Service Hours", description: "Service hours for steam", color: "#ffffff"   }
 ].map { |attrs| Category.find_or_create_by!(name: attrs[:name]) { |c| c.assign_attributes(attrs) } }
 
 puts "  Created #{categories.size} categories"
@@ -54,7 +55,7 @@ groups = [
 ].map do |attrs|
   Group.find_or_create_by!(name: attrs[:name]) do |g|
     g.description = attrs[:description]
-    g.leader = admin
+    g.leader = neon
   end
 end
 
@@ -80,7 +81,7 @@ if Rails.env.development?
     Opportunity.find_or_create_by!(title: attrs[:title]) do |o|
       o.assign_attributes(attrs)
       o.category = cat
-      o.creator = super_admin
+      o.creator = neon
     end
   end
 
