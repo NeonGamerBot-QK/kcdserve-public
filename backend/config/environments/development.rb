@@ -7,6 +7,9 @@ Rails.application.configure do
   config.hosts << "localhost"
   config.hosts << /.*\.app\.github\.dev$/
 
+  # Allow CSRF for local development to work with changing origins
+  config.action_controller.forgery_protection_origin_check = false
+
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 

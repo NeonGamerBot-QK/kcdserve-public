@@ -1,3 +1,9 @@
+<% if Rails.env.development? %>
+  <div class="text-center my-3">
+    <%= button_to "Dev Login", dev_login_path, method: :post, class: "btn btn-outline-success", style: "border-style: dashed;" %>
+  </div>
+<% end %>
+
 <div class="text-center py-5">
   <h1 class="display-4 fw-bold">Make a Difference in Your Community</h1>
   <p class="lead text-muted">Track your volunteer hours, discover opportunities, and build your service resume.</p>

@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 
   # Public-facing routes
   root "pages#home"
+  post "dev_login", to: "dev_login#create" if Rails.env.development?
+  post "dev_promote", to: "dev_login#promote" if Rails.env.development?
   get "dashboard", to: "pages#dashboard"
 
   # Volunteer opportunities (public index/show, authenticated actions)
@@ -62,6 +64,11 @@ Rails.application.routes.draw do
         get :export_csv
       end
     end
+  end
+
+  # Flipper UI (only in development)
+  if Rails.env.development?
+    mount Flipper::UI.app(Flipper) => "/flipper"
   end
 
   # Health check

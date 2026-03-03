@@ -14,7 +14,8 @@ categories = [
   { name: "Food Service", description: "Food banks, meal prep, and distribution", color: "#fd7e14" },
   { name: "Animal Welfare", description: "Animal shelter volunteering and rescue", color: "#6f42c1" },
   { name: "Disaster Relief", description: "Emergency response and disaster recovery", color: "#e83e8c" },
-  { name: "Arts & Culture", description: "Cultural events, arts programs, and museums", color: "#20c997" }
+  { name: "Arts & Culture", description: "Cultural events, arts programs, and museums", color: "#20c997" },
+  { name: "Community Service", description: "General community service and volunteer work", color: "#17a2b8" }
 ].map { |attrs| Category.find_or_create_by!(name: attrs[:name]) { |c| c.assign_attributes(attrs) } }
 
 puts "  Created #{categories.size} categories"
@@ -23,11 +24,58 @@ puts "  Created #{categories.size} categories"
 super_admin = User.find_or_create_by!(email: "admin@kcdserve.com") do |u|
   u.first_name = "Super"
   u.last_name = "Admin"
-  u.password = "password123"
+  u.password = ENV["SEED_PASSWORD"] || "password123"
+  u.password_confirmation = ENV["SEED_PASSWORD"] || "password123"
   u.role = :super_admin
 end
 
 puts "  Created super admin: admin@kcdserve.com / password123"
+
+# Create neon super admin
+neon = User.find_or_create_by!(email: "neon@saahild.com") do |u|
+  u.first_name = "Neon"
+  u.last_name = "User"
+  u.password = ENV["SEED_PASSWORD"] || "password123"
+  u.password_confirmation = ENV["SEED_PASSWORD"] || "password123"
+  u.role = :super_admin
+end
+
+puts "  Created super admin: neon@saahild.com / password123"
+
+# Create sample admin
+admin = User.find_or_create_by!(email: "admin2@kcdserve.com") do |u|
+  u.first_name = "Site"
+  u.last_name = "Admin"
+  u.password = ENV["SEED_PASSWORD"] || "password123"
+  u.password_confirmation = ENV["SEED_PASSWORD"] || "password123"
+  u.role = :admin
+end
+
+puts "  Created admin: admin2@kcdserve.com / password123"
+
+# Create sample volunteers
+volunteers = 5.times.map do |i|
+  User.find_or_create_by!(email: "volunteer#{i + 1}@kcdserve.com") do |u|
+    u.first_name = [ "Alice", "Bob", "Carol", "David", "Emma" ][i]
+    u.last_name = [ "Johnson", "Smith", "Williams", "Brown", "Davis" ][i]
+    u.password = ENV["SEED_PASSWORD"] || "password123"
+    u.password_confirmation = ENV["SEED_PASSWORD"] || "password123"
+    u.role = :volunteer
+    u.bio = "Passionate volunteer committed to making a difference."
+  end
+end
+
+puts "  Created super admin: admin@kcdserve.com / password123"
+
+# Create neon super admin
+neon = User.find_or_create_by!(email: "neon@saahild.com") do |u|
+  u.first_name = "Neon"
+  u.last_name = "User"
+  u.password = "password123"
+  u.role = :super_admin
+end
+
+puts "  Created super admin: neon@saahild.com / password123"
 
 # Create sample admin
 admin = User.find_or_create_by!(email: "admin2@kcdserve.com") do |u|
@@ -42,8 +90,8 @@ puts "  Created admin: admin2@kcdserve.com / password123"
 # Create sample volunteers
 volunteers = 5.times.map do |i|
   User.find_or_create_by!(email: "volunteer#{i + 1}@kcdserve.com") do |u|
-    u.first_name = ["Alice", "Bob", "Carol", "David", "Emma"][i]
-    u.last_name = ["Johnson", "Smith", "Williams", "Brown", "Davis"][i]
+    u.first_name = [ "Alice", "Bob", "Carol", "David", "Emma" ][i]
+    u.last_name = [ "Johnson", "Smith", "Williams", "Brown", "Davis" ][i]
     u.password = "password123"
     u.role = :volunteer
     u.bio = "Passionate volunteer committed to making a difference."
@@ -99,9 +147,9 @@ volunteers.each do |volunteer|
       service_date: Date.current - (i * 7 + rand(1..5)),
       category: categories.sample
     ) do |sh|
-      sh.hours = [1, 1.5, 2, 2.5, 3, 4].sample
+      sh.hours = [ 1, 1.5, 2, 2.5, 3, 4 ].sample
       sh.description = "Volunteered at a local community event. Helped with setup, coordination, and cleanup."
-      sh.status = [:pending, :approved, :approved].sample
+      sh.status = [ :pending, :approved, :approved ].sample
       sh.group = volunteer.groups.first
     end
   end

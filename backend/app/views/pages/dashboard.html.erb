@@ -1,3 +1,9 @@
+<% if Rails.env.development? && !current_user.super_admin? %>
+  <div class="mb-3">
+    <%= button_to "Promote to Super Admin", dev_promote_path, method: :post, class: "btn btn-outline-success", style: "border-style: dashed;" %>
+  </div>
+<% end %>
+
 <h1 class="mb-4">Welcome back, <%= current_user.first_name %>!</h1>
 
 <div class="row g-4 mb-4">
