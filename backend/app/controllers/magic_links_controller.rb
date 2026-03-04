@@ -12,14 +12,26 @@ class MagicLinksController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:user][:email])
+    email = params[:email]&.strip&.downcase
 
-    if user
-      user.send_magic_link
-      redirect_to root_path, notice: "Check your email for the login link!"
-    else
-      redirect_to root_path, alert: "No account found with that email."
+    if email.blank?
+      redirect_to root_path, alert: "Please enter an email address."
+      return
     end
+
+    # Find existing user or create a new one (sign-up via magic link)
+    user = User.find_by(email: email)
+    unless user
+      user = User.create!(
+        email: email,
+        password: Devise.friendly_token(20),
+        first_name: params[:first_name].presence || email.split("@").first.capitalize,
+        last_name: params[:last_name].presence || ""
+      )
+    end
+
+    user.send_magic_link
+    redirect_to root_path, notice: "Check your email for the login link!"
   end
 
   private

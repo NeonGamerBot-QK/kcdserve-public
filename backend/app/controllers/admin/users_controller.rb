@@ -4,6 +4,7 @@ module Admin
   # Admin management of user accounts and role assignments
   class UsersController < BaseController
     before_action :set_user, only: [:show, :edit, :update, :destroy]
+    before_action :require_admin!, only: [:edit, :update, :destroy]
 
     def index
       @pagy, @users = pagy(User.order(:last_name, :first_name))

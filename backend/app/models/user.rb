@@ -19,8 +19,8 @@ class User < ApplicationRecord
     magic_link_sent_at && magic_link_sent_at > 15.minutes.ago
   end
 
-  # Roles enum: volunteer=0, group_leader=1, admin=2, super_admin=3
-  enum :role, { volunteer: 0, group_leader: 1, admin: 2, super_admin: 3 }
+  # Roles enum: volunteer=0, group_leader=1, admin=2, super_admin=3, teacher=4
+  enum :role, { volunteer: 0, group_leader: 1, admin: 2, super_admin: 3, teacher: 4 }
 
   # Associations
   has_many :group_memberships, dependent: :destroy
@@ -52,6 +52,11 @@ class User < ApplicationRecord
   # Checks if user has administrative privileges (admin or super_admin)
   def admin_or_above?
     admin? || super_admin?
+  end
+
+  # Checks if user has at least teacher-level access (teacher, admin, or super_admin)
+  def staff?
+    teacher? || admin_or_above?
   end
 
   # Finds or creates a user from OmniAuth provider data

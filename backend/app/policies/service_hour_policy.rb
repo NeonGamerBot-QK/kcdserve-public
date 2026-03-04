@@ -8,7 +8,7 @@ class ServiceHourPolicy < ApplicationPolicy
   end
 
   def show?
-    record.user == user || user.admin_or_above?
+    record.user == user || user.staff?
   end
 
   def create?
@@ -25,12 +25,12 @@ class ServiceHourPolicy < ApplicationPolicy
 
   # Determines if the user can approve or reject an hour submission
   def review?
-    user.admin_or_above?
+    user.staff?
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.admin_or_above?
+      if user.staff?
         scope.all
       else
         scope.where(user: user)

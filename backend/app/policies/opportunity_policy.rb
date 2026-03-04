@@ -8,7 +8,7 @@ class OpportunityPolicy < ApplicationPolicy
   end
 
   def show?
-    record.published? || user&.admin_or_above?
+    record.published? || user&.staff?
   end
 
   def create?
@@ -30,7 +30,7 @@ class OpportunityPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user&.admin_or_above?
+      if user&.staff?
         scope.all
       else
         scope.published

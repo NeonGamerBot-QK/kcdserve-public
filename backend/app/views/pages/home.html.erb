@@ -4,32 +4,58 @@
   </div>
 <% end %>
 
-<div class="row justify-content-center my-5">
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title text-center">Sign in with Magic Link</h5>
-        <%= form_with(url: auth_magic_login_path, local: true) do |f| %>
-          <div class="mb-3">
-            <%= f.label :email, "Email address", class: "form-label" %>
-            <%= f.email_field :email, class: "form-control", placeholder: "you@example.com", required: true %>
-          </div>
-          <div class="d-grid">
-            <%= f.submit "Send Login Link", class: "btn btn-primary" %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="text-center py-5">
   <h1 class="display-4 fw-bold">Make a Difference in Your Community</h1>
   <p class="lead text-muted">Track your volunteer hours, discover opportunities, and build your service resume.</p>
-  <div class="mt-4">
-    <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg me-2" %>
-    <%= link_to "Browse Opportunities", opportunities_path, class: "btn btn-outline-primary btn-lg" %>
+</div>
+
+<% unless user_signed_in? %>
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-center mb-3">Sign In or Sign Up</h5>
+
+          <%# Magic link form with optional name fields for new users %>
+          <%= form_with(url: auth_magic_login_path, local: true) do |f| %>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <%= f.label :first_name, "First Name", class: "form-label" %>
+                <%= f.text_field :first_name, class: "form-control", placeholder: "Jane" %>
+              </div>
+              <div class="col-6">
+                <%= f.label :last_name, "Last Name", class: "form-label" %>
+                <%= f.text_field :last_name, class: "form-control", placeholder: "Doe" %>
+              </div>
+            </div>
+            <p class="text-muted small mb-3">Name fields are only needed for first-time sign up.</p>
+
+            <div class="mb-3">
+              <%= f.label :email, "Email Address", class: "form-label" %>
+              <%= f.email_field :email, class: "form-control", placeholder: "you@example.com", required: true %>
+            </div>
+            <div class="d-grid">
+              <%= f.submit "Send Magic Link", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+
+          <%# Google OAuth2 button (only shown when configured) %>
+          <% if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present? %>
+            <div class="text-center my-3">
+              <span class="text-muted">— or —</span>
+            </div>
+            <div class="d-grid">
+              <%= button_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, method: :post, class: "btn btn-outline-dark", data: { turbo: false } %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
+<% end %>
+
+<div class="text-center mb-4">
+  <%= link_to "Browse Opportunities", opportunities_path, class: "btn btn-outline-primary btn-lg" %>
 </div>
 
 <% if @upcoming_opportunities.any? %>

@@ -17,11 +17,13 @@
         <i class="bi bi-clock-history me-2"></i> Service Hours
       <% end %>
     </li>
-    <li class="nav-item">
-      <%= link_to admin_categories_path, class: "nav-link text-white #{'active' if controller_name == 'categories'}" do %>
-        <i class="bi bi-tags me-2"></i> Categories
-      <% end %>
-    </li>
+    <% if current_user.admin_or_above? %>
+      <li class="nav-item">
+        <%= link_to admin_categories_path, class: "nav-link text-white #{'active' if controller_name == 'categories'}" do %>
+          <i class="bi bi-tags me-2"></i> Categories
+        <% end %>
+      </li>
+    <% end %>
     <li class="nav-item">
       <%= link_to admin_reports_path, class: "nav-link text-white #{'active' if controller_name == 'reports'}" do %>
         <i class="bi bi-bar-chart me-2"></i> Reports

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Admin
-  # Admin management of service categories
+  # Admin management of service categories (admin-only, teachers cannot manage)
   class CategoriesController < BaseController
+    before_action :require_admin!
     before_action :set_category, only: [:edit, :update, :destroy]
 
     def index

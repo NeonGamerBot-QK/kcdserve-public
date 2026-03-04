@@ -5,11 +5,11 @@
 # Regular users can only view and update their own profiles.
 class UserPolicy < ApplicationPolicy
   def index?
-    user.admin_or_above?
+    user.staff?
   end
 
   def show?
-    user == record || user.admin_or_above?
+    user == record || user.staff?
   end
 
   def update?
@@ -27,7 +27,7 @@ class UserPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.admin_or_above?
+      if user.staff?
         scope.all
       else
         scope.where(id: user.id)

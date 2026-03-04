@@ -15,9 +15,11 @@
   </div>
   <div class="col-md-6">
     <div class="d-grid gap-2">
-      <%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-outline-primary" %>
+      <% if current_user.admin_or_above? %>
+        <%= link_to "Edit User", edit_admin_user_path(@user), class: "btn btn-outline-primary" %>
+      <% end %>
       <%= link_to "View Profile", profile_path(@user), class: "btn btn-outline-secondary" %>
-      <% unless @user == current_user %>
+      <% if current_user.admin_or_above? && @user != current_user %>
         <%= button_to "Delete User", admin_user_path(@user), method: :delete, class: "btn btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
       <% end %>
     </div>
