@@ -47,8 +47,20 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
-  # Print emails to console instead of sending
-  config.action_mailer.delivery_method = :letter_opener
+  # Use SMTP if SMTP_ADDRESS is set, otherwise use letter_opener
+  if ENV["SMTP_ADDRESS"].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV["SMTP_ADDRESS"],
+      port: ENV["SMTP_PORT"] || 587,
+      user_name: ENV["SMTP_USERNAME"].presence,
+      password: ENV["SMTP_PASSWORD"].presence,
+      authentication: (ENV["SMTP_USERNAME"].present? && ENV["SMTP_PASSWORD"].present?) ? :plain : nil,
+      enable_starttls_auto: ENV["SMTP_STARTTLS"] == "true"
+    }
+  else
+    config.action_mailer.delivery_method = :letter_opener
+  end
   config.action_mailer.perform_deliveries = true
 
   # Print deprecation notices to the Rails logger.
