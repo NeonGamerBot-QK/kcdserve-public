@@ -168,6 +168,16 @@ class UserTest < ActiveSupport::TestCase
     assert_nil user.deleted_at
   end
 
+  test "soft-deleting a user preserves their service hours" do
+    user = create(:user)
+    category = create(:category)
+    hour = create(:service_hour, user: user, category: category)
+    user.soft_delete!
+
+    assert ServiceHour.exists?(hour.id), "Service hours should not be destroyed on soft-delete"
+    assert_equal user.id, hour.reload.user_id
+  end
+
   test "default scope excludes soft-deleted users" do
     user = create(:user)
     user.soft_delete!

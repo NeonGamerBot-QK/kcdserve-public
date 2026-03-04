@@ -9,7 +9,17 @@
             <% if @service_hour.title.present? %>
               <p><strong>Title:</strong> <%= @service_hour.title %></p>
             <% end %>
-            <p><strong>Volunteer:</strong> <%= link_to @service_hour.user.full_name, admin_user_path(@service_hour.user) %></p>
+            <p>
+              <strong>Volunteer:</strong>
+              <% if @service_hour.user %>
+                <%= link_to @service_hour.user.full_name, admin_user_path(@service_hour.user) %>
+                <% if @service_hour.user.deleted? %>
+                  <span class="badge bg-secondary">Deactivated</span>
+                <% end %>
+              <% else %>
+                <span class="text-muted">Deleted User</span>
+              <% end %>
+            </p>
             <p><strong>Date:</strong> <%= @service_hour.service_date.strftime("%B %d, %Y") %></p>
             <p><strong>Hours:</strong> <%= @service_hour.hours %></p>
             <p><strong>Category:</strong> <%= @service_hour.category.name %></p>

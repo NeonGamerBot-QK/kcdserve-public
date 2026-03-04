@@ -9,7 +9,7 @@
             <% if @service_hour.title.present? %>
               <p><strong>Title:</strong> <%= @service_hour.title %></p>
             <% end %>
-            <p><strong>Volunteer:</strong> <%= @service_hour.user.full_name %></p>
+            <p><strong>Volunteer:</strong> <%= @service_hour.user&.full_name || "Deleted User" %></p>
             <p><strong>Date:</strong> <%= @service_hour.service_date.strftime("%B %d, %Y") %></p>
             <p><strong>Hours:</strong> <%= @service_hour.hours %></p>
             <p><strong>Category:</strong> <%= @service_hour.category.name %></p>

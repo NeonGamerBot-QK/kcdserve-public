@@ -2,12 +2,13 @@ class ServiceHour < ApplicationRecord
   has_paper_trail
 
   # Associations
-  belongs_to :user
+  # Bypass User's default_scope so hours remain accessible after soft-deletion
+  belongs_to :user, -> { unscope(where: :deleted_at) }
   belongs_to :opportunity, optional: true
   belongs_to :group, optional: true
   belongs_to :category
-  belongs_to :reviewer, class_name: "User", foreign_key: :reviewed_by_id, optional: true
-  belongs_to :editor, class_name: "User", foreign_key: :edited_by_id, optional: true, inverse_of: :edited_hours
+  belongs_to :reviewer, -> { unscope(where: :deleted_at) }, class_name: "User", foreign_key: :reviewed_by_id, optional: true
+  belongs_to :editor, -> { unscope(where: :deleted_at) }, class_name: "User", foreign_key: :edited_by_id, optional: true, inverse_of: :edited_hours
 
   # Active Storage
   has_many_attached :photos

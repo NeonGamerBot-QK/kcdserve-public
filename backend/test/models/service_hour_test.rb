@@ -96,6 +96,28 @@ class ServiceHourTest < ActiveSupport::TestCase
     assert service_hour.rejected?
   end
 
+  # -- Soft-deleted user association --
+
+  test "still loads user after they are soft-deleted" do
+    service_hour = create(:service_hour)
+    service_hour.user.soft_delete!
+    service_hour.reload
+
+    assert_not_nil service_hour.user
+    assert service_hour.user.deleted?
+    assert_kind_of String, service_hour.user.full_name
+  end
+
+  test "still loads reviewer after they are soft-deleted" do
+    reviewer = create(:user, :admin)
+    service_hour = create(:service_hour, :approved, reviewer: reviewer)
+    reviewer.soft_delete!
+    service_hour.reload
+
+    assert_not_nil service_hour.reviewer
+    assert service_hour.reviewer.deleted?
+  end
+
   # -- Scopes --
 
   test ".recent orders by created_at descending" do
