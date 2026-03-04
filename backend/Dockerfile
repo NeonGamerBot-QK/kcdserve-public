@@ -17,7 +17,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq \
-  && apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client \
+  && apt-get install --no-install-recommends -y curl wget libjemalloc2 libvips postgresql-client \
   && ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so \
   && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
@@ -40,7 +40,8 @@ RUN apt-get update -qq \
 COPY vendor/* ./vendor/
 COPY Gemfile Gemfile.lock ./
 
-RUN bundle install \
+RUN gem install bundler -v 2.6.9 \
+  && bundle install \
   && rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
   && bundle exec bootsnap precompile -j 1 --gemfile
 
