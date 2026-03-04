@@ -41,6 +41,8 @@ COPY vendor/* ./vendor/
 COPY Gemfile Gemfile.lock ./
 
 RUN gem install bundler -v 2.6.9 \
+  && rm Gemfile.lock \
+  && bundle lock \
   && bundle install \
   && rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
   && bundle exec bootsnap precompile -j 1 --gemfile
