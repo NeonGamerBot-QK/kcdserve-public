@@ -73,6 +73,7 @@ Rails.application.routes.draw do
         get :export_csv
       end
     end
+    resources :audit_log, only: [ :index, :show ]
   end
 
   # Flipper UI (only in development)

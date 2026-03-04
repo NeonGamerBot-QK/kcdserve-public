@@ -1,4 +1,6 @@
 class Group < ApplicationRecord
+  has_paper_trail
+
   # Associations
   belongs_to :leader, class_name: "User", optional: true
   has_many :group_memberships, dependent: :destroy

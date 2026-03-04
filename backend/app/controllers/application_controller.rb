@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_paper_trail_whodunnit
 
   # Rescue Pundit authorization errors with a 403 forbidden response
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized

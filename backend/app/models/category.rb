@@ -1,4 +1,6 @@
 class Category < ApplicationRecord
+  has_paper_trail
+
   has_many :opportunities, dependent: :nullify
   has_many :service_hours, dependent: :nullify
 

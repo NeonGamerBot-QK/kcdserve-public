@@ -149,7 +149,7 @@
             <tbody>
               <% @recent_submissions.each do |sh| %>
                 <tr>
-                  <td><%= sh.user.full_name %></td>
+                  <td><%= sh.user&.full_name || "Deleted User" %></td>
                   <td><%= sh.hours %></td>
                   <td><%= sh.service_date.strftime("%m/%d") %></td>
                   <td><%= link_to "Review", admin_service_hour_path(sh), class: "btn btn-sm btn-outline-warning" %></td>

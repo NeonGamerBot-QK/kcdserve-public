@@ -61,6 +61,9 @@ gem "pagy"
 # CSV export
 gem "csv"
 
+# Audit trail / version tracking
+gem "paper_trail"
+
 # Feature flags
 gem "flipper"
 gem "flipper-active_record"

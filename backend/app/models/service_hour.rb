@@ -1,4 +1,6 @@
 class ServiceHour < ApplicationRecord
+  has_paper_trail
+
   # Associations
   belongs_to :user
   belongs_to :opportunity, optional: true

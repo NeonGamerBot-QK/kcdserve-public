@@ -24,5 +24,12 @@ module Admin
         redirect_to admin_root_path, alert: "You do not have permission to perform this action."
       end
     end
+
+    # Restricts actions to super_admin only
+    def require_super_admin!
+      unless current_user.super_admin?
+        redirect_to admin_root_path, alert: "You do not have permission to perform this action."
+      end
+    end
   end
 end

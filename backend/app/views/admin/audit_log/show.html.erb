@@ -1,0 +1,71 @@
+<%= link_to "← Back to Audit Log", admin_audit_log_index_path, class: "btn btn-outline-secondary btn-sm mb-3" %>
+
+<h1 class="mb-4">
+  Audit Log Entry #<%= @version.id %>
+</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-header"><strong>Metadata</strong></div>
+      <div class="card-body">
+        <p><strong>Event:</strong>
+          <span class="badge bg-<%= @version.event == 'create' ? 'success' : @version.event == 'update' ? 'info' : 'danger' %>">
+            <%= @version.event %>
+          </span>
+        </p>
+        <p><strong>Model:</strong> <%= @version.item_type %></p>
+        <p><strong>Item ID:</strong> <%= @version.item_id %></p>
+        <p><strong>When:</strong> <%= @version.created_at.strftime("%B %d, %Y at %I:%M:%S %p") %></p>
+        <p><strong>Who:</strong>
+          <% if @version.whodunnit.present? %>
+            <% actor = User.with_deleted.find_by(id: @version.whodunnit) %>
+            <%= actor ? link_to(actor.full_name, admin_user_path(actor)) : "User ##{@version.whodunnit}" %>
+          <% else %>
+            <span class="text-muted">System</span>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <% if @version.object_changes.present? %>
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header"><strong>Changes</strong></div>
+        <div class="card-body">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Attribute</th>
+                <th>Before</th>
+                <th>After</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @version.changeset&.each do |attribute, (before_val, after_val)| %>
+                <% next if %w[encrypted_password reset_password_token magic_link_token].include?(attribute) %>
+                <tr>
+                  <td><code><%= attribute %></code></td>
+                  <td><%= before_val.present? ? truncate(before_val.to_s, length: 200) : "<em class='text-muted'>blank</em>".html_safe %></td>
+                  <td><%= after_val.present? ? truncate(after_val.to_s, length: 200) : "<em class='text-muted'>blank</em>".html_safe %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @version.object.present? %>
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header"><strong>Snapshot (state before this event)</strong></div>
+        <div class="card-body">
+          <pre class="mb-0" style="max-height: 400px; overflow-y: auto;"><%= @version.object %></pre>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

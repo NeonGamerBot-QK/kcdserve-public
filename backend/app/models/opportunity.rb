@@ -1,4 +1,6 @@
 class Opportunity < ApplicationRecord
+  has_paper_trail
+
   # Associations
   belongs_to :category, optional: true
   belongs_to :creator, class_name: "User", foreign_key: :created_by_id, optional: true
