@@ -114,6 +114,23 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "Jane Doe", user.full_name
   end
 
+  test "#age returns nil when birthday is not set" do
+    user = build(:user, birthday: nil)
+    assert_nil user.age
+  end
+
+  test "#age calculates correct age from birthday" do
+    user = build(:user, birthday: 16.years.ago.to_date)
+    assert_equal 16, user.age
+  end
+
+  test "#age accounts for birthday not yet passed this year" do
+    user = build(:user, birthday: Date.new(Date.current.year - 15, 12, 31))
+    # If today is before Dec 31, they're still 14; if it is Dec 31, they're 15
+    expected = Date.current >= Date.new(Date.current.year, 12, 31) ? 15 : 14
+    assert_equal expected, user.age
+  end
+
   test "#total_approved_hours sums only approved service hours" do
     user = create(:user)
     category = create(:category)

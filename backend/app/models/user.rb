@@ -49,6 +49,16 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  # Calculates the user's current age from their birthday
+  def age
+    return nil unless birthday
+
+    today = Date.current
+    age = today.year - birthday.year
+    age -= 1 if today < birthday + age.years
+    age
+  end
+
   # Returns total approved service hours for the user
   def total_approved_hours
     service_hours.approved.sum(:hours)
