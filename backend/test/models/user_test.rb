@@ -149,6 +149,61 @@ class UserTest < ActiveSupport::TestCase
     assert_not create(:user, :group_leader).admin_or_above?
   end
 
+  # -- Soft deletion --
+
+  test "#soft_delete! sets deleted_at timestamp" do
+    user = create(:user)
+    user.soft_delete!
+
+    assert user.deleted?
+    assert_not_nil user.deleted_at
+  end
+
+  test "#restore! clears deleted_at timestamp" do
+    user = create(:user)
+    user.soft_delete!
+    user.restore!
+
+    assert_not user.deleted?
+    assert_nil user.deleted_at
+  end
+
+  test "default scope excludes soft-deleted users" do
+    user = create(:user)
+    user.soft_delete!
+
+    assert_not_includes User.all, user
+  end
+
+  test ".with_deleted includes soft-deleted users" do
+    user = create(:user)
+    user.soft_delete!
+
+    assert_includes User.with_deleted, user
+  end
+
+  test ".only_deleted returns only soft-deleted users" do
+    active_user = create(:user)
+    deleted_user = create(:user)
+    deleted_user.soft_delete!
+
+    results = User.only_deleted
+    assert_includes results, deleted_user
+    assert_not_includes results, active_user
+  end
+
+  test ".deleted_over_7_years_ago returns users deleted more than 7 years ago" do
+    recent_delete = create(:user)
+    recent_delete.soft_delete!
+
+    old_delete = create(:user)
+    old_delete.update_columns(deleted_at: 8.years.ago)
+
+    results = User.deleted_over_7_years_ago
+    assert_includes results, old_delete
+    assert_not_includes results, recent_delete
+  end
+
   # -- Class methods --
 
   test ".from_omniauth creates a new user from an auth hash" do

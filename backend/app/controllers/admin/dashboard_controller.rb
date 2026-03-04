@@ -5,6 +5,7 @@ module Admin
   class DashboardController < BaseController
     def index
       @total_users = User.count
+      @archived_users = User.only_deleted.count
       @total_hours = ServiceHour.approved.sum(:hours)
       @pending_reviews = ServiceHour.pending.count
       @total_opportunities = Opportunity.count

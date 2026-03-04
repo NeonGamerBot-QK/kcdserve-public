@@ -4,6 +4,8 @@ class User < ApplicationRecord
 
   default_scope { where(deleted_at: nil) }
   scope :with_deleted, -> { unscope(where: :deleted_at) }
+  scope :only_deleted, -> { unscope(where: :deleted_at).where.not(deleted_at: nil) }
+  scope :deleted_over_7_years_ago, -> { only_deleted.where(deleted_at: ...7.years.ago) }
 
   if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present?
     devise :omniauthable, omniauth_providers: [ :google_oauth2 ]
@@ -69,18 +71,18 @@ class User < ApplicationRecord
     end
   end
 
-  def prevent_destruction
-    return if ledgerable.nil? || ledgerable.destroyed?
-
-    raise ActiveRecord::RecordNotDestroyed, "HEY! Users cannot be destroyed as there data is needed for archival purposes! if u want to soft delete this user called <user>.soft_delete!"
+  # Returns true if the user has been soft-deleted
+  def deleted?
+    deleted_at.present?
   end
 
-  def soft_delete
+  # Soft-deletes the user by setting deleted_at timestamp
+  def soft_delete!
     update!(deleted_at: Time.current)
   end
 
-  def unsoft_delete
+  # Restores a soft-deleted user by clearing deleted_at
+  def restore!
     update!(deleted_at: nil)
   end
-
 end

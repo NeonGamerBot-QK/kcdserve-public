@@ -54,7 +54,14 @@ Rails.application.routes.draw do
   # Admin namespace
   namespace :admin do
     root "dashboard#index"
-    resources :users, only: [ :index, :show, :edit, :update, :destroy ]
+    resources :users, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
+      member do
+        patch :restore
+      end
+      collection do
+        get :archived
+      end
+    end
     resources :categories, except: [ :show ]
     resources :service_hours, only: [ :index, :show ] do
       member do

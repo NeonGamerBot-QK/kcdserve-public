@@ -21,5 +21,10 @@ FactoryBot.define do
     trait :group_leader do
       role { :group_leader }
     end
+
+    # Creates a soft-deleted user
+    trait :deleted do
+      deleted_at { Time.current }
+    end
   end
 end

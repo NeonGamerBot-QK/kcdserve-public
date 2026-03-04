@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-# Tests for admin user management (list, view, edit, update, delete)
+# Tests for admin user management (list, view, create, edit, update, soft delete, restore, archived)
 class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @admin = create(:user, :admin)
@@ -27,7 +27,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   # -- Index --
 
-  test "index lists all users for admin" do
+  test "index lists all active users for admin" do
     sign_in @admin
 
     get admin_users_path
@@ -43,6 +43,49 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     get admin_user_path(@volunteer)
 
     assert_response :success
+  end
+
+  test "show renders a soft-deleted user detail page for admin" do
+    sign_in @admin
+    @volunteer.soft_delete!
+
+    get admin_user_path(@volunteer)
+
+    assert_response :success
+  end
+
+  # -- New / Create --
+
+  test "new renders the user creation form for admin" do
+    sign_in @admin
+
+    get new_admin_user_path
+
+    assert_response :success
+  end
+
+  test "create adds a new user for admin" do
+    sign_in @admin
+
+    assert_difference "User.count", 1 do
+      post admin_users_path, params: {
+        user: { first_name: "New", last_name: "Person", email: "newperson@example.com", role: "volunteer" }
+      }
+    end
+
+    assert_redirected_to admin_user_path(User.last)
+  end
+
+  test "create re-renders new when params are invalid" do
+    sign_in @admin
+
+    assert_no_difference "User.count" do
+      post admin_users_path, params: {
+        user: { first_name: "", last_name: "", email: "" }
+      }
+    end
+
+    assert_response :unprocessable_entity
   end
 
   # -- Edit --
@@ -80,26 +123,62 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  # -- Destroy --
+  # -- Destroy (soft delete) --
 
-  test "destroy removes a user for admin" do
+  test "destroy soft-deletes a user instead of permanently removing them" do
     sign_in @admin
 
-    assert_difference "User.count", -1 do
+    assert_no_difference "User.with_deleted.count" do
       delete admin_user_path(@volunteer)
     end
 
     assert_redirected_to admin_users_path
+    @volunteer.reload
+    assert @volunteer.deleted?
   end
 
   test "destroy prevents admin from deleting their own account" do
     sign_in @admin
 
-    assert_no_difference "User.count" do
-      delete admin_user_path(@admin)
-    end
+    delete admin_user_path(@admin)
 
     assert_redirected_to admin_users_path
     assert_equal "You cannot delete your own account.", flash[:alert]
+    @admin.reload
+    assert_not @admin.deleted?
+  end
+
+  # -- Restore --
+
+  test "restore reactivates a soft-deleted user" do
+    sign_in @admin
+    @volunteer.soft_delete!
+
+    patch restore_admin_user_path(@volunteer)
+
+    assert_redirected_to admin_user_path(@volunteer)
+    @volunteer.reload
+    assert_not @volunteer.deleted?
+  end
+
+  # -- Archived --
+
+  test "archived lists soft-deleted users" do
+    sign_in @admin
+    @volunteer.soft_delete!
+
+    get archived_admin_users_path
+
+    assert_response :success
+  end
+
+  test "archived filters users deleted 7+ years ago" do
+    sign_in @admin
+    # Manually set deleted_at to 8 years ago to simulate an old deletion
+    @volunteer.update_columns(deleted_at: 8.years.ago)
+
+    get archived_admin_users_path(filter: "7_years")
+
+    assert_response :success
   end
 end
