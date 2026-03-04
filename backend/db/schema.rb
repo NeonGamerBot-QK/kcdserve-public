@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_04_001029) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_04_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -123,6 +123,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_001029) do
     t.bigint "category_id"
     t.datetime "created_at", null: false
     t.text "description", null: false
+    t.datetime "edited_at"
+    t.bigint "edited_by_id"
     t.bigint "group_id"
     t.decimal "hours", precision: 6, scale: 2, null: false
     t.bigint "opportunity_id"
@@ -130,9 +132,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_001029) do
     t.bigint "reviewed_by_id"
     t.date "service_date", null: false
     t.integer "status", default: 0, null: false
+    t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["category_id"], name: "index_service_hours_on_category_id"
+    t.index ["edited_by_id"], name: "index_service_hours_on_edited_by_id"
     t.index ["group_id"], name: "index_service_hours_on_group_id"
     t.index ["opportunity_id"], name: "index_service_hours_on_opportunity_id"
     t.index ["reviewed_by_id"], name: "index_service_hours_on_reviewed_by_id"
@@ -190,5 +194,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_001029) do
   add_foreign_key "service_hours", "groups"
   add_foreign_key "service_hours", "opportunities"
   add_foreign_key "service_hours", "users"
+  add_foreign_key "service_hours", "users", column: "edited_by_id"
   add_foreign_key "service_hours", "users", column: "reviewed_by_id"
 end

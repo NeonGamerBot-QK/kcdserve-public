@@ -32,6 +32,7 @@ class User < ApplicationRecord
   has_many :led_groups, class_name: "Group", foreign_key: :leader_id, dependent: :nullify, inverse_of: :leader
   has_many :service_hours, dependent: :destroy
   has_many :reviewed_hours, class_name: "ServiceHour", foreign_key: :reviewed_by_id, dependent: :nullify, inverse_of: :reviewer
+  has_many :edited_hours, class_name: "ServiceHour", foreign_key: :edited_by_id, dependent: :nullify, inverse_of: :editor
   has_many :created_opportunities, class_name: "Opportunity", foreign_key: :created_by_id, dependent: :nullify, inverse_of: :creator
   has_many :opportunity_signups, dependent: :destroy
   has_many :signed_up_opportunities, through: :opportunity_signups, source: :opportunity

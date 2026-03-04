@@ -36,7 +36,18 @@ class ServiceHoursController < ApplicationController
 
   def update
     authorize @service_hour
-    if @service_hour.update(service_hour_params)
+
+    # Track when staff members edit another user's submission
+    if current_user.staff? && @service_hour.user != current_user
+      @service_hour.assign_attributes(service_hour_params)
+      @service_hour.editor = current_user
+      @service_hour.edited_at = Time.current
+      success = @service_hour.save
+    else
+      success = @service_hour.update(service_hour_params)
+    end
+
+    if success
       redirect_to @service_hour, notice: "Service hours updated."
     else
       render :edit, status: :unprocessable_entity
@@ -70,7 +81,7 @@ class ServiceHoursController < ApplicationController
 
   def service_hour_params
     params.require(:service_hour).permit(
-      :hours, :description, :service_date, :category_id,
+      :title, :hours, :description, :service_date, :category_id,
       :group_id, :opportunity_id, photos: []
     )
   end

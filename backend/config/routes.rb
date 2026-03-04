@@ -63,7 +63,7 @@ Rails.application.routes.draw do
       end
     end
     resources :categories, except: [ :show ]
-    resources :service_hours, only: [ :index, :show ] do
+    resources :service_hours, only: [ :index, :show, :edit, :update ] do
       member do
         patch :review
       end

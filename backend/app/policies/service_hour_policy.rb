@@ -16,7 +16,7 @@ class ServiceHourPolicy < ApplicationPolicy
   end
 
   def update?
-    record.user == user && record.pending?
+    (record.user == user && record.pending?) || user.staff?
   end
 
   def destroy?
