@@ -48,8 +48,9 @@ Rails.application.routes.draw do
   # Volunteer profiles
   resources :profiles, only: [ :show, :edit, :update ]
 
-  # Service resume PDF download
+  # Service resume PDF download and CSV hours export
   get "resume/:id", to: "resumes#show", as: :resume
+  get "resume/:id/csv", to: "resumes#export_csv", as: :resume_csv
 
   # Admin namespace
   namespace :admin do

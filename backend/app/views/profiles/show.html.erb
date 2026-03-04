@@ -18,7 +18,8 @@
     <% if @user == current_user %>
       <div class="mt-3">
         <%= link_to "Edit Profile", edit_profile_path(@user), class: "btn btn-outline-primary btn-sm" %>
-        <%= link_to "Download Resume", resume_path(@user), class: "btn btn-outline-secondary btn-sm" %>
+        <%= link_to "Download Resume (PDF)", resume_path(@user), class: "btn btn-outline-secondary btn-sm" %>
+        <%= link_to "Export Hours (CSV)", resume_csv_path(@user), class: "btn btn-outline-secondary btn-sm" %>
       </div>
     <% end %>
   </div>
