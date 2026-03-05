@@ -79,10 +79,45 @@ class Admin::ReportsControllerTest < ActionDispatch::IntegrationTest
 
     get export_csv_admin_reports_path
 
-    # Verify the CSV header row is present
+    # Verify the CSV header row contains all expected columns
     csv_lines = response.body.lines
-    assert_includes csv_lines.first, "Volunteer"
-    assert_includes csv_lines.first, "Email"
-    assert_includes csv_lines.first, "Hours"
+    headers = csv_lines.first.strip
+    assert_includes headers, "Volunteer"
+    assert_includes headers, "Email"
+    assert_includes headers, "Hours"
+    assert_includes headers, "Title"
+    assert_includes headers, "On Campus"
+    assert_includes headers, "Organization"
+    assert_includes headers, "Contact Name"
+    assert_includes headers, "Contact Email"
+    assert_includes headers, "Opportunity"
+  end
+
+  test "export_csv includes new column data in rows" do
+    create(:service_hour, :approved, user: @volunteer, category: @category,
+           on_campus: true, organization_name: "Food Bank")
+    sign_in @admin
+
+    get export_csv_admin_reports_path
+
+    csv = CSV.parse(response.body, headers: true)
+    row = csv.first
+    assert_equal "Yes", row["On Campus"]
+    assert_equal "Food Bank", row["Organization"]
+  end
+
+  test "export_csv filters by date range" do
+    create(:service_hour, :approved, user: @volunteer, category: @category,
+           service_date: Date.new(2026, 1, 15))
+    create(:service_hour, :approved, user: @volunteer, category: @category,
+           service_date: Date.new(2026, 6, 15))
+    sign_in @admin
+
+    get export_csv_admin_reports_path(start_date: "2026-01-01", end_date: "2026-02-28")
+
+    assert_response :success
+    # Should include only the January record (header + 1 data row)
+    lines = response.body.lines
+    assert_equal 2, lines.size
   end
 end

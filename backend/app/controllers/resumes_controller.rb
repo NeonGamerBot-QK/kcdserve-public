@@ -21,7 +21,11 @@ class ResumesController < ApplicationController
       .order(service_date: :desc)
 
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << ["Date", "Title", "Category", "Opportunity", "Group", "Hours", "Description"]
+      csv << [
+        "Date", "Title", "Category", "Opportunity", "Group",
+        "Hours", "On Campus", "Organization", "Contact Name",
+        "Contact Email", "Description"
+      ]
       service_hours.each do |sh|
         csv << [
           sh.service_date.to_s,
@@ -30,6 +34,10 @@ class ResumesController < ApplicationController
           sh.opportunity&.title,
           sh.group&.name,
           sh.hours.to_f,
+          sh.on_campus? ? "Yes" : "No",
+          sh.organization_name,
+          sh.contact_name,
+          sh.contact_email,
           sh.description
         ]
       end

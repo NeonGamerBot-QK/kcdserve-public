@@ -23,20 +23,33 @@ module Admin
         .limit(25)
     end
 
-    # Exports service hour data as CSV
+    # Exports service hour data as CSV with optional date range filtering
     def export_csv
-      @service_hours = ServiceHour.approved.includes(:user, :category, :group).order(service_date: :desc)
+      scope = ServiceHour.approved.includes(:user, :category, :group, :opportunity)
+      date_range = parse_date_range
+      scope = scope.by_date_range(date_range[:start], date_range[:end]) if date_range[:start]
+      scope = scope.order(service_date: :desc)
 
       csv_data = CSV.generate(headers: true) do |csv|
-        csv << ["Volunteer", "Email", "Date", "Hours", "Category", "Group", "Description"]
-        @service_hours.each do |sh|
+        csv << [
+          "Volunteer", "Email", "Date", "Title", "Hours",
+          "Category", "Group", "Opportunity", "On Campus",
+          "Organization", "Contact Name", "Contact Email", "Description"
+        ]
+        scope.each do |sh|
           csv << [
             sh.user.full_name,
             sh.user.email,
             sh.service_date.to_s,
+            sh.title,
             sh.hours.to_f,
             sh.category.name,
             sh.group&.name || "N/A",
+            sh.opportunity&.title || "N/A",
+            sh.on_campus? ? "Yes" : "No",
+            sh.organization_name,
+            sh.contact_name,
+            sh.contact_email,
             sh.description
           ]
         end
