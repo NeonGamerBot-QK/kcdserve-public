@@ -82,7 +82,8 @@ class ServiceHoursController < ApplicationController
   def service_hour_params
     params.require(:service_hour).permit(
       :title, :hours, :description, :service_date, :category_id,
-      :group_id, :opportunity_id, photos: []
+      :group_id, :opportunity_id, :on_campus, :organization_name,
+      :contact_name, :contact_email, photos: []
     )
   end
 end

@@ -17,6 +17,16 @@
           <div class="col-md-6">
             <p><strong>Group:</strong> <%= @service_hour.group&.name || "N/A" %></p>
             <p><strong>Opportunity:</strong> <%= @service_hour.opportunity&.title || "N/A" %></p>
+            <p><strong>On Campus:</strong> <%= @service_hour.on_campus? ? "Yes" : "No" %></p>
+            <% if @service_hour.organization_name.present? %>
+              <p><strong>Organization:</strong> <%= @service_hour.organization_name %></p>
+            <% end %>
+            <% if @service_hour.contact_name.present? %>
+              <p><strong>Contact:</strong> <%= @service_hour.contact_name %></p>
+            <% end %>
+            <% if @service_hour.contact_email.present? %>
+              <p><strong>Contact Email:</strong> <%= mail_to @service_hour.contact_email %></p>
+            <% end %>
             <p>
               <strong>Status:</strong>
               <span class="badge bg-<%= @service_hour.approved? ? 'success' : @service_hour.pending? ? 'warning' : 'danger' %>">

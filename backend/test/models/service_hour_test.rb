@@ -142,4 +142,42 @@ class ServiceHourTest < ActiveSupport::TestCase
     assert_includes results, inside
     assert_not_includes results, _outside
   end
+
+  # -- New attributes (on_campus, organization, contact) --
+
+  test "defaults on_campus to false" do
+    service_hour = create(:service_hour)
+    assert_not service_hour.on_campus?
+  end
+
+  test "can be marked as on campus" do
+    service_hour = create(:service_hour, :on_campus)
+    assert service_hour.on_campus?
+  end
+
+  test ".on_campus scope returns only on-campus hours" do
+    category = create(:category)
+    on = create(:service_hour, category: category, on_campus: true)
+    _off = create(:service_hour, category: category, on_campus: false)
+
+    results = ServiceHour.on_campus
+    assert_includes results, on
+    assert_not_includes results, _off
+  end
+
+  test "is valid with contact_email in correct format" do
+    service_hour = build(:service_hour, contact_email: "test@example.com")
+    assert service_hour.valid?
+  end
+
+  test "is invalid with malformed contact_email" do
+    service_hour = build(:service_hour, contact_email: "not-an-email")
+    assert_not service_hour.valid?
+    assert_includes service_hour.errors[:contact_email], "is invalid"
+  end
+
+  test "allows blank contact_email" do
+    service_hour = build(:service_hour, contact_email: "")
+    assert service_hour.valid?
+  end
 end

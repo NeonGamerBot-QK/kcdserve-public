@@ -7,6 +7,10 @@ FactoryBot.define do
     hours { 2.0 }
     description { "Volunteered at the food bank" }
     service_date { Date.current }
+    on_campus { false }
+    organization_name { nil }
+    contact_name { nil }
+    contact_email { nil }
 
     # Creates a service hour that has been approved
     trait :approved do
@@ -16,6 +20,11 @@ FactoryBot.define do
     # Creates a service hour that has been rejected
     trait :rejected do
       status { :rejected }
+    end
+
+    # Creates a service hour performed on campus
+    trait :on_campus do
+      on_campus { true }
     end
   end
 end

@@ -21,8 +21,13 @@ class ServiceHour < ApplicationRecord
   validates :description, presence: true
   validates :service_date, presence: true
   validates :title, length: { maximum: 100 }
+  validates :contact_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+  validates :organization_name, length: { maximum: 150 }
+  validates :contact_name, length: { maximum: 100 }
+  validates :contact_email, length: { maximum: 150 }
 
   # Scopes
   scope :recent, -> { order(created_at: :desc) }
   scope :by_date_range, ->(start_date, end_date) { where(service_date: start_date..end_date) }
+  scope :on_campus, -> { where(on_campus: true) }
 end

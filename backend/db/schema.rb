@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_04_010001) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_04_020000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -121,13 +121,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_010001) do
   create_table "service_hours", force: :cascade do |t|
     t.text "admin_comment"
     t.bigint "category_id"
+    t.string "contact_email"
+    t.string "contact_name"
     t.datetime "created_at", null: false
     t.text "description", null: false
     t.datetime "edited_at"
     t.bigint "edited_by_id"
     t.bigint "group_id"
     t.decimal "hours", precision: 6, scale: 2, null: false
+    t.boolean "on_campus", default: false, null: false
     t.bigint "opportunity_id"
+    t.string "organization_name"
     t.datetime "reviewed_at"
     t.bigint "reviewed_by_id"
     t.date "service_date", null: false
