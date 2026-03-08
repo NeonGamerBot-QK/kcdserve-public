@@ -38,10 +38,9 @@ RUN apt-get update -qq \
 
 # Install application gems
 COPY vendor/* ./vendor/
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile ./
 
 RUN gem install bundler -v 2.6.9 \
-  && rm Gemfile.lock \
   && bundle lock \
   && bundle install \
   && rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git \
