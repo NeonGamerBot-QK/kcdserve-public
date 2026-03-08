@@ -12,7 +12,9 @@ class ResumeGeneratorService
   # @param user [User] the volunteer to generate a resume for
   def initialize(user)
     @user = user
-    @approved_hours = user.service_hours.approved
+    # Restitution hours are excluded from totals/summaries but included in the full history
+    @approved_hours = user.service_hours.approved.non_restitution
+    @all_approved_hours = user.service_hours.approved
   end
 
   # Generates the PDF resume document.
@@ -121,10 +123,10 @@ class ResumeGeneratorService
     pdf.move_down 15
   end
 
-  # Renders ALL approved service hours — no limit — with title and opportunity columns.
+  # Renders ALL approved service hours — no limit — including restitution, with title and opportunity columns.
   # Automatically paginates across multiple pages via prawn-table.
   def render_full_service_history(pdf)
-    all_hours = @approved_hours
+    all_hours = @all_approved_hours
       .includes(:category, :opportunity, :group)
       .order(service_date: :desc)
     return if all_hours.empty?
@@ -134,10 +136,12 @@ class ResumeGeneratorService
 
     table_data = [["Date", "Title", "Category", "Opportunity", "Group", "Hours", "Description"]]
     all_hours.each do |sh|
+      category_label = sh.category&.name || "—"
+      category_label += " *" if sh.category&.restitution?
       table_data << [
         sh.service_date.strftime("%Y-%m-%d"),
         sh.title.presence || "—",
-        sh.category&.name || "—",
+        category_label,
         sh.opportunity&.title || "—",
         sh.group&.name || "—",
         sh.hours.to_f.round(2).to_s,

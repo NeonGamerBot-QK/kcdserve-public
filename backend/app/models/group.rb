@@ -13,9 +13,9 @@ class Group < ApplicationRecord
   # Validations
   validates :name, presence: true, uniqueness: true
 
-  # Returns total approved hours for all members in this group
+  # Returns total approved hours for all members in this group, excluding community restitution hours
   def total_approved_hours
-    service_hours.approved.sum(:hours)
+    service_hours.approved.non_restitution.sum(:hours)
   end
 
   # Returns the count of active members in this group

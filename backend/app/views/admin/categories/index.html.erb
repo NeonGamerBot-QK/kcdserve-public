@@ -4,13 +4,18 @@
 </div>
 
 <table class="table table-hover">
-  <thead><tr><th>Color</th><th>Name</th><th>Description</th><th></th></tr></thead>
+  <thead><tr><th>Color</th><th>Name</th><th>Description</th><th>Type</th><th></th></tr></thead>
   <tbody>
     <% @categories.each do |cat| %>
       <tr>
         <td><span class="badge" style="background-color: <%= cat.color %>;">&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
         <td><%= cat.name %></td>
         <td><%= truncate(cat.description, length: 60) %></td>
+        <td>
+          <% if cat.restitution? %>
+            <span class="badge bg-warning text-dark">Community Restitution</span>
+          <% end %>
+        </td>
         <td>
           <%= link_to "Edit", edit_admin_category_path(cat), class: "btn btn-sm btn-outline-primary" %>
           <%= button_to "Delete", admin_category_path(cat), method: :delete, class: "btn btn-sm btn-outline-danger", data: { turbo_confirm: "Delete #{cat.name}?" } %>

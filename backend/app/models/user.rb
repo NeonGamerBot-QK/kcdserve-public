@@ -59,9 +59,9 @@ class User < ApplicationRecord
     age
   end
 
-  # Returns total approved service hours for the user
+  # Returns total approved service hours for the user, excluding community restitution hours
   def total_approved_hours
-    service_hours.approved.sum(:hours)
+    service_hours.approved.non_restitution.sum(:hours)
   end
 
   # Checks if user has administrative privileges (admin or super_admin)

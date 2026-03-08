@@ -7,7 +7,7 @@ module Admin
     def index
       @date_range = parse_date_range
 
-      @hours_scope = ServiceHour.approved
+      @hours_scope = ServiceHour.approved.non_restitution
       @hours_scope = @hours_scope.by_date_range(@date_range[:start], @date_range[:end]) if @date_range[:start]
 
       @total_hours = @hours_scope.sum(:hours)
@@ -15,6 +15,7 @@ module Admin
       @hours_by_group = @hours_scope.where.not(group_id: nil).joins(:group).group("groups.name").sum(:hours)
       @monthly_trend = @hours_scope.group_by_month(:service_date, last: 12).sum(:hours)
 
+      # Top volunteers ranked by non-restitution approved hours
       @top_volunteers = User.joins(:service_hours)
         .merge(@hours_scope)
         .group("users.id")

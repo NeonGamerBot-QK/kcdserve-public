@@ -28,6 +28,13 @@
         <%= f.text_area :description, class: "form-control", rows: 3 %>
       </div>
     </div>
+    <div class="col-12">
+      <div class="form-check mb-3">
+        <%= f.check_box :restitution, class: "form-check-input" %>
+        <%= f.label :restitution, "Community Restitution", class: "form-check-label" %>
+        <div class="form-text">Hours in this category are tracked separately and do not count toward volunteer totals.</div>
+      </div>
+    </div>
   </div>
 
   <div class="mt-3">

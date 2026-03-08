@@ -30,4 +30,6 @@ class ServiceHour < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   scope :by_date_range, ->(start_date, end_date) { where(service_date: start_date..end_date) }
   scope :on_campus, -> { where(on_campus: true) }
+  # Excludes hours logged under community restitution categories from totals
+  scope :non_restitution, -> { joins(:category).where(categories: { restitution: false }) }
 end
