@@ -49,3 +49,6 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Ignore Gemfile.lock so the container uses its own regenerated lock file
+/Gemfile.lock
