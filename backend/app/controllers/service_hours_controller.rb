@@ -26,7 +26,7 @@ class ServiceHoursController < ApplicationController
       ServiceHourMailer.submission_received(@service_hour).deliver_later
       redirect_to @service_hour, notice: "Service hours submitted for approval."
     else
-      render :new, status: :unprocessable_entity
+      redirect_with_errors(@service_hour, new_service_hour_path)
     end
   end
 
@@ -50,7 +50,7 @@ class ServiceHoursController < ApplicationController
     if success
       redirect_to @service_hour, notice: "Service hours updated."
     else
-      render :edit, status: :unprocessable_entity
+      redirect_with_errors(@service_hour, edit_service_hour_path(@service_hour))
     end
   end
 

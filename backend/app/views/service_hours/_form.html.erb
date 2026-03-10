@@ -14,7 +14,7 @@
     <div class="col-12">
       <div class="mb-3">
         <%= f.label :title, "Title (optional)", class: "form-label" %>
-        <%= f.text_field :title, class: "form-control", maxlength: 100, placeholder: "Short summary of the service" %>
+        <%= f.text_field :title, class: "form-control", maxlength: 64, minlength: 5, placeholder: "Short summary of the service (5–64 chars)" %>
       </div>
     </div>
     <div class="col-md-4">
@@ -26,7 +26,7 @@
     <div class="col-md-4">
       <div class="mb-3">
         <%= f.label :hours, class: "form-label" %>
-        <%= f.number_field :hours, class: "form-control", step: 0.25, min: 0.25, required: true %>
+        <%= f.number_field :hours, class: "form-control", step: 0.25, min: 0.25, max: 24, required: true %>
       </div>
     </div>
     <div class="col-md-4">
@@ -50,13 +50,13 @@
     <div class="col-12">
       <div class="mb-3">
         <%= f.label :description, "Description of Service", class: "form-label" %>
-        <%= f.text_area :description, class: "form-control", rows: 4, required: true %>
+        <%= f.text_area :description, class: "form-control", rows: 4, required: true, minlength: 10, maxlength: 2000 %>
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
         <%= f.label :photos, "Photo Proof (optional)", class: "form-label" %>
-        <%= f.file_field :photos, class: "form-control", multiple: true, accept: "image/*" %>
+        <%= f.file_field :photos, class: "form-control", multiple: true, accept: "image/*,video/*,application/pdf" %>
       </div>
     </div>
     <div class="col-md-6">

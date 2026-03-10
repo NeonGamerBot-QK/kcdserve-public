@@ -28,7 +28,7 @@ class GroupsController < ApplicationController
     if @group.save
       redirect_to @group, notice: "Group was successfully created."
     else
-      render :new, status: :unprocessable_entity
+      redirect_with_errors(@group, new_group_path)
     end
   end
 
@@ -41,7 +41,7 @@ class GroupsController < ApplicationController
     if @group.update(group_params)
       redirect_to @group, notice: "Group was successfully updated."
     else
-      render :edit, status: :unprocessable_entity
+      redirect_with_errors(@group, edit_group_path(@group))
     end
   end
 
@@ -53,6 +53,7 @@ class GroupsController < ApplicationController
 
   # Allows the current user to join a group
   def join
+    authorize @group, :join?
     unless @group.members.exists?(id: current_user.id)
       @group.group_memberships.create!(user: current_user)
     end
@@ -87,6 +88,6 @@ class GroupsController < ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :description, :leader_id, :logo)
+    params.require(:group).permit(:name, :description, :leader_id, :logo, :invite_only)
   end
 end

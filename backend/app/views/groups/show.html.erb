@@ -5,7 +5,14 @@
         <%= image_tag @group.logo, class: "rounded-circle me-3", style: "width: 80px; height: 80px; object-fit: cover;" %>
       <% end %>
       <div>
-        <h1 class="mb-0"><%= @group.name %></h1>
+        <h1 class="mb-0">
+          <%= @group.name %>
+          <% if @group.invite_only? %>
+            <span class="badge bg-secondary ms-2" title="Invite Only">
+              <i class="bi bi-lock-fill"></i> Private
+            </span>
+          <% end %>
+        </h1>
         <% if @group.leader %>
           <p class="text-muted mb-0">Led by <%= @group.leader.full_name %></p>
         <% end %>
@@ -55,10 +62,12 @@
         <% if user_signed_in? %>
           <% if @is_member %>
             <%= button_to "Leave Group", leave_group_path(@group), method: :delete, class: "btn btn-outline-warning" %>
+          <% elsif @group.invite_only? %>
+            <p class="text-muted small mb-0"><i class="bi bi-lock-fill"></i> This group is invite only.</p>
           <% else %>
             <%= button_to "Join Group", join_group_path(@group), method: :post, class: "btn btn-primary" %>
           <% end %>
-        <% else %>
+        <% elsif !@group.invite_only? %>
           <p><%= link_to "Sign in", new_user_session_path %> to join this group.</p>
         <% end %>
 

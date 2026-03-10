@@ -8,11 +8,18 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def show?
+    # Private groups are only visible to members, leaders, and staff
+    return true unless record.invite_only?
+    user.staff? || record.leader == user || record.members.exists?(id: user.id)
+  end
+
+  def join?
+    return false if record.invite_only?
     true
   end
 
   def create?
-    user.admin_or_above?
+    user.staff?
   end
 
   def update?
@@ -30,7 +37,16 @@ class GroupPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      scope.all
+      if user&.staff?
+        scope.all
+      elsif user.present?
+        # Show public groups + invite-only groups the user belongs to
+        scope.left_joins(:group_memberships)
+             .where("groups.invite_only = false OR group_memberships.user_id = ?", user.id)
+             .distinct
+      else
+        scope.where(invite_only: false)
+      end
     end
   end
 end

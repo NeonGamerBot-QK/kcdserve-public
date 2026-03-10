@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
 
   # Rescue Pundit authorization errors with a 403 forbidden response
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   private
 
@@ -24,5 +25,16 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:alert] = "You are not authorized to perform this action."
     redirect_back(fallback_location: root_path)
+  end
+
+  def record_not_found
+    flash[:alert] = "The requested record was not found."
+    redirect_back(fallback_location: root_path)
+  end
+
+  # Redirects with model validation errors in the flash
+  def redirect_with_errors(record, fallback_path)
+    flash[:alert] = record.errors.full_messages.to_sentence
+    redirect_to fallback_path
   end
 end

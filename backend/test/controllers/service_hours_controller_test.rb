@@ -98,7 +98,7 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to service_hour_path(created_hour)
   end
 
-  test "create renders new with errors when params are invalid" do
+  test "create redirects with flash errors when params are invalid" do
     sign_in @volunteer
 
     assert_no_difference "ServiceHour.count" do
@@ -107,7 +107,8 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_response :unprocessable_entity
+    assert_redirected_to new_service_hour_path
+    assert flash[:alert].present?
   end
 
   # -- Update --

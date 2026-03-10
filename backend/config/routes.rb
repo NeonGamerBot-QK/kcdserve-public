@@ -77,10 +77,14 @@ Rails.application.routes.draw do
     resources :audit_log, only: [ :index, :show ]
   end
 
-  # Flipper UI (only in development)
+  # Flipper UI — development: open; production: admin+ only
   if Rails.env.development?
     mount Flipper::UI.app(Flipper) => "/flipper"
     mount LetterOpenerWeb::Engine, at: "/mail"
+  else
+    authenticate :user, ->(u) { u.admin_or_above? } do
+      mount Flipper::UI.app(Flipper) => "/flipper"
+    end
   end
 
   # Health check

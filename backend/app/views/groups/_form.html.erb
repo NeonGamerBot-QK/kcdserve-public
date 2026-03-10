@@ -34,6 +34,14 @@
         <%= f.file_field :logo, class: "form-control", accept: "image/*" %>
       </div>
     </div>
+    <div class="col-md-6">
+      <div class="mb-3 d-flex align-items-end h-100">
+        <div class="form-check">
+          <%= f.check_box :invite_only, class: "form-check-input" %>
+          <%= f.label :invite_only, "Invite Only (private group)", class: "form-check-label" %>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="mt-3">
