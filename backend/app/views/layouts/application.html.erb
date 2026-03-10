@@ -35,6 +35,15 @@
       </div>
     <% end %>
 
+    <% if flash[:error] %>
+      <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= flash[:error] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      </div>
+    <% end %>
+
     <main class="container py-4">
       <%= yield %>
     </main>

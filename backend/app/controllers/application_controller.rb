@@ -32,9 +32,9 @@ class ApplicationController < ActionController::Base
     redirect_back(fallback_location: root_path)
   end
 
-  # Redirects with model validation errors in the flash
+  # Redirects with model validation errors in flash[:error]
   def redirect_with_errors(record, fallback_path)
-    flash[:alert] = record.errors.full_messages.to_sentence
+    flash[:error] = record.errors.full_messages.to_sentence
     redirect_to fallback_path
   end
 end

@@ -108,7 +108,7 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to new_service_hour_path
-    assert flash[:alert].present?
+    assert flash[:error].present?
   end
 
   # -- Update --
