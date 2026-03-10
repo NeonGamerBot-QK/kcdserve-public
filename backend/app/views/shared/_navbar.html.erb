@@ -26,13 +26,12 @@
 
       <ul class="navbar-nav">
         <% if user_signed_in? && current_user.is_a?(User) %>
-          <% if current_user.admin_or_above? %>
+          <% if current_user.admin_or_above? || current_user.teacher? %>
+            <% content_for :admin_css do %>
+              <style>.admin-nav-btn { border: 2px dashed orange; border-radius: 6px; padding: 2px 10px; }</style>
+            <% end %>
             <li class="nav-item">
-              <%= link_to "Admin", admin_root_path, class: "nav-link" %>
-            </li>
-          <% elsif current_user.teacher? %>
-            <li class="nav-item">
-              <%= link_to "Staff Portal", admin_root_path, class: "nav-link" %>
+              <%= link_to(current_user.admin_or_above? ? "Admin" : "Staff Portal", admin_root_path, class: "nav-link admin-nav-btn") %>
             </li>
           <% end %>
           <li class="nav-item dropdown">
