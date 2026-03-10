@@ -4,107 +4,109 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-KCDServe is a Ruby on Rails 8.1 application for tracking volunteer service hours. It is a **monolithic Rails app** with no separate frontend framework — ERB templates with Bootstrap 5, Hotwire (Turbo + Stimulus), and importmap.
+KCDServe is a Ruby on Rails 8.1 app for tracking volunteer service hours. Monolithic — ERB + Bootstrap 5 + Hotwire (Turbo + Stimulus) + importmap. No separate frontend build step.
 
 All application code lives in `backend/`. Run all commands from that directory.
 
 ## Commands
 
 ```bash
-# Install dependencies
 bundle install
-
-# Database
 bin/rails db:create db:migrate
-bin/rails db:seed           # Seeds default accounts (see README)
+bin/rails db:seed
 
-# Development server
 bin/rails server
-
-# Run all tests
 bin/rails test
+bin/rails test test/models/user_test.rb:42   # single test by line
 
-# Run a single test file
-bin/rails test test/models/user_test.rb
-
-# Run a single test by line number
-bin/rails test test/models/user_test.rb:42
-
-# Linting
 bundle exec rubocop
-bundle exec rubocop -a     # Auto-correct
+bundle exec rubocop -a
 
-# Security audits
-bundle exec brakeman
-bundle exec bundler-audit
-
-# Background jobs (Solid Queue)
-bin/rails solid_queue:start
-
-# Dev-only utilities (available at runtime, not rake tasks)
-# POST /dev_login    — bypass auth in development
-# POST /dev_promote  — promote user role in development
-# GET  /flipper      — feature flag UI
-# GET  /mail         — letter_opener email viewer
+# Dev-only routes (not rake tasks)
+# POST /dev_login    — bypass auth
+# POST /dev_promote  — promote user role
+# GET  /flipper      — feature flag UI (admin+ in prod)
+# GET  /mail         — letter_opener
 ```
 
 ## Architecture
 
+### Error Handling Conventions
+
+- **Validation failures**: use `redirect_with_errors(record, path)` (defined in `ApplicationController`) — sets `flash[:error]` and redirects. Never render 422s.
+- **Auth failures**: `rescue_from Pundit::NotAuthorizedError` → `flash[:alert]` + redirect back.
+- **Record not found**: `rescue_from ActiveRecord::RecordNotFound` → `flash[:alert]` + redirect back.
+- `flash[:notice]` = green, `flash[:alert]` = red (auth/system), `flash[:error]` = red (validation). All three are rendered in both `layouts/application.html.erb` and `layouts/admin.html.erb`.
+- Forms use `novalidate` to skip browser-native validation — always hits server.
+
 ### Authorization (Pundit)
 
-Every controller action should call `authorize` (or `policy_scope`). `ApplicationPolicy` denies all actions by default — subclass and explicitly permit. The admin namespace uses role-based guards instead of Pundit policies:
+Every controller action must call `authorize` or `policy_scope`. `ApplicationPolicy` denies everything by default. Admin namespace skips Pundit and uses role guards on `Admin::BaseController`:
 
-- `Admin::BaseController#require_staff!` — teacher, admin, or super_admin
-- `Admin::BaseController#require_admin!` — admin or super_admin only
-- `Admin::BaseController#require_super_admin!` — super_admin only
+- `require_staff!` — teacher, admin, super_admin
+- `require_admin!` — admin, super_admin
+- `require_super_admin!` — super_admin only
+
+Tests that use `assert_raises(Pundit::NotAuthorizedError)` are broken by design — `rescue_from` catches it before it bubbles. Those tests are pre-existing failures; don't try to fix by removing `rescue_from`.
 
 ### User Roles
 
-`User#role` is an enum: `volunteer=0`, `group_leader=1`, `admin=2`, `super_admin=3`, `teacher=4`
+Enum on `User#role`: `volunteer=0`, `group_leader=1`, `admin=2`, `super_admin=3`, `teacher=4`
 
-Key helpers on `User`:
-- `admin_or_above?` — admin or super_admin
 - `staff?` — teacher, admin, or super_admin
+- `admin_or_above?` — admin or super_admin
 
-### Soft Deletion
+Group creation requires `staff?`. Group update requires `admin_or_above? || leader`.
 
-Users are soft-deleted via `deleted_at`. `User` has a `default_scope` filtering them out. Use `User.with_deleted` or `User.only_deleted` to bypass. Associations that must survive user deletion (e.g. `ServiceHour#user`) use `-> { unscope(where: :deleted_at) }` in their `belongs_to`.
+### Groups
+
+- `invite_only: boolean` (default false) — private groups hidden from non-members in index/show, join blocked.
+- `GroupPolicy::Scope` filters invite-only groups for non-staff via LEFT JOIN on `group_memberships`.
+- Flipper UI mounted in prod behind `authenticate :user, ->(u) { u.admin_or_above? }`.
 
 ### Service Hours
 
-`ServiceHour#status` is an enum: `pending=0`, `approved=1`, `rejected=2`. Hours must belong to a `Category`. Optional associations: `Opportunity`, `Group`. Photos attached via Active Storage (`has_many_attached :photos`).
+`ServiceHour#status`: `pending=0`, `approved=1`, `rejected=2`.
 
-### PDF Generation
+Active validations (enforced server-side):
+- `hours`: `> 0`, `<= 24`
+- `title`: 5–64 chars, optional (allow_blank)
+- `description`: required, 10–2000 chars
+- `service_date`: must fall within current school year (Sep 1 – Jun 30)
+- `photos`: content type must be image/video/PDF (custom validator `photos_are_valid_type`)
 
-`ResumeGeneratorService` in `app/services/` produces a Prawn PDF. It is invoked asynchronously via `ResumeGenerationJob`. The `resumes#show` and `resumes#export_csv` routes handle delivery.
+School year is computed dynamically in the model (`current_school_year` private method).
+
+### Soft Deletion
+
+`User` has `deleted_at` with `default_scope`. Use `User.with_deleted` / `User.only_deleted` to bypass. Associations that must survive deletion declare `-> { unscope(where: :deleted_at) }` in `belongs_to`.
+
+### Layouts
+
+- `layouts/application.html.erb` — public + volunteer views
+- `layouts/admin.html.erb` — admin namespace; has `<%= yield :admin_css %>` in `<head>` for page-specific styles
+- Both layouts render `flash[:notice]`, `flash[:alert]`, `flash[:error]`
+
+### PDF / CSV
+
+`ResumeGeneratorService` (Prawn) invoked via `ResumeGenerationJob`. Routes: `GET /resume/:id` and `GET /resume/:id/csv`.
 
 ### Audit Trail
 
-`PaperTrail` is enabled on `User` and `ServiceHour`. Versions are stored in the `versions` table and viewable at `admin/audit_log`.
-
-### Feature Flags
-
-Uses `flipper` + `flipper-active_record`. Flags are managed via the `/flipper` UI (development only).
+PaperTrail on `User` and `ServiceHour`. Viewable at `/admin/audit_log`.
 
 ### Authentication
 
-- Primary: Devise (email/password)
-- Google OAuth (OmniAuth) — only enabled when `GOOGLE_CLIENT_ID` is set and not in development
-- Magic links — 15-minute expiry tokens sent via `MagicLinkMailer`
+- Devise (email/password)
+- Google OAuth — only when `GOOGLE_CLIENT_ID` set and not in development
+- Magic links — 15-min expiry, `MagicLinkMailer`
 
 ### Email
 
-- Development: letter_opener (or SMTP if `SMTP_ADDRESS` env var is set)
-- Mailers: `MagicLinkMailer`, `OpportunityMailer`, `ServiceHourMailer`
-
-### Required Environment Variables
-
-| Variable | Purpose |
-|---|---|
-| `GOOGLE_CLIENT_ID` | Google OAuth (optional) |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth (optional) |
-| `SMTP_ADDRESS` | SMTP delivery (optional, falls back to letter_opener) |
+Development uses letter_opener unless `SMTP_ADDRESS` is set. Mailers: `MagicLinkMailer`, `OpportunityMailer`, `ServiceHourMailer`.
 
 ### Testing
 
-Test factories are in `test/factories/` using `factory_bot_rails` + `faker`. Fixtures also exist in `test/fixtures/`. System tests use Capybara + Selenium.
+Factories in `test/factories/` (factory_bot + faker). Service hour factory uses `service_date: Date.current` — safe as long as school year validation passes for today's date. System tests use Capybara + Selenium.
+
+Pre-existing test failures (do not regress further): ~19 failures across controllers, mostly `assert_raises(Pundit::NotAuthorizedError)` (broken by `rescue_from`) and index views checking description text that isn't rendered in the list.
