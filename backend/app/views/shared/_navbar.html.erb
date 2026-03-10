@@ -28,11 +28,11 @@
         <% if user_signed_in? && current_user.is_a?(User) %>
           <% if current_user.admin_or_above? %>
             <li class="nav-item">
-              <%= link_to "Admin", admin_root_path, class: "btn btn-outline-warning btn-sm ms-1" %>
+              <%= link_to "Admin", admin_root_path, class: "nav-link" %>
             </li>
           <% elsif current_user.teacher? %>
             <li class="nav-item">
-              <%= link_to "Staff Portal", admin_root_path, class: "btn btn-outline-warning btn-sm ms-1" %>
+              <%= link_to "Staff Portal", admin_root_path, class: "nav-link" %>
             </li>
           <% end %>
           <li class="nav-item dropdown">
