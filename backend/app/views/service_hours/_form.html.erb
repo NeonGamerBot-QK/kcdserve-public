@@ -1,4 +1,4 @@
-<%= form_with(model: service_hour, class: "needs-validation") do |f| %>
+<%= form_with(model: service_hour, html: { novalidate: true }) do |f| %>
   <% if service_hour.errors.any? %>
     <div class="alert alert-danger">
       <h6><%= pluralize(service_hour.errors.count, "error") %> prevented saving:</h6>
