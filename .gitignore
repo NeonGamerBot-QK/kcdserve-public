@@ -10,3 +10,6 @@ log/
 
 # Temp files and caches
 tmp/
+
+# Node dependencies
+node_modules/
