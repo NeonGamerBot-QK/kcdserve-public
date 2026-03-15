@@ -43,9 +43,11 @@ mobile/
 │   │   ├── login.tsx       # Google / username+password / PIN login
 │   │   └── pin.tsx         # PIN entry screen
 │   ├── (tabs)/
-│   │   ├── dashboard.tsx        # Stats dashboard + Log Hours CTA
-│   │   ├── events.tsx      # Admin-posted events browser
-│   │   └── history.tsx     # Student's past submissions
+│   │   ├── dashboard.tsx       # Stats dashboard + Log Hours CTA
+│   │   ├── activity.tsx        # Log of student past volunteer activities
+│   │   ├── log.tsx             # Form for students to log hours
+│   │   ├── opportunities.tsx   # Admin-posted events browser
+│   │   └── more.tsx            # Settings and other functionalities to be developed
 │   └── log-hours/
 │       ├── index.tsx       # Step 1: Org / event selection
 │       ├── details.tsx     # Step 2: Date, hours, notes

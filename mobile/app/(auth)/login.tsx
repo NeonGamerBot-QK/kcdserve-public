@@ -2,6 +2,7 @@ import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import { useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import TopBar from '../../components/TopBar';
 import Card from '../../components/Card';
 
@@ -48,7 +49,7 @@ export default function LoginScreen() {
               secureTextEntry
             />
 
-            <Pressable className="bg-primary-500 rounded-xl py-3.5 items-center">
+            <Pressable className="bg-primary-500 rounded-xl py-3.5 items-center" onPress={() => router.replace('/(tabs)/dashboard')}>
               <Text className="font-inter-semibold text-base text-white">
                 Sign in
               </Text>
