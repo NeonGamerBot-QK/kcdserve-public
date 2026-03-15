@@ -1,5 +1,6 @@
 import { Redirect } from 'expo-router';
 
-export default function LoginScreen() {
-  return <Redirect href="/(tabs)/home" />;
+// TODO: check auth state and conditionally redirect to (tabs)/dashboard
+export default function Index() {
+  return <Redirect href="/(auth)/login" />;
 }
