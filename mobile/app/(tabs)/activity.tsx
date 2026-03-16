@@ -90,7 +90,7 @@ export default function ActivityScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="mb-2 px-5"
+        className="mb-2 px-5 max-h-10"
         contentContainerStyle={{ paddingRight: 20 }}
       >
         {FILTERS.map((label, i) => (
