@@ -21,7 +21,9 @@ export default function Index() {
   }, [hydrated]);
 
   return (
-    <View className={`flex-1 items-center justify-center ${isDark ? "bg-slate-950" : "bg-slate-50"}`}>
+    <View
+      className={`flex-1 items-center justify-center ${isDark ? "bg-slate-950" : "bg-slate-50"}`}
+    >
       <ActivityIndicator size="large" color="#3B82F6" />
     </View>
   );
