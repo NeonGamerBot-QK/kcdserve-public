@@ -68,10 +68,14 @@ export default function DashboardScreen() {
           <>
             {/* Stats hero */}
             <View className="items-center mt-4 mb-5">
-              <Text className={`font-inter-medium text-sm uppercase tracking-wider ${textMuted} mb-1`}>
+              <Text
+                className={`font-inter-medium text-sm uppercase tracking-wider ${textMuted} mb-1`}
+              >
                 TOTAL APPROVED
               </Text>
-              <Text className={`font-inter-semibold text-6xl ${textPrimary} mt-1.5`}>
+              <Text
+                className={`font-inter-semibold text-6xl ${textPrimary} mt-1.5`}
+              >
                 {dashboard.approved_hours}
               </Text>
               <Text className={`font-inter text-base ${textMuted} mt-1`}>
@@ -81,7 +85,9 @@ export default function DashboardScreen() {
 
             {/* Pending pill */}
             <View className="items-center mb-8">
-              <View className={`flex-row items-center ${bgCard} rounded-2xl px-5 py-4 border ${borderCard}`}>
+              <View
+                className={`flex-row items-center ${bgCard} rounded-2xl px-5 py-4 border ${borderCard}`}
+              >
                 <View className="w-2 h-2 rounded-full bg-status-pending mr-2" />
                 <Text className={`font-inter-medium text-sm ${textPrimary}`}>
                   {dashboard.pending_hours} Pending
@@ -93,7 +99,9 @@ export default function DashboardScreen() {
             {dashboard.groups.length > 0 && (
               <View className="px-5">
                 <View className="flex-row justify-between items-center mb-3">
-                  <Text className={`font-inter-semibold text-sm uppercase tracking-wider ${textMuted}`}>
+                  <Text
+                    className={`font-inter-semibold text-sm uppercase tracking-wider ${textMuted}`}
+                  >
                     GROUPS
                   </Text>
                   <Pressable>
