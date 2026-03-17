@@ -95,7 +95,7 @@ Rails.application.routes.draw do
       delete "logout", to: "sessions#destroy"
       get "me", to: "me#show"
       get "dashboard", to: "dashboard#show"
-      get "service_hours", to: "service_hours#index"
+      resources :service_hours, only: [ :index, :create ]
     end
   end
 
