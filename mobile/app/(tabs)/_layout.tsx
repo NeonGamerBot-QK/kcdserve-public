@@ -1,6 +1,7 @@
 import { View, Pressable } from "react-native";
 import { Tabs, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../../hooks/useTheme";
 
 function FABButton() {
   return (
@@ -15,20 +16,22 @@ function FABButton() {
 }
 
 export default function TabLayout() {
+  const { isDark } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "#3B82F6",
-        tabBarInactiveTintColor: "#94a3b8",
+        tabBarInactiveTintColor: isDark ? "#64748b" : "#94a3b8",
         tabBarLabelStyle: {
           fontFamily: "Inter_500Medium",
           fontSize: 11,
         },
         tabBarStyle: {
-          backgroundColor: "white",
+          backgroundColor: isDark ? "#0f172a" : "white",
           borderTopWidth: 1,
-          borderTopColor: "#e2e8f0",
+          borderTopColor: isDark ? "#334155" : "#e2e8f0",
           height: 85,
           paddingTop: 8,
         },
