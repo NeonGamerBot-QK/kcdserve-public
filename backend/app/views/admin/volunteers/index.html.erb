@@ -1,0 +1,163 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-semibold text-slate-900">Volunteers</h1>
+  <div class="flex space-x-2">
+    <button class="border border-slate-300 text-slate-700 px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-slate-50" onclick="toggleColumnSelector()">
+      &#9776; Columns
+    </button>
+    <button class="border border-slate-300 text-slate-700 px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-slate-50" onclick="copyTable()">
+      &#128203; Copy as Table
+    </button>
+  </div>
+</div>
+
+<div id="column-selector" class="bg-white rounded-2xl border border-gray-200 p-6 mb-6" style="display: none;">
+  <h6 class="font-semibold text-slate-900 mb-3">Select Columns</h6>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <% [ { id: 'col-name', label: 'Name' },
+         { id: 'col-email', label: 'Email' },
+         { id: 'col-phone', label: 'Phone' },
+         { id: 'col-role', label: 'Role' },
+         { id: 'col-hours', label: 'Total Hours' },
+         { id: 'col-birthday', label: 'Birthday' },
+         { id: 'col-age', label: 'Age' },
+         { id: 'col-groups', label: 'Groups' },
+         { id: 'col-joined', label: 'Joined' },
+         { id: 'col-status', label: 'Status' } ].each do |col| %>
+      <label class="flex items-center space-x-2 text-sm text-slate-700 cursor-pointer">
+        <input class="column-toggle h-4 w-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500" type="checkbox" value="<%= col[:id] %>" id="<%= col[:id] %>" data-label="<%= col[:label] %>">
+        <span><%= col[:label] %></span>
+      </label>
+    <% end %>
+  </div>
+  <div class="mt-4 flex items-center space-x-2">
+    <button class="bg-primary-500 text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-primary-600" onclick="applyColumns()">Apply</button>
+    <button class="border border-slate-300 text-slate-700 px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-slate-50" onclick="selectAllColumns()">Select All</button>
+    <button class="text-slate-500 hover:text-slate-700 px-4 py-1.5 text-sm" onclick="toggleColumnSelector()">Close</button>
+  </div>
+</div>
+
+<div class="bg-white rounded-2xl border border-gray-200 overflow-x-auto">
+  <table class="w-full text-sm" id="volunteers-table">
+    <thead class="bg-slate-50">
+      <tr>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-name">Name</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-email">Email</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-phone">Phone</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-role">Role</th>
+        <th class="text-right px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-hours">Total Hours</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-birthday">Birthday</th>
+        <th class="text-center px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-age">Age</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-groups">Groups</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-joined">Joined</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-status">Status</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+      <% @volunteers.each do |user| %>
+        <tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 col-name"><%= link_to user.full_name, admin_user_path(user), class: "text-primary-500 hover:text-primary-700 font-medium" %></td>
+          <td class="px-4 py-3 text-slate-600 col-email"><%= user.email %></td>
+          <td class="px-4 py-3 text-slate-600 col-phone"><%= user.phone || "—" %></td>
+          <td class="px-4 py-3 col-role"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"><%= user.role.humanize %></span></td>
+          <td class="px-4 py-3 text-right text-slate-600 col-hours"><%= user.total_approved_hours.to_i %></td>
+          <td class="px-4 py-3 text-slate-600 col-birthday"><%= user.birthday&.strftime("%m/%d/%Y") || "—" %></td>
+          <td class="px-4 py-3 text-center text-slate-600 col-age"><%= user.age || "—" %></td>
+          <td class="px-4 py-3 text-slate-600 col-groups"><%= user.groups.pluck(:name).join(", ") || "—" %></td>
+          <td class="px-4 py-3 text-slate-600 col-joined"><%= user.created_at.strftime("%m/%d/%Y") %></td>
+          <td class="px-4 py-3 col-status">
+            <% if user.deleted? %>
+              <span class="px-2 py-0.5 rounded-full bg-red-50 text-status-rejected text-xs font-medium">Deactivated</span>
+            <% else %>
+              <span class="px-2 py-0.5 rounded-full bg-green-50 text-status-approved text-xs font-medium">Active</span>
+            <% end %>
+          </td>
+          <td class="px-4 py-3">
+            <%= link_to "View", profile_path(user), class: "text-slate-500 hover:text-slate-700 text-xs font-medium" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-4">
+  <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
+</div>
+
+<script>
+const DEFAULT_COLUMNS = ['col-name', 'col-email', 'col-role', 'col-hours', ''];
+
+function getStoredColumns() {
+  const stored = localStorage.getItem('volunteer_columns');
+  return stored ? JSON.parse(stored) : null;
+}
+
+function saveColumns(columns) {
+  localStorage.setItem('volunteer_columns', JSON.stringify(columns));
+}
+
+function applyColumns() {
+  const checkboxes = document.querySelectorAll('.column-toggle:checked');
+  const selected = Array.from(checkboxes).map(c => c.value);
+  saveColumns(selected);
+  updateColumnVisibility(selected);
+  document.getElementById('column-selector').style.display = 'none';
+}
+
+function updateColumnVisibility(selected) {
+  const allCols = ['col-name', 'col-email', 'col-phone', 'col-role', 'col-hours', 'col-birthday', 'col-age', 'col-groups', 'col-joined', 'col-status'];
+  allCols.forEach(col => {
+    const cells = document.querySelectorAll('.' + col + ', th.' + col + ', td.' + col);
+    const isSelected = selected.includes(col);
+    cells.forEach(cell => {
+      cell.style.display = isSelected ? '' : 'none';
+    });
+  });
+}
+
+function selectAllColumns() {
+  document.querySelectorAll('.column-toggle').forEach(cb => cb.checked = true);
+}
+
+function toggleColumnSelector() {
+  const selector = document.getElementById('column-selector');
+  selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
+}
+
+function copyTable() {
+  const table = document.getElementById('volunteers-table');
+  const rows = table.querySelectorAll('tr');
+  let text = '';
+  
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('th, td');
+    const rowData = [];
+    cells.forEach(cell => {
+      if (cell.style.display !== 'none') {
+        rowData.push(cell.innerText.trim());
+      }
+    });
+    if (rowData.length > 0) {
+      text += rowData.join('\t') + '\n';
+    }
+  });
+  
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Table copied to clipboard!');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  let columns = getStoredColumns();
+  if (!columns) {
+    columns = ['col-name', 'col-email', 'col-role', 'col-hours', 'col-status'];
+  }
+  
+  document.querySelectorAll('.column-toggle').forEach(cb => {
+    cb.checked = columns.includes(cb.value);
+  });
+  
+  updateColumnVisibility(columns);
+});
+</script>

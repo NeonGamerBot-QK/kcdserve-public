@@ -1,57 +1,73 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container">
-    <%= link_to "KCDServe", root_path, class: "navbar-brand fw-bold" %>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <%= link_to "Opportunities", opportunities_path, class: "nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Groups", groups_path, class: "nav-link" %>
-        </li>
-        <% if user_signed_in? && current_user.is_a?(User) %>
-          <li class="nav-item">
-            <%= link_to "My Hours", service_hours_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Dashboard", dashboard_path, class: "nav-link" %>
-          </li>
+<nav class="bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="flex items-center justify-between h-14">
+      <%# Left: Avatar + Brand — matches mobile TopBar %>
+      <div class="flex items-center space-x-3">
+        <% if user_signed_in? %>
+          <div class="w-9 h-9 rounded-full bg-accent-500 flex items-center justify-center">
+            <span class="font-semibold text-white text-sm"><%= current_user.first_name[0] %></span>
+          </div>
+        <% else %>
+          <div class="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          </div>
         <% end %>
-      </ul>
+        <% if user_signed_in? && (current_user.admin_or_above? || current_user.teacher?) %>
+          <span class="border-2 border-dashed border-orange-400 rounded-lg px-2.5 py-0.5 bg-orange-50">
+            <%= link_to "KCDServe", root_path, class: "font-semibold text-lg text-slate-900" %>
+          </span>
+        <% else %>
+          <%= link_to "KCDServe", root_path, class: "font-semibold text-lg text-slate-900" %>
+        <% end %>
+      </div>
 
-      <ul class="navbar-nav">
+      <%# Mobile toggle %>
+      <button id="navbar-toggler" type="button" class="md:hidden p-2 text-slate-500" aria-label="Toggle navigation">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <%# Right: Nav links — styled as pills like mobile FilterChip %>
+      <div id="navbar-collapse" class="hidden md:flex md:items-center space-x-1">
+        <%= link_to "Opportunities", opportunities_path, class: "rounded-full px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50" %>
+        <%= link_to "Groups", groups_path, class: "rounded-full px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50" %>
+        <% if user_signed_in? && current_user.is_a?(User) %>
+          <%= link_to "My Hours", service_hours_path, class: "rounded-full px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50" %>
+          <%= link_to "Dashboard", dashboard_path, class: "rounded-full px-4 py-1.5 text-sm font-medium text-primary-500 hover:bg-primary-50" %>
+        <% end %>
+
         <% if user_signed_in? && current_user.is_a?(User) %>
           <% if current_user.admin_or_above? || current_user.teacher? %>
-            <% content_for :admin_css do %>
-              <style>.admin-nav-btn { border: 2px dashed orange; border-radius: 6px; padding: 2px 10px; }</style>
-            <% end %>
-            <li class="nav-item">
-              <%= link_to(current_user.admin_or_above? ? "Admin" : "Staff Portal", admin_root_path, class: "nav-link admin-nav-btn") %>
-            </li>
+            <%= link_to(current_user.admin_or_above? ? "Admin" : "Staff", admin_root_path, class: "rounded-full px-4 py-1.5 text-sm font-medium border-2 border-dashed border-orange-400 text-orange-500 hover:bg-orange-50") %>
           <% end %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-              <i class="bi bi-person-circle"></i> <%= current_user.full_name %>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><%= link_to "My Profile", profile_path(current_user), class: "dropdown-item" %></li>
-              <li><%= link_to "Download Resume (PDF)", resume_path(current_user), class: "dropdown-item" %></li>
-              <li><%= link_to "Export Hours (CSV)", resume_csv_path(current_user), class: "dropdown-item" %></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
-            </ul>
-          </li>
+
+          <div class="relative group ml-1">
+            <button class="flex items-center space-x-1 rounded-full px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+              <span><%= current_user.first_name %></span>
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="absolute right-0 mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-lg hidden group-hover:block z-50 py-1">
+              <%= link_to "My Profile", profile_path(current_user), class: "block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50" %>
+              <%= link_to "Resume (PDF)", resume_path(current_user), class: "block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50" %>
+              <%= link_to "Export CSV", resume_csv_path(current_user), class: "block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50" %>
+              <div class="border-t border-gray-100 my-1"></div>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50" %>
+            </div>
+          </div>
         <% else %>
-          <li class="nav-item">
-            <%= link_to "Sign In", root_path, class: "btn btn-outline-light ms-2" %>
-          </li>
+          <%= link_to "Sign In", root_path, class: "rounded-full px-4 py-1.5 text-sm font-medium bg-primary-500 text-white hover:bg-primary-600" %>
         <% end %>
-      </ul>
+      </div>
     </div>
   </div>
 </nav>
+
+<script>
+  document.getElementById('navbar-toggler').addEventListener('click', function() {
+    const collapse = document.getElementById('navbar-collapse');
+    collapse.classList.toggle('hidden');
+  });
+</script>

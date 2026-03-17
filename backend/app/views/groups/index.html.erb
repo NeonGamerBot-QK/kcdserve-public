@@ -1,47 +1,44 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Groups</h1>
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold">Groups</h1>
   <% if user_signed_in? && current_user.admin_or_above? %>
-    <%= link_to "New Group", new_group_path, class: "btn btn-primary" %>
+    <%= link_to "New Group", new_group_path, class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
   <% end %>
 </div>
 
-<div class="row g-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
   <% @groups.each do |group| %>
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <% if group.logo.attached? %>
-              <%= image_tag group.logo, class: "rounded-circle me-3", style: "width: 50px; height: 50px; object-fit: cover;" %>
-            <% else %>
-              <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                <%= group.name[0] %>
-              </div>
-            <% end %>
-            <div>
-              <h5 class="mb-0"><%= group.name %></h5>
-              <% if group.leader %>
-                <small class="text-muted">Led by <%= group.leader.full_name %></small>
-              <% end %>
+    <div class="bg-white rounded-lg border shadow-sm h-full">
+      <div class="p-4">
+        <div class="flex items-center mb-3">
+          <% if group.logo.attached? %>
+            <%= image_tag group.logo, class: "rounded-full mr-3", style: "width: 50px; height: 50px; object-fit: cover;" %>
+          <% else %>
+            <div class="rounded-full bg-gray-400 text-white flex items-center justify-content-center mr-3 flex-shrink-0" style="width: 50px; height: 50px;">
+              <%= group.name[0] %>
             </div>
-          </div>
-          <p class="text-muted"><%= truncate(group.description, length: 100) %></p>
-          <div class="d-flex justify-content-between">
-            <span class="text-muted"><i class="bi bi-people me-1"></i> <%= group.member_count %> members</span>
+          <% end %>
+          <div>
+            <h5 class="mb-0 font-semibold"><%= group.name %></h5>
+            <% if group.leader %>
+              <small class="text-gray-500">Led by <%= group.leader.full_name %></small>
+            <% end %>
           </div>
         </div>
-        <div class="card-footer bg-transparent">
-          <%= link_to "View Group", group_path(group), class: "btn btn-sm btn-outline-primary" %>
+        <p class="text-gray-600 mb-3"><%= truncate(group.description, length: 100) %></p>
+        <div class="flex justify-between">
+          <span class="text-gray-500 text-sm"><%= group.member_count %> members</span>
         </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 border-t">
+        <%= link_to "View Group", group_path(group), class: "text-blue-600 hover:text-blue-800 text-sm" %>
       </div>
     </div>
   <% end %>
 </div>
 
 <% if @groups.empty? %>
-  <div class="text-center py-5">
-    <i class="bi bi-people display-1 text-muted"></i>
-    <p class="lead text-muted mt-3">No groups yet.</p>
+  <div class="text-center py-12">
+    <p class="text-gray-500 text-lg">No groups yet.</p>
   </div>
 <% end %>
 

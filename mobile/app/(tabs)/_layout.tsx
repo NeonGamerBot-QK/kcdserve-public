@@ -61,7 +61,7 @@ export default function TabLayout() {
         listeners={{
           tabPress: (e) => {
             e.preventDefault();
-            router.push('/log-hours' as any);
+            router.push("/log-hours" as any);
           },
         }}
       />
