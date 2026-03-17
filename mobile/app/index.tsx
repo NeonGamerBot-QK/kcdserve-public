@@ -1,7 +1,7 @@
-import { Redirect } from 'expo-router';
-import { View, ActivityIndicator } from 'react-native';
-import { useAuthStore } from '../store/authStore';
-import { USE_API } from '../lib/config';
+import { Redirect } from "expo-router";
+import { View, ActivityIndicator } from "react-native";
+import { useAuthStore } from "../store/authStore";
+import { USE_API } from "../lib/config";
 
 export default function Index() {
   const hydrated = useAuthStore((s) => s.hydrated);
