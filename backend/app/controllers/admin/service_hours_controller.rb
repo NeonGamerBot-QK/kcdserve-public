@@ -36,6 +36,14 @@ module Admin
         reviewer: current_user,
         reviewed_at: Time.current
       )
+      Notification.create!(
+        user: @service_hour.user,
+        kind: "service_hour_reviewed",
+        title: "Hours #{params[:status].capitalize}",
+        body: "Your #{@service_hour.hours}h submission has been #{params[:status]}.",
+        resource_type: "ServiceHour",
+        resource_id: @service_hour.id
+      )
       ServiceHourMailer.review_notification(@service_hour).deliver_later
       redirect_to admin_service_hours_path(status: :pending), notice: "Service hour #{params[:status]}."
     end

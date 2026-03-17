@@ -46,5 +46,5 @@
 <% end %>
 
 <div class="mt-4">
-  <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
+  <%== @pagy.series_nav(:bootstrap) if @pagy.pages > 1 %>
 </div>

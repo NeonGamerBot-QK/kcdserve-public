@@ -37,6 +37,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :opportunity_signups, dependent: :destroy
   has_many :signed_up_opportunities, through: :opportunity_signups, source: :opportunity
+  has_many :notifications, dependent: :destroy
 
   # Active Storage
   has_one_attached :avatar

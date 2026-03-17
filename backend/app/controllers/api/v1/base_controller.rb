@@ -3,6 +3,8 @@
 module Api
   module V1
     class BaseController < ActionController::API
+      include Pagy::Method
+
       before_action :authenticate_api_user!
 
       private
@@ -28,6 +30,13 @@ module Api
 
       def current_session
         @current_session
+      end
+
+      # Returns a full URL for an Active Storage attachment, or nil if not attached.
+      def active_storage_url(attachment)
+        return nil unless attachment.attached?
+
+        Rails.application.routes.url_helpers.url_for(attachment)
       end
     end
   end

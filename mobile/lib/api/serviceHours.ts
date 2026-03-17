@@ -40,9 +40,12 @@ export function submitServiceHour(data: ServiceHourFormValues) {
   formData.append("service_hour[contact_name]", data.supervisorName);
   formData.append("service_hour[contact_email]", data.supervisorEmail);
 
-  // Optional group ID — only append when truthy
+  // Optional fields — only append when truthy
   if (data.suborg) {
     formData.append("service_hour[group_id]", data.suborg);
+  }
+  if (data.location) {
+    formData.append("service_hour[location]", data.location);
   }
 
   // Photo file uploads in the format React Native's fetch expects

@@ -22,6 +22,9 @@
           <p class="text-sm"><span class="font-medium text-slate-500">Date:</span> <span class="text-slate-900"><%= @service_hour.service_date.strftime("%B %d, %Y") %></span></p>
           <p class="text-sm"><span class="font-medium text-slate-500">Hours:</span> <span class="text-slate-900 font-semibold"><%= @service_hour.hours %></span></p>
           <p class="text-sm"><span class="font-medium text-slate-500">Category:</span> <span class="text-slate-900"><%= @service_hour.category.name %></span></p>
+          <% if @service_hour.location.present? %>
+            <p class="text-sm"><span class="font-medium text-slate-500">Location:</span> <span class="text-slate-900"><%= @service_hour.location %></span></p>
+          <% end %>
         </div>
         <div class="space-y-2">
           <p class="text-sm"><span class="font-medium text-slate-500">Group:</span> <span class="text-slate-900"><%= @service_hour.group&.name || "N/A" %></span></p>

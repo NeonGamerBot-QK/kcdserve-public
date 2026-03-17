@@ -94,8 +94,21 @@ Rails.application.routes.draw do
       post "login/verify", to: "sessions#verify"
       delete "logout", to: "sessions#destroy"
       get "me", to: "me#show"
+      patch "me", to: "me#update"
       get "dashboard", to: "dashboard#show"
       resources :service_hours, only: [ :index, :create ]
+      resources :categories, only: [ :index ]
+      resources :opportunities, only: [ :index, :show ] do
+        member do
+          post :signup
+          delete :withdraw
+        end
+      end
+      resources :notifications, only: [ :index ] do
+        member do
+          patch :read
+        end
+      end
     end
   end
 

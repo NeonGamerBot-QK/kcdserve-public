@@ -37,7 +37,7 @@ module Api
 
       def service_hour_params
         params.require(:service_hour).permit(
-          :description, :service_date, :hours, :organization_name,
+          :description, :service_date, :hours, :organization_name, :location,
           :group_id, :contact_name, :contact_email, :title, :on_campus,
           photos: []
         )

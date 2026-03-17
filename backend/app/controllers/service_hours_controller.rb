@@ -69,6 +69,14 @@ class ServiceHoursController < ApplicationController
       reviewer: current_user,
       reviewed_at: Time.current
     )
+    Notification.create!(
+      user: @service_hour.user,
+      kind: "service_hour_reviewed",
+      title: "Hours #{params[:status].capitalize}",
+      body: "Your #{@service_hour.hours}h submission has been #{params[:status]}.",
+      resource_type: "ServiceHour",
+      resource_id: @service_hour.id
+    )
     ServiceHourMailer.review_notification(@service_hour).deliver_later
     redirect_to @service_hour, notice: "Service hour #{params[:status]}."
   end
@@ -83,7 +91,7 @@ class ServiceHoursController < ApplicationController
     params.require(:service_hour).permit(
       :title, :hours, :description, :service_date, :category_id,
       :group_id, :opportunity_id, :on_campus, :organization_name,
-      :contact_name, :contact_email, photos: []
+      :location, :contact_name, :contact_email, photos: []
     )
   end
 end
