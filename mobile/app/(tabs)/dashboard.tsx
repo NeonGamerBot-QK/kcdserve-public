@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import TopBar from '../../components/TopBar';
-import OrgCard from '../../components/OrgCard';
+import { View, Text, ScrollView, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../../components/TopBar";
+import OrgCard from "../../components/OrgCard";
 
 export default function DashboardScreen() {
   return (
