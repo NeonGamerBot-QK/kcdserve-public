@@ -8,10 +8,10 @@ type TopBarProps = {
 
 export default function TopBar({ initial }: TopBarProps) {
   return (
-    <View className="flex-row items-center px-5 pt-2 pb-3">
+    <View className="flex-row items-center mb-4 px-5 pt-2 pb-3 border-b border-slate-200">
       {initial ? (
         <View className="w-9 h-9 rounded-full bg-accent-500 items-center justify-center">
-          <Text className="font-inter-semibold text-white text-sm">
+          <Text className="font-inter-semibold text-white text-lg">
             {initial}
           </Text>
         </View>
@@ -20,9 +20,11 @@ export default function TopBar({ initial }: TopBarProps) {
           <Ionicons name="person" size={18} color="#64748b" />
         </View>
       )}
-      <Text className="font-inter-semibold text-lg text-slate-900 ml-3">
-        KCDServe
-      </Text>
+      <View className="absolute left-0 right-0 items-center">
+        <Text className="font-inter-semibold text-lg text-slate-900">
+          KCDServe
+        </Text>
+      </View>
     </View>
   );
 }
