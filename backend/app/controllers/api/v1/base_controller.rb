@@ -8,7 +8,7 @@ module Api
       private
 
       # Authenticates the user via Bearer token from the Authorization header.
-      # Returns 401 if the token is missing, invalid, or expired.
+      # Looks up an active session and returns 401 if invalid or expired.
       def authenticate_api_user!
         token = request.headers["Authorization"]&.remove("Bearer ")
         if token.blank?
@@ -16,14 +16,18 @@ module Api
           return
         end
 
-        @current_user = User.find_by(api_token: token)
-        if @current_user.nil? || @current_user.api_token_expires_at < Time.current
+        @current_session = Session.active.includes(:user).find_by(token: token)
+        if @current_session.nil?
           render json: { error: "Invalid or expired token" }, status: :unauthorized
         end
       end
 
       def current_user
-        @current_user
+        @current_session&.user
+      end
+
+      def current_session
+        @current_session
       end
     end
   end

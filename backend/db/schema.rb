@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_024641) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_031054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -151,9 +151,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_024641) do
     t.index ["user_id"], name: "index_service_hours_on_user_id"
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["token"], name: "index_sessions_on_token", unique: true
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
-    t.string "api_token"
-    t.datetime "api_token_expires_at"
     t.text "bio"
     t.date "birthday"
     t.datetime "created_at", null: false
@@ -174,7 +182,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_024641) do
     t.integer "role", default: 0, null: false
     t.string "uid"
     t.datetime "updated_at", null: false
-    t.index ["api_token"], name: "index_users_on_api_token", unique: true
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
@@ -208,4 +215,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_024641) do
   add_foreign_key "service_hours", "users"
   add_foreign_key "service_hours", "users", column: "edited_by_id"
   add_foreign_key "service_hours", "users", column: "reviewed_by_id"
+  add_foreign_key "sessions", "users"
 end
