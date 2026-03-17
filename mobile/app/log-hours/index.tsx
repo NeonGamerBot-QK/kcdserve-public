@@ -489,7 +489,7 @@ export default function LogHoursPage1() {
               />
             )}
           />
-          <Text className="text-xs text-slate-400 text-right mt-1">
+          <Text className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"} text-right mt-1`}>
             {descriptionValue.length}/500
           </Text>
           {errors.description && (

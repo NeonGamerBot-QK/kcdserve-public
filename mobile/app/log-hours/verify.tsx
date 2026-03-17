@@ -214,7 +214,7 @@ export default function LogHoursPage2() {
           {/* Signature */}
           <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
             Supervisor Signature{" "}
-            <Text className="font-inter text-slate-400">(optional)</Text>
+            <Text className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}>(optional)</Text>
           </Text>
           <Pressable
             onPress={() => setShowSignatureModal(true)}
@@ -275,7 +275,7 @@ export default function LogHoursPage2() {
                 </Text>
                 <View className="w-9" />
               </View>
-              <Text className="text-center font-inter text-sm text-slate-500 px-5 mt-3">
+              <Text className={`text-center font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"} px-5 mt-3`}>
                 Ask your supervisor to sign below
               </Text>
               <View className="flex-1 mt-2">
@@ -307,7 +307,7 @@ export default function LogHoursPage2() {
 
           {/* Photos */}
           <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
-            Photos <Text className="font-inter text-slate-400">(optional)</Text>
+            Photos <Text className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}>(optional)</Text>
           </Text>
           <View className="flex-row gap-3 mb-3">
             <Pressable
