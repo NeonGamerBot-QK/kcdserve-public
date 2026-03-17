@@ -1,48 +1,63 @@
-<div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-bold">My Service Hours</h1>
-  <%= link_to "Log New Hours", new_service_hour_path, class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
-</div>
+<div class="max-w-lg mx-auto">
+  <div class="flex justify-between items-center mb-3">
+    <h1 class="font-semibold text-2xl text-slate-900">Activity Log</h1>
+    <%= link_to new_service_hour_path, class: "bg-primary-500 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-primary-600" do %>
+      + Log Hours
+    <% end %>
+  </div>
 
-<% if @service_hours.any? %>
-  <div class="bg-white rounded-lg border shadow-sm overflow-hidden">
-    <table class="w-full">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Date</th>
-          <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Hours</th>
-          <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Category</th>
-          <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Group</th>
-          <th class="text-left px-4 py-3 text-sm font-medium text-gray-600">Status</th>
-          <th class="text-left px-4 py-3 text-sm font-medium text-gray-600"></th>
-        </tr>
-      </thead>
-      <tbody class="divide-y">
-        <% @service_hours.each do |sh| %>
-          <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
-            <td class="px-4 py-3"><%= sh.hours %></td>
-            <td class="px-4 py-3"><%= sh.category.name %></td>
-            <td class="px-4 py-3"><%= sh.group&.name || "—" %></td>
-            <td class="px-4 py-3">
-              <span class="px-2 py-1 rounded text-xs text-white <%= sh.approved? ? 'bg-green-500' : sh.pending? ? 'bg-yellow-500' : 'bg-red-500' %>">
-                <%= sh.status.humanize %>
-              </span>
-            </td>
-            <td class="px-4 py-3">
-              <%= link_to "View", service_hour_path(sh), class: "text-blue-600 hover:text-blue-800 text-sm" %>
-            </td>
-          </tr>
+  <%# Filter chips — matches mobile FilterChip component %>
+  <div class="flex space-x-2 mt-2 mb-6 overflow-x-auto pb-1">
+    <%= link_to "All", service_hours_path, class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status].blank? ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
+    <%= link_to "Approved", service_hours_path(status: :approved), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'approved' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
+    <%= link_to "Pending", service_hours_path(status: :pending), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'pending' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
+    <%= link_to "Rejected", service_hours_path(status: :rejected), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'rejected' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
+  </div>
+
+  <% if @service_hours.any? %>
+    <%# Group by month — matches mobile SectionList with month headers %>
+    <% @service_hours.group_by { |sh| sh.service_date.strftime("%B %Y").upcase }.each do |month, hours| %>
+      <%# Section header — matches mobile: uppercase tracking-wider text-xs text-accent-600 %>
+      <div class="pt-4 pb-1">
+        <p class="font-semibold text-xs uppercase tracking-wider text-accent-600"><%= month %></p>
+      </div>
+
+      <%# ServiceHourCards — matches mobile ServiceHourCard component %>
+      <div class="space-y-2">
+        <% hours.each do |sh| %>
+          <%= link_to service_hour_path(sh), class: "block" do %>
+            <div class="bg-white rounded-2xl border border-gray-200 flex items-center py-3 px-5">
+              <%# Icon circle — matches mobile w-10 h-10 rounded-full bg-primary-50 %>
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center mr-3 flex-shrink-0">
+                <span class="text-primary-500 text-lg">&#9201;</span>
+              </div>
+              <%# Title + org + date — matches mobile flex-1 layout %>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-sm text-slate-900 truncate"><%= sh.title.presence || sh.description.truncate(40) %></p>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  <%= sh.group&.name || sh.category.name %> · <%= sh.service_date.strftime("%b %d") %>
+                </p>
+              </div>
+              <%# Hours + StatusBadge — matches mobile items-end layout %>
+              <div class="text-right ml-3 flex-shrink-0">
+                <p class="font-semibold text-sm text-slate-900"><%= sh.hours %>h</p>
+                <span class="inline-block mt-0.5 px-2.5 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 text-status-approved' : sh.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+                  <%= sh.status.upcase %>
+                </span>
+              </div>
+            </div>
+          <% end %>
         <% end %>
-      </tbody>
-    </table>
-  </div>
+      </div>
+    <% end %>
 
-  <div class="mt-4">
-    <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
-  </div>
-<% else %>
-  <div class="text-center py-12">
-    <p class="text-gray-500 text-lg mb-4">You haven't logged any service hours yet.</p>
-    <%= link_to "Log Your First Hours", new_service_hour_path, class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
-  </div>
-<% end %>
+    <div class="mt-6">
+      <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-slate-400 text-base">No service hours to show.</p>
+      <%= link_to "Log Your First Hours", new_service_hour_path, class: "inline-block mt-4 bg-primary-500 text-white rounded-xl px-5 py-2.5 font-medium text-sm hover:bg-primary-600" %>
+    </div>
+  <% end %>
+</div>

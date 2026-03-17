@@ -4,6 +4,7 @@
   --color-primary-50: #EFF6FF;
   --color-primary-100: #DBEAFE;
   --color-primary-200: #BFDBFE;
+  --color-primary-300: #93C5FD;
   --color-primary-400: #60A5FA;
   --color-primary-500: #3B82F6;
   --color-primary-600: #2563EB;
@@ -14,7 +15,17 @@
   --color-status-approved: #22C55E;
   --color-status-rejected: #EF4444;
 
-  --font-inter: Inter, sans-serif;
-  --font-inter-medium: Inter, sans-serif;
-  --font-inter-semibold: Inter, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+}
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Ensure links in nav don't get default underlines */
+  a {
+    text-decoration: none;
+  }
 }
