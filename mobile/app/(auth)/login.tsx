@@ -1,17 +1,24 @@
-import { View, Text, TextInput, Pressable, ScrollView, Alert } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import TopBar from '../../components/TopBar';
-import Card from '../../components/Card';
-import { USE_API } from '../../lib/config';
-import { useRequestPin, useVerifyPin } from '../../hooks/useLogin';
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  ScrollView,
+  Alert,
+} from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import TopBar from "../../components/TopBar";
+import Card from "../../components/Card";
+import { USE_API } from "../../lib/config";
+import { useRequestPin, useVerifyPin } from "../../hooks/useLogin";
 
 export default function LoginScreen() {
-  const [step, setStep] = useState<'email' | 'pin'>('email');
-  const [email, setEmail] = useState('');
-  const [pin, setPin] = useState('');
+  const [step, setStep] = useState<"email" | "pin">("email");
+  const [email, setEmail] = useState("");
+  const [pin, setPin] = useState("");
   const pinInputRef = useRef<TextInput>(null);
 
   const requestPinMutation = useRequestPin();
@@ -19,39 +26,39 @@ export default function LoginScreen() {
 
   // Auto-focus the hidden PIN input when entering the PIN step
   useEffect(() => {
-    if (step === 'pin') {
+    if (step === "pin") {
       setTimeout(() => pinInputRef.current?.focus(), 100);
     }
   }, [step]);
 
   // Auto-submit when all 6 digits are entered
   useEffect(() => {
-    if (pin.length === 6 && step === 'pin') {
+    if (pin.length === 6 && step === "pin") {
       handlePinSubmit(pin);
     }
   }, [pin]);
 
   function handleEmailContinue() {
     if (!USE_API) {
-      router.replace('/(tabs)/dashboard');
+      router.replace("/(tabs)/dashboard");
       return;
     }
 
     const trimmed = email.trim();
     if (!trimmed) {
-      Alert.alert('Missing email', 'Please enter your email address.');
+      Alert.alert("Missing email", "Please enter your email address.");
       return;
     }
 
     requestPinMutation.mutate(
       { email: trimmed },
-      { onSuccess: () => setStep('pin') }
+      { onSuccess: () => setStep("pin") },
     );
   }
 
   function handlePinSubmit(submittedPin: string) {
     if (!USE_API) {
-      router.replace('/(tabs)/dashboard');
+      router.replace("/(tabs)/dashboard");
       return;
     }
 
@@ -59,22 +66,22 @@ export default function LoginScreen() {
       { email: email.trim(), pin: submittedPin },
       {
         onError: () => {
-          setPin('');
+          setPin("");
           pinInputRef.current?.focus();
         },
-      }
+      },
     );
   }
 
   function handleBackToEmail() {
-    setStep('email');
-    setPin('');
+    setStep("email");
+    setPin("");
     requestPinMutation.reset();
     verifyPinMutation.reset();
   }
 
   function handleResendPin() {
-    setPin('');
+    setPin("");
     verifyPinMutation.reset();
     requestPinMutation.mutate({ email: email.trim() });
   }
@@ -101,7 +108,7 @@ export default function LoginScreen() {
           )}
         </View>
 
-        {step === 'email' ? (
+        {step === "email" ? (
           /* Step 1: Email */
           <View className="px-5 mb-4">
             <Card>
@@ -123,17 +130,20 @@ export default function LoginScreen() {
 
               {requestPinMutation.isError && (
                 <Text className="font-inter text-sm text-red-500 mb-3">
-                  {requestPinMutation.error?.message || 'Something went wrong. Try again.'}
+                  {requestPinMutation.error?.message ||
+                    "Something went wrong. Try again."}
                 </Text>
               )}
 
               <Pressable
-                className={`rounded-xl py-3.5 items-center ${requestPinMutation.isPending ? 'bg-primary-300' : 'bg-primary-500'}`}
+                className={`rounded-xl py-3.5 items-center ${requestPinMutation.isPending ? "bg-primary-300" : "bg-primary-500"}`}
                 onPress={handleEmailContinue}
                 disabled={requestPinMutation.isPending}
               >
                 <Text className="font-inter-semibold text-base text-white">
-                  {requestPinMutation.isPending ? 'Sending code…' : 'Send login code'}
+                  {requestPinMutation.isPending
+                    ? "Sending code…"
+                    : "Send login code"}
                 </Text>
               </Pressable>
             </Card>
@@ -146,7 +156,10 @@ export default function LoginScreen() {
                 <Pressable onPress={handleBackToEmail} className="mr-2 p-1">
                   <Ionicons name="arrow-back" size={20} color="#475569" />
                 </Pressable>
-                <Text className="font-inter text-sm text-slate-500 flex-1" numberOfLines={1}>
+                <Text
+                  className="font-inter text-sm text-slate-500 flex-1"
+                  numberOfLines={1}
+                >
                   {email}
                 </Text>
               </View>
@@ -168,12 +181,12 @@ export default function LoginScreen() {
                     key={i}
                     className={`w-11 h-14 rounded-xl border-2 items-center justify-center ${
                       pin.length === i
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-slate-200 bg-slate-50'
+                        ? "border-primary-500 bg-primary-50"
+                        : "border-slate-200 bg-slate-50"
                     }`}
                   >
                     <Text className="font-inter-semibold text-xl text-slate-900">
-                      {pin[i] ?? ''}
+                      {pin[i] ?? ""}
                     </Text>
                   </View>
                 ))}
@@ -184,7 +197,7 @@ export default function LoginScreen() {
                 value={pin}
                 onChangeText={(t) => {
                   if (!verifyPinMutation.isPending) {
-                    setPin(t.replace(/[^0-9]/g, '').slice(0, 6));
+                    setPin(t.replace(/[^0-9]/g, "").slice(0, 6));
                   }
                 }}
                 keyboardType="number-pad"
@@ -195,7 +208,8 @@ export default function LoginScreen() {
 
               {verifyPinMutation.isError && (
                 <Text className="font-inter text-sm text-red-500 text-center mb-3">
-                  {verifyPinMutation.error?.message || 'Invalid or expired code. Try again.'}
+                  {verifyPinMutation.error?.message ||
+                    "Invalid or expired code. Try again."}
                 </Text>
               )}
 
@@ -205,9 +219,14 @@ export default function LoginScreen() {
                 </Text>
               )}
 
-              <Pressable onPress={handleResendPin} disabled={requestPinMutation.isPending}>
+              <Pressable
+                onPress={handleResendPin}
+                disabled={requestPinMutation.isPending}
+              >
                 <Text className="font-inter-medium text-sm text-primary-500 text-center">
-                  {requestPinMutation.isPending ? 'Resending…' : "Didn't get the code? Resend"}
+                  {requestPinMutation.isPending
+                    ? "Resending…"
+                    : "Didn't get the code? Resend"}
                 </Text>
               </Pressable>
             </Card>
