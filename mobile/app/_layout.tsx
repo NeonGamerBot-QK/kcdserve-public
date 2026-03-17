@@ -9,11 +9,15 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { View } from 'react-native';
 import '../global.css';
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+
+const SHOW_DEV_BORDER =
+  __DEV__ && process.env.EXPO_PUBLIC_BYE_BYE_GREEN_BORDER !== '1';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -33,12 +37,14 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(tabs)" />
-      </Stack>
-      <StatusBar style="auto" />
-    </QueryClientProvider>
+    <View style={SHOW_DEV_BORDER ? { flex: 1, borderWidth: 2, borderColor: '#86efac' } : { flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(tabs)" />
+        </Stack>
+        <StatusBar style="auto" />
+      </QueryClientProvider>
+    </View>
   );
 }
