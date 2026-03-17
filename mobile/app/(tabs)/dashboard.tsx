@@ -10,11 +10,11 @@ export default function DashboardScreen() {
         <TopBar initial="J" />
 
         {/* Stats hero */}
-        <View className="items-center mt-4 mb-4">
-          <Text className="font-inter-medium text-xs uppercase tracking-wider text-slate-500">
+        <View className="items-center mt-4 mb-5">
+          <Text className="font-inter-medium text-sm uppercase tracking-wider text-slate-500 mb-1">
             TOTAL APPROVED
           </Text>
-          <Text className="font-inter-semibold text-6xl text-slate-900 mt-1">
+          <Text className="font-inter-semibold text-6xl text-slate-900 mt-1.5">
             42.5
           </Text>
           <Text className="font-inter text-base text-slate-500 mt-1">
@@ -23,10 +23,10 @@ export default function DashboardScreen() {
         </View>
 
         {/* Pending pill */}
-        <View className="items-center mb-6">
-          <View className="flex-row items-center bg-amber-50 rounded-full px-4 py-2">
+        <View className="items-center mb-8">
+          <View className="flex-row items-center bg-white rounded-2xl px-5 py-4 border border-gray-200">
             <View className="w-2 h-2 rounded-full bg-status-pending mr-2" />
-            <Text className="font-inter-medium text-sm text-status-pending">
+            <Text className="font-inter-medium text-sm text-slate-900">
               8.0 Pending
             </Text>
           </View>
@@ -35,7 +35,7 @@ export default function DashboardScreen() {
         {/* Suborganizations */}
         <View className="px-5">
           <View className="flex-row justify-between items-center mb-3">
-            <Text className="font-inter-semibold text-xs uppercase tracking-wider text-slate-500">
+            <Text className="font-inter-semibold text-sm uppercase tracking-wider text-slate-500">
               SUBORGANIZATIONS
             </Text>
             <Pressable>
