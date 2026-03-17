@@ -13,11 +13,11 @@ type RequestOptions = {
  */
 export async function apiFetch<T = unknown>(
   path: string,
-  options: RequestOptions = {}
+  options: RequestOptions = {},
 ): Promise<T> {
   if (!USE_API) {
     throw new Error(
-      "apiFetch called without a SERVER_URL configured. This is a bug."
+      "apiFetch called without a SERVER_URL configured. This is a bug.",
     );
   }
 
@@ -44,7 +44,7 @@ export async function apiFetch<T = unknown>(
     const errorBody = await res.json().catch(() => ({}));
     throw new ApiError(
       errorBody.error || `Request failed (${res.status})`,
-      res.status
+      res.status,
     );
   }
 
