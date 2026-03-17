@@ -58,6 +58,12 @@ export default function TabLayout() {
           title: "",
           tabBarIcon: () => <FABButton />,
         }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault();
+            router.push('/log-hours' as any);
+          },
+        }}
       />
       <Tabs.Screen
         name="opportunities"
