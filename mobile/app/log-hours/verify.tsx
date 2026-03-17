@@ -14,7 +14,7 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import SignatureScreen from "react-native-signature-canvas";
 import * as ImagePicker from "expo-image-picker";
@@ -40,7 +40,7 @@ export default function LogHoursPage2() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Page2Values>({
-    resolver: standardSchemaResolver(page2Schema),
+    resolver: zodResolver(page2Schema),
     defaultValues: {
       supervisorName: store.page2.supervisorName ?? "",
       supervisorEmail: store.page2.supervisorEmail ?? "",

@@ -14,7 +14,7 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -75,7 +75,7 @@ export default function LogHoursPage1() {
     setValue,
     watch,
   } = useForm<Page1Values>({
-    resolver: standardSchemaResolver(page1Schema),
+    resolver: zodResolver(page1Schema),
     defaultValues: {
       suborg: store.page1.suborg ?? "",
       hours: store.page1.hours ?? 1,
