@@ -1,6 +1,6 @@
-import { View, Text, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { View, Text, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 
 export default function NotFoundScreen() {
   return (
@@ -14,7 +14,7 @@ export default function NotFoundScreen() {
         </Text>
         <Pressable
           className="mt-6 bg-primary-500 rounded-xl px-6 py-3"
-          onPress={() => router.replace('/(tabs)/dashboard')}
+          onPress={() => router.replace("/(tabs)/dashboard")}
         >
           <Text className="font-inter-semibold text-base text-white">
             Go to Dashboard
