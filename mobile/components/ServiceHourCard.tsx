@@ -21,7 +21,7 @@ export default function ServiceHourCard({
   icon = 'time-outline',
 }: ServiceHourCardProps) {
   return (
-    <View className="flex-row items-center py-3 px-5">
+    <Card className="flex-row items-center py-3 px-5 mx-5 my-1">
       <View className="w-10 h-10 rounded-full bg-primary-50 items-center justify-center mr-3">
         <Ionicons name={icon as any} size={20} color="#3B82F6" />
       </View>
@@ -39,6 +39,6 @@ export default function ServiceHourCard({
           <StatusBadge status={status} />
         </View>
       </View>
-    </View>
+    </Card>
   );
 }
