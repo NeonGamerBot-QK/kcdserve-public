@@ -94,6 +94,8 @@ Rails.application.routes.draw do
       post "login/verify", to: "sessions#verify"
       delete "logout", to: "sessions#destroy"
       get "me", to: "me#show"
+      get "dashboard", to: "dashboard#show"
+      get "service_hours", to: "service_hours#index"
     end
   end
 
