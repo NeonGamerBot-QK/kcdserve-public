@@ -205,11 +205,11 @@ export default function LogHoursPage1() {
                     <Picker
                       selectedValue={value ?? ""}
                       onValueChange={onChange}
-                      style={{ color: pickerTextColor }}
+                      style={{ color: pickerTextColor, backgroundColor: isDark ? "#1e293b" : "#f8fafc" }}
                     >
-                      <Picker.Item label="None" value="" />
+                      <Picker.Item label="None" value="" color={pickerTextColor} />
                       {groups.map((g) => (
-                        <Picker.Item key={g.id} label={g.name} value={g.id} />
+                        <Picker.Item key={g.id} label={g.name} value={g.id} color={pickerTextColor} />
                       ))}
                     </Picker>
                   </View>
@@ -235,10 +235,10 @@ export default function LogHoursPage1() {
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: pickerTextColor }}
+                      style={{ color: pickerTextColor, backgroundColor: isDark ? "#1e293b" : "#f8fafc" }}
                     >
                       {Array.from({ length: 25 }, (_, i) => (
-                        <Picker.Item key={i} label={String(i)} value={i} />
+                        <Picker.Item key={i} label={String(i)} value={i} color={pickerTextColor} />
                       ))}
                     </Picker>
                   </View>
@@ -257,13 +257,14 @@ export default function LogHoursPage1() {
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: pickerTextColor }}
+                      style={{ color: pickerTextColor, backgroundColor: isDark ? "#1e293b" : "#f8fafc" }}
                     >
                       {[0, 15, 30, 45].map((m) => (
                         <Picker.Item
                           key={m}
                           label={m === 0 ? "0 min" : `${m} min`}
                           value={m}
+                          color={pickerTextColor}
                         />
                       ))}
                     </Picker>
