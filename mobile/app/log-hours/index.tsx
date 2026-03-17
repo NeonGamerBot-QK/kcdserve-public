@@ -147,11 +147,24 @@ export default function LogHoursPage1() {
     }
   }
 
-  const onNext = handleSubmit((data) => {
-    store.setPage1(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.push("/log-hours/verify" as any);
-  });
+  const onNext = handleSubmit(
+    (data) => {
+      console.log("[onNext] valid data:", JSON.stringify(data));
+      store.setPage1(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      router.push("/log-hours/verify" as any);
+    },
+    (errors) => {
+      console.log("[onNext] validation errors:", JSON.stringify(errors));
+      Alert.alert(
+        "Fix these errors",
+        Object.values(errors)
+          .map((e) => e?.message)
+          .filter(Boolean)
+          .join("\n"),
+      );
+    },
+  );
 
   const groups = dashboard?.groups ?? [];
 
