@@ -1,7 +1,7 @@
-import { Pressable, View, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import TopBar from '../../components/TopBar';
-import { useTheme } from '../../hooks/useTheme';
+import { Pressable, View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../../components/TopBar";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function MoreScreen() {
   const { isDark, toggleDarkMode } = useTheme();
@@ -30,15 +30,15 @@ export default function MoreScreen() {
                 Dark Mode
               </Text>
               <Text className={`font-inter text-sm ${textMuted} mt-0.5`}>
-                {isDark ? 'On' : 'Off'}
+                {isDark ? "On" : "Off"}
               </Text>
             </View>
             {/* Toggle pill */}
             <View
-              className={`w-12 h-7 rounded-full justify-center px-0.5 ${isDark ? 'bg-primary-500' : 'bg-slate-300'}`}
+              className={`w-12 h-7 rounded-full justify-center px-0.5 ${isDark ? "bg-primary-500" : "bg-slate-300"}`}
             >
               <View
-                className={`w-6 h-6 rounded-full bg-white shadow-sm ${isDark ? 'self-end' : 'self-start'}`}
+                className={`w-6 h-6 rounded-full bg-white shadow-sm ${isDark ? "self-end" : "self-start"}`}
               />
             </View>
           </Pressable>
