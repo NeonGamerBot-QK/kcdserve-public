@@ -1,0 +1,30 @@
+export const CATEGORIES = [
+  "Community Service",
+  "Environment & Conservation",
+  "Education & Tutoring",
+  "Healthcare & Medical",
+  "Arts & Culture",
+  "Animal Welfare",
+  "Sports & Recreation",
+  "Religious & Faith",
+  "Civic & Government",
+  "Other",
+];
+
+export const COMMON_ORGS = [
+  "American Red Cross",
+  "Habitat for Humanity",
+  "Local Food Bank",
+  "Big Brothers Big Sisters",
+  "Meals on Wheels",
+  "Salvation Army",
+  "YMCA",
+  "Boys & Girls Club",
+  "United Way",
+  "Feeding America",
+  "St. Jude Children's Research Hospital",
+  "Goodwill Industries",
+  "American Cancer Society",
+  "Humane Society",
+  "Doctors Without Borders",
+];
