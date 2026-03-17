@@ -49,6 +49,6 @@ export const useAuthStore = create<AuthState>()(
         expiresAt: state.expiresAt,
         user: state.user,
       }),
-    }
-  )
+    },
+  ),
 );
