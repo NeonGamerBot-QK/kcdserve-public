@@ -91,6 +91,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       post "login", to: "sessions#create"
+      post "login/verify", to: "sessions#verify"
       delete "logout", to: "sessions#destroy"
       get "me", to: "me#show"
     end

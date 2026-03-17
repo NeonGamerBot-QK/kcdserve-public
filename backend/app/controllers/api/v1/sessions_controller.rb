@@ -3,14 +3,28 @@
 module Api
   module V1
     class SessionsController < BaseController
-      skip_before_action :authenticate_api_user!, only: :create
+      skip_before_action :authenticate_api_user!, only: [ :create, :verify ]
 
       # POST /api/v1/login
-      # Accepts email + password, returns a 30-day API token.
+      # Accepts email, sends a 6-digit PIN to the user's email.
       def create
         user = User.find_by(email: params[:email]&.downcase&.strip)
 
-        if user&.valid_password?(params[:password])
+        if user
+          user.send_login_pin
+        end
+
+        # Always return 200 to avoid leaking whether the email exists
+        render json: { message: "If that email exists, a login code has been sent." }, status: :ok
+      end
+
+      # POST /api/v1/login/verify
+      # Accepts email + pin, returns a 30-day API token.
+      def verify
+        user = User.find_by(email: params[:email]&.downcase&.strip)
+
+        if user&.verify_login_pin(params[:pin])
+          user.clear_login_pin!
           token = SecureRandom.urlsafe_base64(48)
           user.update!(api_token: token, api_token_expires_at: 30.days.from_now)
 
@@ -20,7 +34,7 @@ module Api
             user: user_json(user)
           }, status: :ok
         else
-          render json: { error: "Invalid email or password" }, status: :unauthorized
+          render json: { error: "Invalid or expired code" }, status: :unauthorized
         end
       end
 

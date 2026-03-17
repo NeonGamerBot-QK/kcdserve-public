@@ -84,6 +84,27 @@ class User < ApplicationRecord
     end
   end
 
+  # Generates a 6-digit login PIN, stores it, and emails it to the user.
+  # PIN expires after 10 minutes.
+  def send_login_pin
+    pin = SecureRandom.random_number(999_999).to_s.rjust(6, "0")
+    update!(login_pin: pin, login_pin_sent_at: Time.current)
+    LoginPinMailer.login_pin(self, pin).deliver_now
+  end
+
+  # Verifies the provided PIN matches and hasn't expired (10 minutes)
+  def verify_login_pin(pin)
+    return false if login_pin.blank? || login_pin_sent_at.blank?
+    return false if login_pin_sent_at < 10.minutes.ago
+
+    ActiveSupport::SecurityUtils.secure_compare(login_pin, pin)
+  end
+
+  # Clears the login PIN after successful verification
+  def clear_login_pin!
+    update!(login_pin: nil, login_pin_sent_at: nil)
+  end
+
   # Returns true if the user has been soft-deleted
   def deleted?
     deleted_at.present?
