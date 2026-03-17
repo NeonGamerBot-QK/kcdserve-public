@@ -3,21 +3,21 @@ import {
   Inter_500Medium,
   Inter_600SemiBold,
   useFonts,
-} from '@expo-google-fonts/inter';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import * as SplashScreen from 'expo-splash-screen';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { View } from 'react-native';
-import '../global.css';
+} from "@expo-google-fonts/inter";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as SplashScreen from "expo-splash-screen";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { View } from "react-native";
+import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
 const SHOW_DEV_BORDER =
-  __DEV__ && process.env.EXPO_PUBLIC_BYE_BYE_GREEN_BORDER !== '1';
+  __DEV__ && process.env.EXPO_PUBLIC_BYE_BYE_GREEN_BORDER !== "1";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -37,7 +37,18 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={SHOW_DEV_BORDER ? { flex: 1, borderWidth: 10, borderColor: '#86efac', borderStyle: 'dashed' } : { flex: 1 }}>
+    <View
+      style={
+        SHOW_DEV_BORDER
+          ? {
+              flex: 1,
+              borderWidth: 10,
+              borderColor: "#86efac",
+              borderStyle: "dashed",
+            }
+          : { flex: 1 }
+      }
+    >
       <QueryClientProvider client={queryClient}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(auth)" />
