@@ -87,6 +87,15 @@ Rails.application.routes.draw do
     end
   end
 
+  # Mobile API
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      post "login", to: "sessions#create"
+      delete "logout", to: "sessions#destroy"
+      get "me", to: "me#show"
+    end
+  end
+
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 end
