@@ -1,166 +1,155 @@
-<h1 class="mb-4">Admin Dashboard</h1>
+<h1 class="text-2xl font-semibold text-slate-900 mb-6">Admin Dashboard</h1>
 
 <%# === Summary stat cards === %>
-<div class="row g-4 mb-4">
-  <div class="col-md-3">
-    <div class="card text-center bg-primary text-white">
-      <div class="card-body">
-        <h3><%= @total_users %></h3>
-        <p class="mb-0">Total Users</p>
-      </div>
-    </div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="bg-primary-500 text-white rounded-2xl p-5 text-center">
+    <h3 class="text-3xl font-bold"><%= @total_users %></h3>
+    <p class="text-primary-100 text-sm mt-1">Total Users</p>
   </div>
-  <div class="col-md-3">
-    <div class="card text-center bg-success text-white">
-      <div class="card-body">
-        <h3><%= @total_hours.to_f.round(1) %></h3>
-        <p class="mb-0">Approved Hours</p>
-      </div>
-    </div>
+  <div class="bg-status-approved text-white rounded-2xl p-5 text-center">
+    <h3 class="text-3xl font-bold"><%= @total_hours.to_f.round(1) %></h3>
+    <p class="text-green-100 text-sm mt-1">Approved Hours</p>
   </div>
-  <div class="col-md-3">
-    <div class="card text-center bg-warning text-dark">
-      <div class="card-body">
-        <h3><%= @pending_reviews %></h3>
-        <p class="mb-0">Pending Reviews</p>
-      </div>
-    </div>
+  <div class="bg-status-pending text-white rounded-2xl p-5 text-center">
+    <h3 class="text-3xl font-bold"><%= @pending_reviews %></h3>
+    <p class="text-amber-100 text-sm mt-1">Pending Reviews</p>
   </div>
-  <div class="col-md-3">
-    <div class="card text-center bg-info text-white">
-      <div class="card-body">
-        <h3><%= @total_opportunities %></h3>
-        <p class="mb-0">Opportunities</p>
-      </div>
-    </div>
+  <div class="bg-accent-500 text-white rounded-2xl p-5 text-center">
+    <h3 class="text-3xl font-bold"><%= @total_opportunities %></h3>
+    <p class="text-teal-100 text-sm mt-1">Opportunities</p>
   </div>
 </div>
 
 <%# === Active users & total hours highlight === %>
-<div class="row g-4 mb-4">
-  <div class="col-md-6">
-    <div class="card text-center border-primary">
-      <div class="card-body">
-        <h2 class="text-primary"><%= @active_users %></h2>
-        <p class="mb-0 text-muted">Active Volunteers <small>(last 30 days)</small></p>
-      </div>
-    </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+  <div class="bg-white rounded-2xl border border-gray-200 p-6 text-center">
+    <h2 class="text-3xl font-bold text-primary-500"><%= @active_users %></h2>
+    <p class="text-slate-500 text-sm mt-1">Active Volunteers <span class="text-xs">(last 30 days)</span></p>
   </div>
-  <div class="col-md-6">
-    <div class="card text-center border-success">
-      <div class="card-body">
-        <h2 class="text-success"><%= number_with_delimiter(@total_hours.to_f.round(1)) %></h2>
-        <p class="mb-0 text-muted">Total Approved Hours</p>
-      </div>
-    </div>
+  <div class="bg-white rounded-2xl border border-gray-200 p-6 text-center">
+    <h2 class="text-3xl font-bold text-status-approved"><%= number_with_delimiter(@total_hours.to_f.round(1)) %></h2>
+    <p class="text-slate-500 text-sm mt-1">Total Approved Hours</p>
   </div>
 </div>
 
 <%# === Service hours by month chart === %>
-<div class="row g-4 mb-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0">Service Hours by Month</h5></div>
-      <div class="card-body">
-        <%= column_chart @hours_by_month, colors: ["#0d6efd"], xtitle: "Month", ytitle: "Hours" %>
-      </div>
-    </div>
+<div class="bg-white rounded-2xl border border-gray-200 mb-6">
+  <div class="px-6 py-4 border-b border-gray-200">
+    <h5 class="font-semibold text-slate-900">Service Hours by Month</h5>
+  </div>
+  <div class="p-6">
+    <%= column_chart @hours_by_month, colors: ["#3B82F6"], xtitle: "Month", ytitle: "Hours" %>
   </div>
 </div>
 
 <%# === Category breakdown: pie chart + submission count table === %>
-<div class="row g-4 mb-4">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0">Hours by Category</h5></div>
-      <div class="card-body">
-        <%= pie_chart @hours_by_category %>
-      </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <div class="bg-white rounded-2xl border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h5 class="font-semibold text-slate-900">Hours by Category</h5>
+    </div>
+    <div class="p-6">
+      <%= pie_chart @hours_by_category %>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0">Service Category Breakdown</h5></div>
-      <div class="card-body">
-        <table class="table table-sm">
-          <thead><tr><th>Category</th><th>Submissions</th><th>Hours</th></tr></thead>
-          <tbody>
-            <% @hours_by_category.each do |category_name, hours| %>
-              <tr>
-                <td><%= category_name %></td>
-                <td><%= @category_submission_counts[category_name] || 0 %></td>
-                <td><%= hours.to_f.round(1) %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+  <div class="bg-white rounded-2xl border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h5 class="font-semibold text-slate-900">Service Category Breakdown</h5>
+    </div>
+    <div class="p-6">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-200">
+            <th class="text-left py-2 text-slate-500 font-medium">Category</th>
+            <th class="text-left py-2 text-slate-500 font-medium">Submissions</th>
+            <th class="text-left py-2 text-slate-500 font-medium">Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @hours_by_category.each do |category_name, hours| %>
+            <tr class="border-b border-gray-100">
+              <td class="py-2 text-slate-900"><%= category_name %></td>
+              <td class="py-2 text-slate-600"><%= @category_submission_counts[category_name] || 0 %></td>
+              <td class="py-2 text-slate-600"><%= hours.to_f.round(1) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 
 <%# === Geolocation: hours by location === %>
-<div class="row g-4 mb-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0"><i class="bi bi-geo-alt-fill"></i> Service Hours by Location</h5></div>
-      <div class="card-body">
-        <% if @hours_by_location.any? %>
-          <%= bar_chart @hours_by_location, colors: ["#198754"], xtitle: "Hours", ytitle: "Location" %>
-        <% else %>
-          <p class="text-muted mb-0">No location data available yet.</p>
-        <% end %>
-      </div>
-    </div>
+<div class="bg-white rounded-2xl border border-gray-200 mb-6">
+  <div class="px-6 py-4 border-b border-gray-200">
+    <h5 class="font-semibold text-slate-900">&#128205; Service Hours by Location</h5>
+  </div>
+  <div class="p-6">
+    <% if @hours_by_location.any? %>
+      <%= bar_chart @hours_by_location, colors: ["#14B8A6"], xtitle: "Hours", ytitle: "Location" %>
+    <% else %>
+      <p class="text-slate-400">No location data available yet.</p>
+    <% end %>
   </div>
 </div>
 
 <%# === Top volunteers & pending reviews === %>
-<div class="row g-4">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0">Top Volunteers</h5></div>
-      <div class="card-body">
-        <table class="table table-sm">
-          <thead><tr><th>#</th><th>Volunteer</th><th>Hours</th></tr></thead>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="bg-white rounded-2xl border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h5 class="font-semibold text-slate-900">Top Volunteers</h5>
+    </div>
+    <div class="p-6">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-200">
+            <th class="text-left py-2 text-slate-500 font-medium">#</th>
+            <th class="text-left py-2 text-slate-500 font-medium">Volunteer</th>
+            <th class="text-left py-2 text-slate-500 font-medium">Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @top_volunteers.each_with_index do |v, i| %>
+            <tr class="border-b border-gray-100">
+              <td class="py-2 text-slate-600"><%= i + 1 %></td>
+              <td class="py-2"><%= link_to v.full_name, admin_user_path(v), class: "text-primary-500 hover:text-primary-700" %></td>
+              <td class="py-2 text-slate-600"><%= v.total_hours.to_f.round(1) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="bg-white rounded-2xl border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+      <h5 class="font-semibold text-slate-900">Pending Reviews</h5>
+      <%= link_to "View All", admin_service_hours_path(status: :pending), class: "text-sm font-medium text-primary-500 hover:text-primary-700" %>
+    </div>
+    <div class="p-6">
+      <% if @recent_submissions.any? %>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-2 text-slate-500 font-medium">Volunteer</th>
+              <th class="text-left py-2 text-slate-500 font-medium">Hours</th>
+              <th class="text-left py-2 text-slate-500 font-medium">Date</th>
+              <th class="text-left py-2 text-slate-500 font-medium"></th>
+            </tr>
+          </thead>
           <tbody>
-            <% @top_volunteers.each_with_index do |v, i| %>
-              <tr>
-                <td><%= i + 1 %></td>
-                <td><%= link_to v.full_name, admin_user_path(v) %></td>
-                <td><%= v.total_hours.to_f.round(1) %></td>
+            <% @recent_submissions.each do |sh| %>
+              <tr class="border-b border-gray-100">
+                <td class="py-2 text-slate-900"><%= sh.user&.full_name || "Deleted User" %></td>
+                <td class="py-2 text-slate-600"><%= sh.hours %></td>
+                <td class="py-2 text-slate-600"><%= sh.service_date.strftime("%m/%d") %></td>
+                <td class="py-2"><%= link_to "Review", admin_service_hour_path(sh), class: "text-status-pending hover:text-amber-600 font-medium text-xs" %></td>
               </tr>
             <% end %>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Pending Reviews</h5>
-        <%= link_to "View All", admin_service_hours_path(status: :pending), class: "btn btn-sm btn-outline-primary" %>
-      </div>
-      <div class="card-body">
-        <% if @recent_submissions.any? %>
-          <table class="table table-sm">
-            <thead><tr><th>Volunteer</th><th>Hours</th><th>Date</th><th></th></tr></thead>
-            <tbody>
-              <% @recent_submissions.each do |sh| %>
-                <tr>
-                  <td><%= sh.user&.full_name || "Deleted User" %></td>
-                  <td><%= sh.hours %></td>
-                  <td><%= sh.service_date.strftime("%m/%d") %></td>
-                  <td><%= link_to "Review", admin_service_hour_path(sh), class: "btn btn-sm btn-outline-warning" %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        <% else %>
-          <p class="text-muted">No pending reviews. Nice work!</p>
-        <% end %>
-      </div>
+      <% else %>
+        <p class="text-slate-400">No pending reviews. Nice work!</p>
+      <% end %>
     </div>
   </div>
 </div>

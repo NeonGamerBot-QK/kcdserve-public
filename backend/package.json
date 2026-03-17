@@ -1,0 +1,12 @@
+{
+  "name": "kcdserve-backend",
+  "private": true,
+  "scripts": {
+    "build:css": "bundle exec tailwindcss -i ./app/assets/stylesheets/tailwind/input.css -o ./app/assets/builds/application.css --minify --content ./app/views --content ./app/helpers",
+    "build:css:dev": "bundle exec tailwindcss -i ./app/assets/stylesheets/tailwind/input.css -o ./app/assets/builds/application.css --content ./app/views --content ./app/helpers",
+    "watch:css": "bundle exec tailwindcss -i ./app/assets/stylesheets/tailwind/input.css -o ./app/assets/builds/application.css --watch --content ./app/views --content ./app/helpers"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

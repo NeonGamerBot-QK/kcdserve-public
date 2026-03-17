@@ -1,28 +1,28 @@
-<%= link_to "← Back to Audit Log", admin_audit_log_index_path, class: "btn btn-outline-secondary btn-sm mb-3" %>
+<%= link_to "← Back to Audit Log", admin_audit_log_index_path, class: "text-slate-500 hover:text-slate-700 text-sm mb-4 inline-block" %>
 
-<h1 class="mb-4">
-  Audit Log Entry #<%= @version.id %>
-</h1>
+<h1 class="text-2xl font-semibold text-slate-900 mb-6">Audit Log Entry #<%= @version.id %></h1>
 
-<div class="row">
-  <div class="col-md-4">
-    <div class="card mb-4">
-      <div class="card-header"><strong>Metadata</strong></div>
-      <div class="card-body">
-        <p><strong>Event:</strong>
-          <span class="badge bg-<%= @version.event == 'create' ? 'success' : @version.event == 'update' ? 'info' : 'danger' %>">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div>
+    <div class="bg-white rounded-2xl border border-gray-200 p-6">
+      <h6 class="font-semibold text-slate-900 mb-4">Metadata</h6>
+      <div class="space-y-2 text-sm">
+        <p>
+          <span class="font-medium text-slate-500">Event:</span>
+          <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-medium <%= @version.event == 'create' ? 'bg-green-50 text-status-approved' : @version.event == 'update' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-status-rejected' %>">
             <%= @version.event %>
           </span>
         </p>
-        <p><strong>Model:</strong> <%= @version.item_type %></p>
-        <p><strong>Item ID:</strong> <%= @version.item_id %></p>
-        <p><strong>When:</strong> <%= @version.created_at.strftime("%B %d, %Y at %I:%M:%S %p") %></p>
-        <p><strong>Who:</strong>
+        <p><span class="font-medium text-slate-500">Model:</span> <span class="text-slate-900"><%= @version.item_type %></span></p>
+        <p><span class="font-medium text-slate-500">Item ID:</span> <span class="text-slate-900"><%= @version.item_id %></span></p>
+        <p><span class="font-medium text-slate-500">When:</span> <span class="text-slate-900"><%= @version.created_at.strftime("%B %d, %Y at %I:%M:%S %p") %></span></p>
+        <p>
+          <span class="font-medium text-slate-500">Who:</span>
           <% if @version.whodunnit.present? %>
             <% actor = User.with_deleted.find_by(id: @version.whodunnit) %>
-            <%= actor ? link_to(actor.full_name, admin_user_path(actor)) : "User ##{@version.whodunnit}" %>
+            <%= actor ? link_to(actor.full_name, admin_user_path(actor), class: "text-primary-500 hover:text-primary-700") : "User ##{@version.whodunnit}" %>
           <% else %>
-            <span class="text-muted">System</span>
+            <span class="text-slate-400">System</span>
           <% end %>
         </p>
       </div>
@@ -30,25 +30,27 @@
   </div>
 
   <% if @version.object_changes.present? %>
-    <div class="col-md-8">
-      <div class="card mb-4">
-        <div class="card-header"><strong>Changes</strong></div>
-        <div class="card-body">
-          <table class="table table-sm">
+    <div class="md:col-span-2">
+      <div class="bg-white rounded-2xl border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h6 class="font-semibold text-slate-900">Changes</h6>
+        </div>
+        <div class="p-6">
+          <table class="w-full text-sm">
             <thead>
-              <tr>
-                <th>Attribute</th>
-                <th>Before</th>
-                <th>After</th>
+              <tr class="border-b border-gray-200">
+                <th class="text-left py-2 text-slate-500 font-medium">Attribute</th>
+                <th class="text-left py-2 text-slate-500 font-medium">Before</th>
+                <th class="text-left py-2 text-slate-500 font-medium">After</th>
               </tr>
             </thead>
             <tbody>
               <% @version.changeset&.each do |attribute, (before_val, after_val)| %>
                 <% next if %w[encrypted_password reset_password_token magic_link_token].include?(attribute) %>
-                <tr>
-                  <td><code><%= attribute %></code></td>
-                  <td><%= before_val.present? ? truncate(before_val.to_s, length: 200) : "<em class='text-muted'>blank</em>".html_safe %></td>
-                  <td><%= after_val.present? ? truncate(after_val.to_s, length: 200) : "<em class='text-muted'>blank</em>".html_safe %></td>
+                <tr class="border-b border-gray-100">
+                  <td class="py-2"><code class="text-xs bg-slate-100 px-1.5 py-0.5 rounded text-slate-700"><%= attribute %></code></td>
+                  <td class="py-2 text-slate-600"><%= before_val.present? ? truncate(before_val.to_s, length: 200) : "<em class='text-slate-400'>blank</em>".html_safe %></td>
+                  <td class="py-2 text-slate-900"><%= after_val.present? ? truncate(after_val.to_s, length: 200) : "<em class='text-slate-400'>blank</em>".html_safe %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -59,11 +61,13 @@
   <% end %>
 
   <% if @version.object.present? %>
-    <div class="col-md-8">
-      <div class="card mb-4">
-        <div class="card-header"><strong>Snapshot (state before this event)</strong></div>
-        <div class="card-body">
-          <pre class="mb-0" style="max-height: 400px; overflow-y: auto;"><%= @version.object %></pre>
+    <div class="md:col-span-2">
+      <div class="bg-white rounded-2xl border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h6 class="font-semibold text-slate-900">Snapshot (state before this event)</h6>
+        </div>
+        <div class="p-6">
+          <pre class="text-xs bg-slate-50 rounded-xl p-4 overflow-auto max-h-96 text-slate-700"><%= @version.object %></pre>
         </div>
       </div>
     </div>

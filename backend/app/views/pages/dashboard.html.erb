@@ -1,101 +1,124 @@
 <% if Rails.env.development? && !current_user.super_admin? %>
-  <div class="mb-3">
-    <%= button_to "Promote to Super Admin", dev_promote_path, method: :post, class: "btn btn-outline-success", style: "border-style: dashed;" %>
+  <div class="text-center mb-4">
+    <%= button_to "Promote to Super Admin", dev_promote_path, method: :post, class: "border-2 border-dashed border-green-500 rounded-xl px-4 py-2 text-green-700 hover:bg-green-50 text-sm" %>
   </div>
 <% end %>
 
-<h1 class="mb-4">Welcome back, <%= current_user.first_name %>!</h1>
+<div class="max-w-lg mx-auto">
+  <%# Stats hero — matches mobile dashboard %>
+  <div class="text-center mt-4 mb-5">
+    <p class="font-medium text-sm uppercase tracking-wider text-slate-500 mb-1">TOTAL APPROVED</p>
+    <p class="font-semibold text-6xl text-slate-900 mt-1.5"><%= @total_hours %></p>
+    <p class="text-base text-slate-500 mt-1">Hours completed this year</p>
+  </div>
 
-<div class="row g-4 mb-4">
-  <div class="col-md-3">
-    <div class="card text-center bg-primary text-white">
-      <div class="card-body">
-        <h3><%= @total_hours %></h3>
-        <p class="mb-0">Approved Hours</p>
-      </div>
+  <%# Pending pill — matches mobile %>
+  <div class="flex justify-center mb-8">
+    <div class="inline-flex items-center bg-white rounded-2xl px-5 py-4 border border-gray-200">
+      <div class="w-2 h-2 rounded-full bg-status-pending mr-2"></div>
+      <span class="font-medium text-sm text-slate-900"><%= @pending_count %> Pending</span>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card text-center bg-warning text-dark">
-      <div class="card-body">
-        <h3><%= @pending_count %></h3>
-        <p class="mb-0">Pending Reviews</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card text-center bg-success text-white">
-      <div class="card-body">
-        <h3><%= @groups.count %></h3>
-        <p class="mb-0">Groups</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card text-center bg-info text-white">
-      <div class="card-body">
-        <h3><%= @upcoming_signups.count %></h3>
-        <p class="mb-0">Upcoming Events</p>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="row g-4">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Recent Hours</h5>
-        <%= link_to "Log Hours", new_service_hour_path, class: "btn btn-sm btn-primary" %>
+  <%# Quick stats row %>
+  <div class="grid grid-cols-2 gap-3 mb-8">
+    <div class="bg-white rounded-2xl border border-gray-200 p-4 text-center">
+      <p class="font-semibold text-2xl text-slate-900"><%= @groups.count %></p>
+      <p class="text-xs text-slate-500 mt-0.5">Groups</p>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-200 p-4 text-center">
+      <p class="font-semibold text-2xl text-slate-900"><%= @upcoming_signups.count %></p>
+      <p class="text-xs text-slate-500 mt-0.5">Upcoming Events</p>
+    </div>
+  </div>
+
+  <%# Groups section — matches mobile OrgCard layout %>
+  <% if @groups.any? %>
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-3">
+        <p class="font-semibold text-sm uppercase tracking-wider text-slate-500">GROUPS</p>
+        <%= link_to "View all", groups_path, class: "font-medium text-sm text-primary-500 hover:text-primary-700" %>
       </div>
-      <div class="card-body">
-        <% if @recent_hours.any? %>
-          <table class="table table-sm">
-            <thead>
-              <tr><th>Date</th><th>Hours</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              <% @recent_hours.each do |sh| %>
-                <tr>
-                  <td><%= link_to sh.service_date.strftime("%m/%d/%Y"), service_hour_path(sh) %></td>
-                  <td><%= sh.hours %></td>
-                  <td>
-                    <span class="badge bg-<%= sh.approved? ? 'success' : sh.pending? ? 'warning' : 'danger' %>">
-                      <%= sh.status.humanize %>
-                    </span>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        <% else %>
-          <p class="text-muted">No service hours logged yet.</p>
+
+      <% @groups.each do |group| %>
+        <%= link_to group_path(group), class: "block mb-3" do %>
+          <div class="bg-white rounded-2xl border border-gray-200 p-4">
+            <div class="flex justify-between items-center mb-2">
+              <p class="font-semibold text-base text-slate-900"><%= group.name %></p>
+              <p class="text-xs text-slate-500"><%= group.members.count %> members</p>
+            </div>
+            <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+              <% total = group.service_hours.approved.sum(:hours) %>
+              <% pct = total > 0 ? [total / 100.0 * 100, 100].min : 0 %>
+              <div class="h-full rounded-full bg-primary-500" style="width: <%= pct %>%"></div>
+            </div>
+            <p class="font-medium text-xs text-slate-500 mt-1.5"><%= total.round(1) %> hours</p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Recent Hours — mobile ServiceHourCard style %>
+  <div class="mb-8">
+    <div class="flex justify-between items-center mb-3">
+      <p class="font-semibold text-sm uppercase tracking-wider text-slate-500">RECENT HOURS</p>
+      <%= link_to "Log Hours", new_service_hour_path, class: "font-medium text-sm text-primary-500 hover:text-primary-700" %>
+    </div>
+
+    <% if @recent_hours.any? %>
+      <div class="space-y-2">
+        <% @recent_hours.each do |sh| %>
+          <%= link_to service_hour_path(sh), class: "block" do %>
+            <div class="bg-white rounded-2xl border border-gray-200 flex items-center py-3 px-5">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center mr-3 flex-shrink-0">
+                <span class="text-primary-500 text-lg">&#9201;</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-sm text-slate-900 truncate"><%= sh.title.presence || sh.description.truncate(40) %></p>
+                <p class="text-xs text-slate-500 mt-0.5"><%= sh.category.name %> · <%= sh.service_date.strftime("%b %d") %></p>
+              </div>
+              <div class="text-right ml-3 flex-shrink-0">
+                <p class="font-semibold text-sm text-slate-900"><%= sh.hours %>h</p>
+                <span class="inline-block mt-0.5 px-2.5 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 text-status-approved' : sh.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+                  <%= sh.status.upcase %>
+                </span>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-slate-400">No service hours logged yet.</p>
+        <%= link_to "Log Your First Hours", new_service_hour_path, class: "inline-block mt-3 bg-primary-500 text-white rounded-xl px-5 py-2.5 font-medium text-sm hover:bg-primary-600" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Upcoming Events — mobile card style %>
+  <% if @upcoming_signups.any? %>
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-3">
+        <p class="font-semibold text-sm uppercase tracking-wider text-slate-500">UPCOMING EVENTS</p>
+        <%= link_to "Browse", opportunities_path, class: "font-medium text-sm text-primary-500 hover:text-primary-700" %>
+      </div>
+
+      <div class="space-y-2">
+        <% @upcoming_signups.each do |opp| %>
+          <%= link_to opportunity_path(opp), class: "block" do %>
+            <div class="bg-white rounded-2xl border border-gray-200 flex items-center py-3 px-5">
+              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center mr-3 flex-shrink-0">
+                <span class="text-primary-500 text-lg">&#128197;</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-sm text-slate-900 truncate"><%= opp.title %></p>
+                <p class="text-xs text-slate-500 mt-0.5"><%= opp.date.strftime("%B %d, %Y") %></p>
+              </div>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-header">
-        <h5 class="mb-0">Upcoming Opportunities</h5>
-      </div>
-      <div class="card-body">
-        <% if @upcoming_signups.any? %>
-          <ul class="list-group list-group-flush">
-            <% @upcoming_signups.each do |opp| %>
-              <li class="list-group-item d-flex justify-content-between">
-                <div>
-                  <strong><%= link_to opp.title, opportunity_path(opp) %></strong>
-                  <br><small class="text-muted"><%= opp.date.strftime("%B %d, %Y") %></small>
-                </div>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="text-muted">No upcoming events.</p>
-        <% end %>
-      </div>
-    </div>
-  </div>
+  <% end %>
 </div>
