@@ -129,14 +129,22 @@ export default function LogHoursPage2() {
   return (
     <SafeAreaView className={`flex-1 ${bgPage}`}>
       {/* Header */}
-      <View className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}>
+      <View
+        className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}
+      >
         <Pressable
           onPress={() => router.back()}
           className="w-9 h-9 items-center justify-center"
         >
-          <Ionicons name="arrow-back" size={24} color={isDark ? "#f1f5f9" : "#0f172a"} />
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color={isDark ? "#f1f5f9" : "#0f172a"}
+          />
         </Pressable>
-        <Text className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}>
+        <Text
+          className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}
+        >
           Review & Submit
         </Text>
         <View className="w-9" />
@@ -180,7 +188,9 @@ export default function LogHoursPage2() {
           )}
 
           {/* Supervisor Email */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Supervisor Email
           </Text>
           <Controller
@@ -212,9 +222,15 @@ export default function LogHoursPage2() {
           )}
 
           {/* Signature */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Supervisor Signature{" "}
-            <Text className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}>(optional)</Text>
+            <Text
+              className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
+            >
+              (optional)
+            </Text>
           </Text>
           <Pressable
             onPress={() => setShowSignatureModal(true)}
@@ -263,19 +279,29 @@ export default function LogHoursPage2() {
             onRequestClose={() => setShowSignatureModal(false)}
           >
             <SafeAreaView className={`flex-1 ${bgPage}`}>
-              <View className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}>
+              <View
+                className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}
+              >
                 <Pressable
                   onPress={() => setShowSignatureModal(false)}
                   className="w-9 h-9 items-center justify-center"
                 >
-                  <Ionicons name="close" size={24} color={isDark ? "#f1f5f9" : "#0f172a"} />
+                  <Ionicons
+                    name="close"
+                    size={24}
+                    color={isDark ? "#f1f5f9" : "#0f172a"}
+                  />
                 </Pressable>
-                <Text className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}>
+                <Text
+                  className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}
+                >
                   Supervisor Signature
                 </Text>
                 <View className="w-9" />
               </View>
-              <Text className={`text-center font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"} px-5 mt-3`}>
+              <Text
+                className={`text-center font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"} px-5 mt-3`}
+              >
                 Ask your supervisor to sign below
               </Text>
               <View className="flex-1 mt-2">
@@ -306,8 +332,15 @@ export default function LogHoursPage2() {
           </Modal>
 
           {/* Photos */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
-            Photos <Text className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}>(optional)</Text>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
+            Photos{" "}
+            <Text
+              className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
+            >
+              (optional)
+            </Text>
           </Text>
           <View className="flex-row gap-3 mb-3">
             <Pressable
