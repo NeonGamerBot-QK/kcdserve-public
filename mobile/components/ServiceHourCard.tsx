@@ -1,14 +1,14 @@
-import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import StatusBadge from './StatusBadge';
-import Card from './Card';
+import { View, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import StatusBadge from "./StatusBadge";
+import Card from "./Card";
 
 type ServiceHourCardProps = {
   title: string;
   org: string;
   date: string;
   hours: number;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
   icon?: string;
 };
 
@@ -18,7 +18,7 @@ export default function ServiceHourCard({
   date,
   hours,
   status,
-  icon = 'time-outline',
+  icon = "time-outline",
 }: ServiceHourCardProps) {
   return (
     <View className="flex-row items-center py-3 px-5">
@@ -26,7 +26,9 @@ export default function ServiceHourCard({
         <Ionicons name={icon as any} size={20} color="#3B82F6" />
       </View>
       <View className="flex-1">
-        <Text className="font-inter-medium text-sm text-slate-900">{title}</Text>
+        <Text className="font-inter-medium text-sm text-slate-900">
+          {title}
+        </Text>
         <Text className="font-inter text-xs text-slate-500 mt-0.5">
           {org} · {date}
         </Text>
