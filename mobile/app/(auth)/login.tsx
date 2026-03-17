@@ -178,7 +178,9 @@ export default function LoginScreen() {
                 We sent a 6-digit code to your email
               </Text>
 
-              <Text className={`font-inter-medium text-sm ${textLabel} mb-4 text-center`}>
+              <Text
+                className={`font-inter-medium text-sm ${textLabel} mb-4 text-center`}
+              >
                 Enter your code
               </Text>
 
@@ -195,7 +197,9 @@ export default function LoginScreen() {
                         : `border-slate-200 ${isDark ? "bg-slate-800" : "bg-slate-50"}`
                     }`}
                   >
-                    <Text className={`font-inter-semibold text-xl ${textPrimary}`}>
+                    <Text
+                      className={`font-inter-semibold text-xl ${textPrimary}`}
+                    >
                       {pin[i] ?? ""}
                     </Text>
                   </View>
@@ -254,7 +258,9 @@ export default function LoginScreen() {
 
         {/* Google Sign-In Button */}
         <View className="px-5 mb-8">
-          <Pressable className={`flex-row items-center justify-center ${googleBtnBg} border ${borderInput} rounded-xl py-3.5`}>
+          <Pressable
+            className={`flex-row items-center justify-center ${googleBtnBg} border ${borderInput} rounded-xl py-3.5`}
+          >
             <Ionicons name="logo-google" size={20} color="#4285F4" />
             <Text className={`font-inter-medium text-base ${textLabel} ml-3`}>
               Continue with Google
