@@ -23,8 +23,9 @@ import { page1Schema, Page1Values } from "../../lib/schemas/serviceHour";
 import { useLogHoursFormStore } from "../../store/logHoursForm";
 import { useDashboard } from "../../hooks/useDashboard";
 import FilterChip from "../../components/FilterChip";
-import { CATEGORIES, COMMON_ORGS } from "../../lib/constants";
+import { COMMON_ORGS } from "../../lib/constants";
 import { useTheme } from "../../hooks/useTheme";
+import { useCategories } from "../../hooks/useCategories";
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString("en-US", {
@@ -45,6 +46,7 @@ export default function LogHoursPage1() {
   const store = useLogHoursFormStore();
   const { data: dashboard } = useDashboard();
   const { isDark } = useTheme();
+  const { categories } = useCategories();
 
   // Date state
   const initialDate = store.page1.serviceDate
@@ -458,7 +460,7 @@ export default function LogHoursPage1() {
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{ paddingBottom: 4 }}
               >
-                {CATEGORIES.map((cat) => (
+                {categories.map((cat) => (
                   <FilterChip
                     key={cat}
                     label={cat}
