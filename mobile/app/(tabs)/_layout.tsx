@@ -1,11 +1,11 @@
-import { View, Pressable } from 'react-native';
-import { Tabs, router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Pressable } from "react-native";
+import { Tabs, router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 function FABButton() {
   return (
     <Pressable
-      onPress={() => router.push('/log-hours' as any)}
+      onPress={() => router.push("/log-hours" as any)}
       className="w-14 h-14 rounded-full bg-primary-500 items-center justify-center -mt-6 shadow-lg"
       style={{ elevation: 5 }}
     >
@@ -19,16 +19,16 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#3B82F6',
-        tabBarInactiveTintColor: '#94a3b8',
+        tabBarActiveTintColor: "#3B82F6",
+        tabBarInactiveTintColor: "#94a3b8",
         tabBarLabelStyle: {
-          fontFamily: 'Inter_500Medium',
+          fontFamily: "Inter_500Medium",
           fontSize: 11,
         },
         tabBarStyle: {
-          backgroundColor: 'white',
+          backgroundColor: "white",
           borderTopWidth: 1,
-          borderTopColor: '#e2e8f0',
+          borderTopColor: "#e2e8f0",
           height: 85,
           paddingTop: 8,
         },
@@ -37,7 +37,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
+          title: "Dashboard",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="grid-outline" size={size} color={color} />
           ),
@@ -46,7 +46,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="activity"
         options={{
-          title: 'Activity',
+          title: "Activity",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list-outline" size={size} color={color} />
           ),
@@ -55,14 +55,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="log"
         options={{
-          title: '',
+          title: "",
           tabBarIcon: () => <FABButton />,
         }}
       />
       <Tabs.Screen
         name="opportunities"
         options={{
-          title: 'Events',
+          title: "Events",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
@@ -71,7 +71,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="more"
         options={{
-          title: 'More',
+          title: "More",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="ellipsis-horizontal" size={size} color={color} />
           ),
