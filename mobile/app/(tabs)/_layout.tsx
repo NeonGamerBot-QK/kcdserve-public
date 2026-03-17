@@ -6,7 +6,7 @@ function FABButton() {
   return (
     <Pressable
       onPress={() => router.push('/log-hours' as any)}
-      className="w-14 h-14 rounded-full bg-primary-500 items-center justify-center -mt-6 shadow-lg"
+      className="w-14 h-14 rounded-full -mb-2 bg-primary-500 items-center justify-center shadow-lg"
       style={{ elevation: 5 }}
     >
       <Ionicons name="add" size={32} color="white" />
