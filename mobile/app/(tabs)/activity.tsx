@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, SectionList, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  SectionList,
+  ActivityIndicator,
+} from "react-native";
 import { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
@@ -10,11 +16,66 @@ import type { ServiceHourEntry } from "../../lib/api/serviceHours";
 
 // Fallback mock data for dev mode without SERVER_URL
 const MOCK_HOURS: ServiceHourEntry[] = [
-  { id: 1, title: "Food Bank Volunteering", description: "", organization_name: "NHS", hours: 3, status: "approved", service_date: "2023-10-15", category: null, group: "NHS", created_at: "2023-10-15T00:00:00Z" },
-  { id: 2, title: "Park Cleanup", description: "", organization_name: "Key Club", hours: 2.5, status: "pending", service_date: "2023-10-12", category: null, group: "Key Club", created_at: "2023-10-12T00:00:00Z" },
-  { id: 3, title: "Tutoring Session", description: "", organization_name: "NHS", hours: 1.5, status: "approved", service_date: "2023-10-08", category: null, group: "NHS", created_at: "2023-10-08T00:00:00Z" },
-  { id: 4, title: "Welcome Week Setup", description: "", organization_name: "Student Council", hours: 4, status: "approved", service_date: "2023-09-28", category: null, group: "Student Council", created_at: "2023-09-28T00:00:00Z" },
-  { id: 5, title: "Library Organization", description: "", organization_name: "NHS", hours: 2, status: "rejected", service_date: "2023-09-15", category: null, group: "NHS", created_at: "2023-09-15T00:00:00Z" },
+  {
+    id: 1,
+    title: "Food Bank Volunteering",
+    description: "",
+    organization_name: "NHS",
+    hours: 3,
+    status: "approved",
+    service_date: "2023-10-15",
+    category: null,
+    group: "NHS",
+    created_at: "2023-10-15T00:00:00Z",
+  },
+  {
+    id: 2,
+    title: "Park Cleanup",
+    description: "",
+    organization_name: "Key Club",
+    hours: 2.5,
+    status: "pending",
+    service_date: "2023-10-12",
+    category: null,
+    group: "Key Club",
+    created_at: "2023-10-12T00:00:00Z",
+  },
+  {
+    id: 3,
+    title: "Tutoring Session",
+    description: "",
+    organization_name: "NHS",
+    hours: 1.5,
+    status: "approved",
+    service_date: "2023-10-08",
+    category: null,
+    group: "NHS",
+    created_at: "2023-10-08T00:00:00Z",
+  },
+  {
+    id: 4,
+    title: "Welcome Week Setup",
+    description: "",
+    organization_name: "Student Council",
+    hours: 4,
+    status: "approved",
+    service_date: "2023-09-28",
+    category: null,
+    group: "Student Council",
+    created_at: "2023-09-28T00:00:00Z",
+  },
+  {
+    id: 5,
+    title: "Library Organization",
+    description: "",
+    organization_name: "NHS",
+    hours: 2,
+    status: "rejected",
+    service_date: "2023-09-15",
+    category: null,
+    group: "NHS",
+    created_at: "2023-09-15T00:00:00Z",
+  },
 ];
 
 const FILTERS = ["All", "Approved", "Pending", "Rejected"];
@@ -24,7 +85,9 @@ function groupByMonth(hours: ServiceHourEntry[]) {
   const map = new Map<string, ServiceHourEntry[]>();
   for (const h of hours) {
     const date = new Date(h.service_date);
-    const key = date.toLocaleDateString("en-US", { month: "long", year: "numeric" }).toUpperCase();
+    const key = date
+      .toLocaleDateString("en-US", { month: "long", year: "numeric" })
+      .toUpperCase();
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(h);
   }
