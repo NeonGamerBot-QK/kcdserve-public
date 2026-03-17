@@ -10,10 +10,12 @@ type TopBarProps = {
 
 export default function TopBar({ initial }: TopBarProps) {
   const user = useAuthStore((s) => s.user);
-  const isAdmin = USE_API && (user?.role === "admin" || user?.role === "super_admin");
+  const isAdmin =
+    USE_API && (user?.role === "admin" || user?.role === "super_admin");
 
   // Use first letter of user's name if available and no explicit initial
-  const displayInitial = initial ?? (USE_API && user ? user.first_name[0] : undefined);
+  const displayInitial =
+    initial ?? (USE_API && user ? user.first_name[0] : undefined);
 
   return (
     <View className="flex-row items-center mb-4 px-5 pt-2 pb-3 border-b border-slate-200">
@@ -30,7 +32,17 @@ export default function TopBar({ initial }: TopBarProps) {
       )}
       <View className="absolute left-0 right-0 items-center">
         {isAdmin ? (
-          <View style={{ borderWidth: 2, borderColor: '#f97316', borderStyle: 'dashed', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 2, backgroundColor: '#fff7ed' }}>
+          <View
+            style={{
+              borderWidth: 2,
+              borderColor: "#f97316",
+              borderStyle: "dashed",
+              borderRadius: 8,
+              paddingHorizontal: 10,
+              paddingVertical: 2,
+              backgroundColor: "#fff7ed",
+            }}
+          >
             <Text className="font-inter-semibold text-lg text-slate-900">
               KCDServe
             </Text>
