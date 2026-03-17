@@ -1,83 +1,79 @@
-<div class="row">
-  <div class="col-md-8">
-    <h1><%= @opportunity.title %></h1>
-    <div class="mb-3">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="md:col-span-2">
+    <h1 class="text-2xl font-bold text-slate-900 mb-3"><%= @opportunity.title %></h1>
+    <div class="flex flex-wrap gap-2 mb-4">
       <% if @opportunity.category %>
-        <span class="badge" style="background-color: <%= @opportunity.category.color %>;">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-medium text-white" style="background-color: <%= @opportunity.category.color %>;">
           <%= @opportunity.category.name %>
         </span>
       <% end %>
       <% unless @opportunity.published? %>
-        <span class="badge bg-secondary">Draft</span>
+        <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">Draft</span>
       <% end %>
     </div>
 
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <p><i class="bi bi-calendar me-2"></i><strong>Date:</strong> <%= @opportunity.date.strftime("%B %d, %Y") %></p>
-            <% if @opportunity.start_time %>
-              <p><i class="bi bi-clock me-2"></i><strong>Time:</strong> <%= @opportunity.start_time.strftime("%I:%M %p") %><%= " — #{@opportunity.end_time.strftime('%I:%M %p')}" if @opportunity.end_time %></p>
-            <% end %>
-          </div>
-          <div class="col-md-6">
-            <p><i class="bi bi-geo-alt me-2"></i><strong>Location:</strong> <%= @opportunity.location || "TBD" %></p>
-            <% if @opportunity.required_hours %>
-              <p><i class="bi bi-hourglass me-2"></i><strong>Required Hours:</strong> <%= @opportunity.required_hours %></p>
-            <% end %>
-            <% if @opportunity.max_volunteers %>
-              <p><i class="bi bi-people me-2"></i><strong>Spots:</strong> <%= @opportunity.spots_remaining %> of <%= @opportunity.max_volunteers %> remaining</p>
-            <% end %>
-          </div>
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div class="space-y-2">
+          <p><span class="mr-1">&#128197;</span> <span class="font-medium text-slate-500">Date:</span> <span class="text-slate-900"><%= @opportunity.date.strftime("%B %d, %Y") %></span></p>
+          <% if @opportunity.start_time %>
+            <p><span class="mr-1">&#128336;</span> <span class="font-medium text-slate-500">Time:</span> <span class="text-slate-900"><%= @opportunity.start_time.strftime("%I:%M %p") %><%= " — #{@opportunity.end_time.strftime('%I:%M %p')}" if @opportunity.end_time %></span></p>
+          <% end %>
+        </div>
+        <div class="space-y-2">
+          <p><span class="mr-1">&#128205;</span> <span class="font-medium text-slate-500">Location:</span> <span class="text-slate-900"><%= @opportunity.location || "TBD" %></span></p>
+          <% if @opportunity.required_hours %>
+            <p><span class="mr-1">&#9201;</span> <span class="font-medium text-slate-500">Required Hours:</span> <span class="text-slate-900"><%= @opportunity.required_hours %></span></p>
+          <% end %>
+          <% if @opportunity.max_volunteers %>
+            <p><span class="mr-1">&#128101;</span> <span class="font-medium text-slate-500">Spots:</span> <span class="text-slate-900"><%= @opportunity.spots_remaining %> of <%= @opportunity.max_volunteers %> remaining</span></p>
+          <% end %>
         </div>
       </div>
     </div>
 
-    <div class="mb-4">
-      <h5>Description</h5>
-      <p><%= simple_format(@opportunity.description) %></p>
+    <div class="mb-6">
+      <h5 class="font-semibold text-slate-900 mb-2">Description</h5>
+      <p class="text-slate-600"><%= simple_format(@opportunity.description) %></p>
     </div>
 
     <% if @opportunity.photos.attached? %>
-      <h5>Photos</h5>
-      <div class="row g-2 mb-4">
+      <h5 class="font-semibold text-slate-900 mb-3">Photos</h5>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
         <% @opportunity.photos.each do |photo| %>
-          <div class="col-md-4">
-            <%= image_tag photo, class: "img-fluid rounded" %>
+          <div>
+            <%= image_tag photo, class: "w-full rounded-xl" %>
           </div>
         <% end %>
       </div>
     <% end %>
   </div>
 
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-body">
-        <% if user_signed_in? %>
-          <% if @signed_up %>
-            <p class="text-success"><i class="bi bi-check-circle me-1"></i> You are signed up!</p>
-            <%= button_to "Withdraw", withdraw_opportunity_path(@opportunity), method: :delete, class: "btn btn-outline-danger w-100" %>
-          <% elsif !@opportunity.full? %>
-            <%= button_to "Sign Up", signup_opportunity_path(@opportunity), method: :post, class: "btn btn-primary w-100" %>
-          <% else %>
-            <p class="text-danger">This opportunity is full.</p>
-          <% end %>
+  <div>
+    <div class="bg-white rounded-2xl border border-gray-200 p-6">
+      <% if user_signed_in? %>
+        <% if @signed_up %>
+          <p class="text-status-approved text-sm font-medium mb-3">&#10003; You are signed up!</p>
+          <%= button_to "Withdraw", withdraw_opportunity_path(@opportunity), method: :delete, class: "w-full border border-red-500 text-red-500 rounded-xl px-4 py-2 hover:bg-red-50 font-medium text-sm" %>
+        <% elsif !@opportunity.full? %>
+          <%= button_to "Sign Up", signup_opportunity_path(@opportunity), method: :post, class: "w-full bg-primary-500 text-white rounded-xl px-4 py-2 hover:bg-primary-600 font-medium text-sm" %>
         <% else %>
-          <p>Please <%= link_to "sign in", new_user_session_path %> to sign up.</p>
+          <p class="text-status-rejected text-sm font-medium">This opportunity is full.</p>
         <% end %>
+      <% else %>
+        <p class="text-slate-500 text-sm">Please <%= link_to "sign in", new_user_session_path, class: "text-primary-500 hover:text-primary-700" %> to sign up.</p>
+      <% end %>
 
-        <hr>
+      <hr class="my-4 border-gray-200">
 
-        <% if user_signed_in? && current_user.admin_or_above? %>
-          <div class="d-grid gap-2">
-            <%= link_to "Edit", edit_opportunity_path(@opportunity), class: "btn btn-outline-secondary" %>
-            <%= button_to "Delete", opportunity_path(@opportunity), method: :delete, class: "btn btn-outline-danger", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-          <hr>
-          <p class="text-muted mb-1"><strong>Signed up:</strong> <%= @opportunity.volunteers.count %></p>
-        <% end %>
-      </div>
+      <% if user_signed_in? && current_user.admin_or_above? %>
+        <div class="space-y-2">
+          <%= link_to "Edit", edit_opportunity_path(@opportunity), class: "block w-full text-center border border-slate-300 text-slate-700 rounded-xl px-4 py-2 hover:bg-slate-50 font-medium text-sm" %>
+          <%= button_to "Delete", opportunity_path(@opportunity), method: :delete, class: "w-full border border-red-500 text-red-500 rounded-xl px-4 py-2 hover:bg-red-50 font-medium text-sm", data: { turbo_confirm: "Are you sure?" } %>
+        </div>
+        <hr class="my-4 border-gray-200">
+        <p class="text-slate-500 text-sm"><span class="font-medium">Signed up:</span> <%= @opportunity.volunteers.count %></p>
+      <% end %>
     </div>
   </div>
 </div>

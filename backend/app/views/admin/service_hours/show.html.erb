@@ -1,101 +1,98 @@
-<h1>Review Service Hour</h1>
+<h1 class="text-2xl font-semibold text-slate-900 mb-6">Review Service Hour</h1>
 
-<div class="row">
-  <div class="col-md-8">
-    <div class="card mb-4">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <% if @service_hour.title.present? %>
-              <p><strong>Title:</strong> <%= @service_hour.title %></p>
-            <% end %>
-            <p>
-              <strong>Volunteer:</strong>
-              <% if @service_hour.user %>
-                <%= link_to @service_hour.user.full_name, admin_user_path(@service_hour.user) %>
-                <% if @service_hour.user.deleted? %>
-                  <span class="badge bg-secondary">Deactivated</span>
-                <% end %>
-              <% else %>
-                <span class="text-muted">Deleted User</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="md:col-span-2">
+    <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <% if @service_hour.title.present? %>
+            <p class="text-sm"><span class="font-medium text-slate-500">Title:</span> <span class="text-slate-900"><%= @service_hour.title %></span></p>
+          <% end %>
+          <p class="text-sm">
+            <span class="font-medium text-slate-500">Volunteer:</span>
+            <% if @service_hour.user %>
+              <%= link_to @service_hour.user.full_name, admin_user_path(@service_hour.user), class: "text-primary-500 hover:text-primary-700" %>
+              <% if @service_hour.user.deleted? %>
+                <span class="ml-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs">Deactivated</span>
               <% end %>
-            </p>
-            <p><strong>Date:</strong> <%= @service_hour.service_date.strftime("%B %d, %Y") %></p>
-            <p><strong>Hours:</strong> <%= @service_hour.hours %></p>
-            <p><strong>Category:</strong> <%= @service_hour.category.name %></p>
-          </div>
-          <div class="col-md-6">
-            <p><strong>Group:</strong> <%= @service_hour.group&.name || "N/A" %></p>
-            <p>
-              <strong>Status:</strong>
-              <span class="badge bg-<%= @service_hour.approved? ? 'success' : @service_hour.pending? ? 'warning' : 'danger' %>">
-                <%= @service_hour.status.humanize %>
-              </span>
-            </p>
-          </div>
+            <% else %>
+              <span class="text-slate-400">Deleted User</span>
+            <% end %>
+          </p>
+          <p class="text-sm"><span class="font-medium text-slate-500">Date:</span> <span class="text-slate-900"><%= @service_hour.service_date.strftime("%B %d, %Y") %></span></p>
+          <p class="text-sm"><span class="font-medium text-slate-500">Hours:</span> <span class="text-slate-900 font-semibold"><%= @service_hour.hours %></span></p>
+          <p class="text-sm"><span class="font-medium text-slate-500">Category:</span> <span class="text-slate-900"><%= @service_hour.category.name %></span></p>
         </div>
-        <hr>
-        <h6>Description</h6>
-        <p><%= simple_format(@service_hour.description) %></p>
+        <div class="space-y-2">
+          <p class="text-sm"><span class="font-medium text-slate-500">Group:</span> <span class="text-slate-900"><%= @service_hour.group&.name || "N/A" %></span></p>
+          <p class="text-sm">
+            <span class="font-medium text-slate-500">Status:</span>
+            <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-medium <%= @service_hour.approved? ? 'bg-green-50 text-status-approved' : @service_hour.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+              <%= @service_hour.status.humanize %>
+            </span>
+          </p>
+        </div>
       </div>
+      <hr class="my-4 border-gray-200">
+      <h6 class="font-semibold text-slate-900 mb-2">Description</h6>
+      <p class="text-slate-600 text-sm"><%= simple_format(@service_hour.description) %></p>
     </div>
 
     <% if @service_hour.photos.attached? %>
-      <h5>Photo Proof</h5>
-      <div class="row g-2 mb-4">
+      <h5 class="font-semibold text-slate-900 mb-3">Photo Proof</h5>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
         <% @service_hour.photos.each do |photo| %>
-          <div class="col-md-4">
-            <%= image_tag photo, class: "img-fluid rounded" %>
+          <div>
+            <%= image_tag photo, class: "w-full rounded-xl" %>
           </div>
         <% end %>
       </div>
     <% end %>
   </div>
 
-  <div class="col-md-4">
+  <div>
     <% if @service_hour.pending? %>
-      <div class="card">
-        <div class="card-header"><h5 class="mb-0">Review</h5></div>
-        <div class="card-body">
+      <div class="bg-white rounded-2xl border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h5 class="font-semibold text-slate-900">Review</h5>
+        </div>
+        <div class="p-6">
           <%= form_with(url: review_admin_service_hour_path(@service_hour), method: :patch, local: true) do |f| %>
-            <div class="mb-3">
-              <%= f.label :admin_comment, "Comment", class: "form-label" %>
-              <%= f.text_area :admin_comment, class: "form-control", rows: 3, name: "admin_comment" %>
+            <div class="mb-4">
+              <%= f.label :admin_comment, "Comment", class: "block text-sm font-medium text-slate-700 mb-1" %>
+              <%= f.text_area :admin_comment, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500", rows: 3, name: "admin_comment" %>
             </div>
-            <div class="d-grid gap-2">
-              <button type="submit" name="status" value="approved" class="btn btn-success">
-                <i class="bi bi-check-circle me-1"></i> Approve
+            <div class="space-y-2">
+              <button type="submit" name="status" value="approved" class="w-full bg-status-approved text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:opacity-90">
+                &#10003; Approve
               </button>
-              <button type="submit" name="status" value="rejected" class="btn btn-danger">
-                <i class="bi bi-x-circle me-1"></i> Reject
+              <button type="submit" name="status" value="rejected" class="w-full bg-status-rejected text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:opacity-90">
+                &#10005; Reject
               </button>
             </div>
           <% end %>
         </div>
       </div>
     <% else %>
-      <div class="card">
-        <div class="card-body">
-          <p><strong>Reviewed by:</strong> <%= @service_hour.reviewer&.full_name || "N/A" %></p>
-          <p><strong>Reviewed at:</strong> <%= @service_hour.reviewed_at&.strftime("%B %d, %Y %I:%M %p") %></p>
-          <% if @service_hour.admin_comment.present? %>
-            <p><strong>Comment:</strong> <%= @service_hour.admin_comment %></p>
-          <% end %>
-        </div>
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <p class="text-sm mb-2"><span class="font-medium text-slate-500">Reviewed by:</span> <span class="text-slate-900"><%= @service_hour.reviewer&.full_name || "N/A" %></span></p>
+        <p class="text-sm mb-2"><span class="font-medium text-slate-500">Reviewed at:</span> <span class="text-slate-900"><%= @service_hour.reviewed_at&.strftime("%B %d, %Y %I:%M %p") %></span></p>
+        <% if @service_hour.admin_comment.present? %>
+          <p class="text-sm"><span class="font-medium text-slate-500">Comment:</span> <span class="text-slate-600"><%= @service_hour.admin_comment %></span></p>
+        <% end %>
       </div>
     <% end %>
   </div>
 </div>
 
 <% if @service_hour.editor.present? %>
-  <div class="alert alert-info mt-3">
-    <i class="bi bi-pencil-square me-1"></i>
-    Last edited by <strong><%= @service_hour.editor.full_name %></strong>
+  <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6 text-sm text-blue-800">
+    &#9998; Last edited by <strong><%= @service_hour.editor.full_name %></strong>
     on <%= @service_hour.edited_at&.strftime("%B %d, %Y %I:%M %p") %>
   </div>
 <% end %>
 
-<div class="mt-3">
-  <%= link_to "Edit", edit_admin_service_hour_path(@service_hour), class: "btn btn-outline-primary" %>
-  <%= link_to "← Back", admin_service_hours_path, class: "btn btn-outline-secondary" %>
+<div class="mt-4 flex items-center space-x-3">
+  <%= link_to "Edit", edit_admin_service_hour_path(@service_hour), class: "border border-primary-500 text-primary-500 px-5 py-2 rounded-xl text-sm font-medium hover:bg-primary-50" %>
+  <%= link_to "← Back", admin_service_hours_path, class: "border border-slate-300 text-slate-700 px-5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50" %>
 </div>

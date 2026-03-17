@@ -31,7 +31,7 @@
     </li>
     <% if current_user.super_admin? %>
       <li>
-        <%= link_to admin_audit_log_index_path, class: "block px-3 py-2 rounded text-white #{controller_name == 'audit_log' ? 'bg-blue-600' : ''}" style="border: 2px dashed #dc3545; margin: 4px 0;" do %>
+        <%= link_to admin_audit_log_index_path, class: "block px-3 py-2 rounded text-white #{controller_name == 'audit_log' ? 'bg-blue-600' : ''}", style: "border: 2px dashed #dc3545; margin: 4px 0;" do %>
           <span class="mr-2">&#128221;</span> Audit Logs RAW
         <% end %>
       </li>

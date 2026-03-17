@@ -1,83 +1,79 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0">Volunteers</h1>
-  <div>
-    <button class="btn btn-outline-secondary btn-sm" onclick="toggleColumnSelector()">
-      <i class="bi bi-layout-columns"></i> Columns
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-semibold text-slate-900">Volunteers</h1>
+  <div class="flex space-x-2">
+    <button class="border border-slate-300 text-slate-700 px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-slate-50" onclick="toggleColumnSelector()">
+      &#9776; Columns
     </button>
-    <button class="btn btn-outline-secondary btn-sm" onclick="copyTable()">
-      <i class="bi bi-clipboard"></i> Copy as Table
+    <button class="border border-slate-300 text-slate-700 px-3 py-1.5 rounded-xl text-sm font-medium hover:bg-slate-50" onclick="copyTable()">
+      &#128203; Copy as Table
     </button>
   </div>
 </div>
 
-<div id="column-selector" class="card mb-3" style="display: none;">
-  <div class="card-body">
-    <h6 class="card-title">Select Columns</h6>
-    <div class="row">
-      <% [ { id: 'col-name', label: 'Name' },
-           { id: 'col-email', label: 'Email' },
-           { id: 'col-phone', label: 'Phone' },
-           { id: 'col-role', label: 'Role' },
-           { id: 'col-hours', label: 'Total Hours' },
-           { id: 'col-birthday', label: 'Birthday' },
-           { id: 'col-age', label: 'Age' },
-           { id: 'col-groups', label: 'Groups' },
-           { id: 'col-joined', label: 'Joined' },
-           { id: 'col-status', label: 'Status' } ].each do |col| %>
-        <div class="col-3">
-          <div class="form-check">
-            <input class="form-check-input column-toggle" type="checkbox" value="<%= col[:id] %>" id="<%= col[:id] %>" data-label="<%= col[:label] %>">
-            <label class="form-check-label" for="<%= col[:id] %>"><%= col[:label] %></label>
-          </div>
-        </div>
-      <% end %>
-    </div>
-    <div class="mt-2">
-      <button class="btn btn-primary btn-sm" onclick="applyColumns()">Apply</button>
-      <button class="btn btn-secondary btn-sm" onclick="selectAllColumns()">Select All</button>
-      <button class="btn btn-outline-secondary btn-sm" onclick="toggleColumnSelector()">Close</button>
-    </div>
+<div id="column-selector" class="bg-white rounded-2xl border border-gray-200 p-6 mb-6" style="display: none;">
+  <h6 class="font-semibold text-slate-900 mb-3">Select Columns</h6>
+  <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <% [ { id: 'col-name', label: 'Name' },
+         { id: 'col-email', label: 'Email' },
+         { id: 'col-phone', label: 'Phone' },
+         { id: 'col-role', label: 'Role' },
+         { id: 'col-hours', label: 'Total Hours' },
+         { id: 'col-birthday', label: 'Birthday' },
+         { id: 'col-age', label: 'Age' },
+         { id: 'col-groups', label: 'Groups' },
+         { id: 'col-joined', label: 'Joined' },
+         { id: 'col-status', label: 'Status' } ].each do |col| %>
+      <label class="flex items-center space-x-2 text-sm text-slate-700 cursor-pointer">
+        <input class="column-toggle h-4 w-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500" type="checkbox" value="<%= col[:id] %>" id="<%= col[:id] %>" data-label="<%= col[:label] %>">
+        <span><%= col[:label] %></span>
+      </label>
+    <% end %>
+  </div>
+  <div class="mt-4 flex items-center space-x-2">
+    <button class="bg-primary-500 text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-primary-600" onclick="applyColumns()">Apply</button>
+    <button class="border border-slate-300 text-slate-700 px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-slate-50" onclick="selectAllColumns()">Select All</button>
+    <button class="text-slate-500 hover:text-slate-700 px-4 py-1.5 text-sm" onclick="toggleColumnSelector()">Close</button>
   </div>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-bordered table-hover table-sm" id="volunteers-table">
-    <thead class="table-light">
+<div class="bg-white rounded-2xl border border-gray-200 overflow-x-auto">
+  <table class="w-full text-sm" id="volunteers-table">
+    <thead class="bg-slate-50">
       <tr>
-        <th class="text-nowrap col-name">Name</th>
-        <th class="text-nowrap col-email">Email</th>
-        <th class="text-nowrap col-phone">Phone</th>
-        <th class="text-nowrap col-role">Role</th>
-        <th class="text-nowrap text-end col-hours">Total Hours</th>
-        <th class="text-nowrap col-birthday">Birthday</th>
-        <th class="text-nowrap text-center col-age">Age</th>
-        <th class="text-nowrap col-groups">Groups</th>
-        <th class="text-nowrap col-joined">Joined</th>
-        <th class="text-nowrap col-status">Status</th>
-        <th class="text-nowrap"></th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-name">Name</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-email">Email</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-phone">Phone</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-role">Role</th>
+        <th class="text-right px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-hours">Total Hours</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-birthday">Birthday</th>
+        <th class="text-center px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-age">Age</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-groups">Groups</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-joined">Joined</th>
+        <th class="text-left px-4 py-3 text-slate-500 font-medium whitespace-nowrap col-status">Status</th>
+        <th class="px-4 py-3"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="divide-y divide-gray-100">
       <% @volunteers.each do |user| %>
-        <tr>
-          <td class="col-name"><%= link_to user.full_name, admin_user_path(user) %></td>
-          <td class="col-email"><%= user.email %></td>
-          <td class="col-phone"><%= user.phone || "—" %></td>
-          <td class="col-role"><span class="badge bg-secondary"><%= user.role.humanize %></span></td>
-          <td class="text-end col-hours"><%= user.total_approved_hours.to_i %></td>
-          <td class="col-birthday"><%= user.birthday&.strftime("%m/%d/%Y") || "—" %></td>
-          <td class="text-center col-age"><%= user.age || "—" %></td>
-          <td class="col-groups"><%= user.groups.pluck(:name).join(", ") || "—" %></td>
-          <td class="col-joined"><%= user.created_at.strftime("%m/%d/%Y") %></td>
-          <td class="col-status">
+        <tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 col-name"><%= link_to user.full_name, admin_user_path(user), class: "text-primary-500 hover:text-primary-700 font-medium" %></td>
+          <td class="px-4 py-3 text-slate-600 col-email"><%= user.email %></td>
+          <td class="px-4 py-3 text-slate-600 col-phone"><%= user.phone || "—" %></td>
+          <td class="px-4 py-3 col-role"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"><%= user.role.humanize %></span></td>
+          <td class="px-4 py-3 text-right text-slate-600 col-hours"><%= user.total_approved_hours.to_i %></td>
+          <td class="px-4 py-3 text-slate-600 col-birthday"><%= user.birthday&.strftime("%m/%d/%Y") || "—" %></td>
+          <td class="px-4 py-3 text-center text-slate-600 col-age"><%= user.age || "—" %></td>
+          <td class="px-4 py-3 text-slate-600 col-groups"><%= user.groups.pluck(:name).join(", ") || "—" %></td>
+          <td class="px-4 py-3 text-slate-600 col-joined"><%= user.created_at.strftime("%m/%d/%Y") %></td>
+          <td class="px-4 py-3 col-status">
             <% if user.deleted? %>
-              <span class="badge bg-danger">Deactivated</span>
+              <span class="px-2 py-0.5 rounded-full bg-red-50 text-status-rejected text-xs font-medium">Deactivated</span>
             <% else %>
-              <span class="badge bg-success">Active</span>
+              <span class="px-2 py-0.5 rounded-full bg-green-50 text-status-approved text-xs font-medium">Active</span>
             <% end %>
           </td>
-          <td>
-            <%= link_to "View", profile_path(user), class: "btn btn-sm btn-outline-secondary" %>
+          <td class="px-4 py-3">
+            <%= link_to "View", profile_path(user), class: "text-slate-500 hover:text-slate-700 text-xs font-medium" %>
           </td>
         </tr>
       <% end %>
@@ -85,7 +81,7 @@
   </table>
 </div>
 
-<div class="mt-3">
+<div class="mt-4">
   <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
 </div>
 
@@ -152,14 +148,12 @@ function copyTable() {
   });
 }
 
-// Initialize on load
 document.addEventListener('DOMContentLoaded', function() {
   let columns = getStoredColumns();
   if (!columns) {
     columns = ['col-name', 'col-email', 'col-role', 'col-hours', 'col-status'];
   }
   
-  // Set checkboxes
   document.querySelectorAll('.column-toggle').forEach(cb => {
     cb.checked = columns.includes(cb.value);
   });

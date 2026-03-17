@@ -1,10 +1,16 @@
-<nav class="bg-white border-b border-gray-200 px-4 py-3">
+<nav class="bg-white border-b border-slate-200 px-6 py-3">
   <div class="flex justify-between items-center">
-    <span class="text-gray-700">
-      Signed in as <strong><%= current_user.full_name %></strong> (<%= current_user.role.humanize %>)
-    </span>
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-full bg-accent-500 flex items-center justify-center">
+        <span class="font-semibold text-white text-sm"><%= current_user.first_name[0] %></span>
+      </div>
+      <span class="text-slate-700 text-sm">
+        Signed in as <strong class="font-semibold"><%= current_user.full_name %></strong>
+        <span class="ml-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs"><%= current_user.role.humanize %></span>
+      </span>
+    </div>
     <div>
-      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-3 py-1 border border-gray-300 rounded text-gray-700 hover:bg-gray-100 text-sm" %>
+      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-1.5 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 text-sm font-medium" %>
     </div>
   </div>
 </nav>
