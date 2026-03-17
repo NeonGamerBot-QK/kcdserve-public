@@ -178,14 +178,22 @@ export default function LogHoursPage1() {
   return (
     <SafeAreaView className={`flex-1 ${bgPage}`}>
       {/* Header */}
-      <View className={`flex-row items-center px-4 py-3 border-b ${borderInput}`}>
+      <View
+        className={`flex-row items-center px-4 py-3 border-b ${borderInput}`}
+      >
         <Pressable
           onPress={() => router.back()}
           className="w-9 h-9 items-center justify-center"
         >
-          <Ionicons name="close" size={24} color={isDark ? "#f1f5f9" : "#0f172a"} />
+          <Ionicons
+            name="close"
+            size={24}
+            color={isDark ? "#f1f5f9" : "#0f172a"}
+          />
         </Pressable>
-        <Text className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}>
+        <Text
+          className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}
+        >
           Log Hours
         </Text>
         <View className="w-9" />
@@ -210,15 +218,29 @@ export default function LogHoursPage1() {
                 control={control}
                 name="suborg"
                 render={({ field: { onChange, value } }) => (
-                  <View className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden mb-1`}>
+                  <View
+                    className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden mb-1`}
+                  >
                     <Picker
                       selectedValue={value ?? ""}
                       onValueChange={onChange}
-                      style={{ color: pickerTextColor, backgroundColor: isDark ? "#1e293b" : "#f8fafc" }}
+                      style={{
+                        color: pickerTextColor,
+                        backgroundColor: isDark ? "#1e293b" : "#f8fafc",
+                      }}
                     >
-                      <Picker.Item label="None" value="" color={pickerTextColor} />
+                      <Picker.Item
+                        label="None"
+                        value=""
+                        color={pickerTextColor}
+                      />
                       {groups.map((g) => (
-                        <Picker.Item key={g.id} label={g.name} value={g.id} color={pickerTextColor} />
+                        <Picker.Item
+                          key={g.id}
+                          label={g.name}
+                          value={g.id}
+                          color={pickerTextColor}
+                        />
                       ))}
                     </Picker>
                   </View>
@@ -228,7 +250,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Hours + Minutes */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Time
           </Text>
           <View className="flex-row gap-3">
@@ -240,14 +264,24 @@ export default function LogHoursPage1() {
                 control={control}
                 name="hours"
                 render={({ field: { onChange, value } }) => (
-                  <View className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden`}>
+                  <View
+                    className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden`}
+                  >
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: pickerTextColor, backgroundColor: isDark ? "#1e293b" : "#f8fafc" }}
+                      style={{
+                        color: pickerTextColor,
+                        backgroundColor: isDark ? "#1e293b" : "#f8fafc",
+                      }}
                     >
                       {Array.from({ length: 25 }, (_, i) => (
-                        <Picker.Item key={i} label={String(i)} value={i} color={pickerTextColor} />
+                        <Picker.Item
+                          key={i}
+                          label={String(i)}
+                          value={i}
+                          color={pickerTextColor}
+                        />
                       ))}
                     </Picker>
                   </View>
@@ -262,11 +296,16 @@ export default function LogHoursPage1() {
                 control={control}
                 name="minutes"
                 render={({ field: { onChange, value } }) => (
-                  <View className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden`}>
+                  <View
+                    className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden`}
+                  >
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: pickerTextColor, backgroundColor: isDark ? "#1e293b" : "#f8fafc" }}
+                      style={{
+                        color: pickerTextColor,
+                        backgroundColor: isDark ? "#1e293b" : "#f8fafc",
+                      }}
                     >
                       {[0, 15, 30, 45].map((m) => (
                         <Picker.Item
@@ -289,7 +328,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Service Date */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Service Date
           </Text>
           <Controller
@@ -385,7 +426,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Organization */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Organization
           </Text>
           <Controller
@@ -407,7 +450,9 @@ export default function LogHoursPage1() {
                 />
                 {showSuggestions &&
                   (orgSuggestions.length > 0 || showAddNew) && (
-                    <View className={`border ${borderSuggestions} rounded-xl mt-1 ${bgSuggestions} overflow-hidden`}>
+                    <View
+                      className={`border ${borderSuggestions} rounded-xl mt-1 ${bgSuggestions} overflow-hidden`}
+                    >
                       {orgSuggestions.map((org) => (
                         <Pressable
                           key={org}
@@ -418,7 +463,9 @@ export default function LogHoursPage1() {
                           }}
                           className={`px-4 py-3 border-b ${suggestionBorder}`}
                         >
-                          <Text className={`font-inter text-base ${textPrimary}`}>
+                          <Text
+                            className={`font-inter text-base ${textPrimary}`}
+                          >
                             {org}
                           </Text>
                         </Pressable>
@@ -447,7 +494,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Category */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Category
           </Text>
           <Controller
@@ -478,7 +527,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Description */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Description
           </Text>
           <Controller
@@ -499,7 +550,9 @@ export default function LogHoursPage1() {
               />
             )}
           />
-          <Text className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"} text-right mt-1`}>
+          <Text
+            className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"} text-right mt-1`}
+          >
             {descriptionValue.length}/500
           </Text>
           {errors.description && (
