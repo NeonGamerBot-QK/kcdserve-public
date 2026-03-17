@@ -156,13 +156,7 @@ export default function LogHoursPage1() {
     },
     (errors) => {
       console.log("[onNext] validation errors:", JSON.stringify(errors));
-      Alert.alert(
-        "Fix these errors",
-        Object.values(errors)
-          .map((e) => e?.message)
-          .filter(Boolean)
-          .join("\n"),
-      );
+      Alert.alert("Validation Errors", JSON.stringify(errors, null, 2));
     },
   );
 
