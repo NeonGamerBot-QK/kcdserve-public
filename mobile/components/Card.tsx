@@ -1,12 +1,12 @@
-import { View } from 'react-native';
-import { useTheme } from '../hooks/useTheme';
+import { View } from "react-native";
+import { useTheme } from "../hooks/useTheme";
 
 type CardProps = {
   children: React.ReactNode;
   className?: string;
 };
 
-export default function Card({ children, className = '' }: CardProps) {
+export default function Card({ children, className = "" }: CardProps) {
   const { isDark } = useTheme();
 
   const bgCard = isDark ? "bg-slate-900" : "bg-white";
