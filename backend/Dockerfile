@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 # check=error=true;skip=SecretsUsedInArgOrEnv
 
-
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
 # docker build -t kcdserve .
 # docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name kcdserve kcdserve
