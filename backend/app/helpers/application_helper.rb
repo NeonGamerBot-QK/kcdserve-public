@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  include Pagy::Loader
+  # TODO: fix Pagy::Loader eager load issue in production
+  # include Pagy::Loader
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_023116) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_031054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -151,6 +151,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_023116) do
     t.index ["user_id"], name: "index_service_hours_on_user_id"
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "expires_at", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["token"], name: "index_sessions_on_token", unique: true
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "bio"
     t.date "birthday"
@@ -160,6 +170,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_023116) do
     t.string "encrypted_password", default: "", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
+    t.string "login_pin"
+    t.datetime "login_pin_sent_at"
     t.datetime "magic_link_sent_at"
     t.string "magic_link_token"
     t.string "phone"
@@ -203,4 +215,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_023116) do
   add_foreign_key "service_hours", "users"
   add_foreign_key "service_hours", "users", column: "edited_by_id"
   add_foreign_key "service_hours", "users", column: "reviewed_by_id"
+  add_foreign_key "sessions", "users"
 end

@@ -1,69 +1,113 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import TopBar from '../../components/TopBar';
-import OrgCard from '../../components/OrgCard';
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../../components/TopBar";
+import OrgCard from "../../components/OrgCard";
+import { USE_API } from "../../lib/config";
+import { useDashboard } from "../../hooks/useDashboard";
+
+// Fallback mock data for dev mode without SERVER_URL
+const MOCK = {
+  approved_hours: 42.5,
+  pending_hours: 8.0,
+  groups: [
+    {
+      id: 1,
+      name: "National Honor Society",
+      current_hours: 18,
+      total_approved_hours: 25,
+    },
+    { id: 2, name: "Key Club", current_hours: 12.5, total_approved_hours: 20 },
+    {
+      id: 3,
+      name: "Student Council",
+      current_hours: 12,
+      total_approved_hours: 15,
+    },
+  ],
+};
 
 export default function DashboardScreen() {
+  const { data, isLoading, isError } = useDashboard();
+
+  const dashboard = USE_API ? data : MOCK;
+
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
       <ScrollView className="flex-1">
-        <TopBar initial="J" />
+        <TopBar />
 
-        {/* Stats hero */}
-        <View className="items-center mt-4 mb-5">
-          <Text className="font-inter-medium text-sm uppercase tracking-wider text-slate-500 mb-1">
-            TOTAL APPROVED
-          </Text>
-          <Text className="font-inter-semibold text-6xl text-slate-900 mt-1.5">
-            42.5
-          </Text>
-          <Text className="font-inter text-base text-slate-500 mt-1">
-            Hours completed this year
-          </Text>
-        </View>
+        {USE_API && isLoading && (
+          <View className="items-center mt-10">
+            <ActivityIndicator size="large" color="#3B82F6" />
+          </View>
+        )}
 
-        {/* Pending pill */}
-        <View className="items-center mb-8">
-          <View className="flex-row items-center bg-white rounded-2xl px-5 py-4 border border-gray-200">
-            <View className="w-2 h-2 rounded-full bg-status-pending mr-2" />
-            <Text className="font-inter-medium text-sm text-slate-900">
-              8.0 Pending
+        {USE_API && isError && (
+          <View className="items-center mt-10 px-5">
+            <Text className="font-inter text-base text-red-500 text-center">
+              Failed to load dashboard. Pull down to retry.
             </Text>
           </View>
-        </View>
+        )}
 
-        {/* Suborganizations */}
-        <View className="px-5">
-          <View className="flex-row justify-between items-center mb-3">
-            <Text className="font-inter-semibold text-sm uppercase tracking-wider text-slate-500">
-              SUBORGANIZATIONS
-            </Text>
-            <Pressable>
-              <Text className="font-inter-medium text-sm text-primary-500">
-                View all
+        {dashboard && (
+          <>
+            {/* Stats hero */}
+            <View className="items-center mt-4 mb-5">
+              <Text className="font-inter-medium text-sm uppercase tracking-wider text-slate-500 mb-1">
+                TOTAL APPROVED
               </Text>
-            </Pressable>
-          </View>
+              <Text className="font-inter-semibold text-6xl text-slate-900 mt-1.5">
+                {dashboard.approved_hours}
+              </Text>
+              <Text className="font-inter text-base text-slate-500 mt-1">
+                Hours completed this year
+              </Text>
+            </View>
 
-          <OrgCard
-            name="National Honor Society"
-            deadline="Due Jun 1"
-            current={18}
-            total={25}
-          />
-          <OrgCard
-            name="Key Club"
-            deadline="Due May 15"
-            current={12.5}
-            total={20}
-          />
-          <OrgCard
-            name="Student Council"
-            deadline="Due Jun 30"
-            current={12}
-            total={15}
-          />
-        </View>
+            {/* Pending pill */}
+            <View className="items-center mb-8">
+              <View className="flex-row items-center bg-white rounded-2xl px-5 py-4 border border-gray-200">
+                <View className="w-2 h-2 rounded-full bg-status-pending mr-2" />
+                <Text className="font-inter-medium text-sm text-slate-900">
+                  {dashboard.pending_hours} Pending
+                </Text>
+              </View>
+            </View>
+
+            {/* Groups */}
+            {dashboard.groups.length > 0 && (
+              <View className="px-5">
+                <View className="flex-row justify-between items-center mb-3">
+                  <Text className="font-inter-semibold text-sm uppercase tracking-wider text-slate-500">
+                    GROUPS
+                  </Text>
+                  <Pressable>
+                    <Text className="font-inter-medium text-sm text-primary-500">
+                      View all
+                    </Text>
+                  </Pressable>
+                </View>
+
+                {dashboard.groups.map((group) => (
+                  <OrgCard
+                    key={group.id}
+                    name={group.name}
+                    deadline=""
+                    current={group.current_hours}
+                    total={group.total_approved_hours}
+                  />
+                ))}
+              </View>
+            )}
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

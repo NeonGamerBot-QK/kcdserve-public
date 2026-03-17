@@ -3,17 +3,21 @@ import {
   Inter_500Medium,
   Inter_600SemiBold,
   useFonts,
-} from '@expo-google-fonts/inter';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import * as SplashScreen from 'expo-splash-screen';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import '../global.css';
+} from "@expo-google-fonts/inter";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as SplashScreen from "expo-splash-screen";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { View } from "react-native";
+import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+
+const SHOW_DEV_BORDER =
+  __DEV__ && process.env.EXPO_PUBLIC_BYE_BYE_GREEN_BORDER !== "1";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -33,13 +37,27 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="log-hours" options={{ presentation: 'modal', headerShown: false }} />
+    <View
+      style={
+        SHOW_DEV_BORDER
+          ? {
+              flex: 1,
+              borderWidth: 10,
+              borderColor: "#86efac",
+              borderStyle: "dashed",
+            }
+          : { flex: 1 }
+      }
+    >
+      <QueryClientProvider client={queryClient}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
+          <Stack.Screen name="log-hours" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
-      <StatusBar style="auto" />
-    </QueryClientProvider>
+        <StatusBar style="auto" />
+      </QueryClientProvider>
+    </View>
   );
 }

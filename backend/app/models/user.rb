@@ -34,6 +34,7 @@ class User < ApplicationRecord
   has_many :reviewed_hours, class_name: "ServiceHour", foreign_key: :reviewed_by_id, dependent: :nullify, inverse_of: :reviewer
   has_many :edited_hours, class_name: "ServiceHour", foreign_key: :edited_by_id, dependent: :nullify, inverse_of: :editor
   has_many :created_opportunities, class_name: "Opportunity", foreign_key: :created_by_id, dependent: :nullify, inverse_of: :creator
+  has_many :sessions, dependent: :destroy
   has_many :opportunity_signups, dependent: :destroy
   has_many :signed_up_opportunities, through: :opportunity_signups, source: :opportunity
 
@@ -82,6 +83,27 @@ class User < ApplicationRecord
       user.first_name = auth.info.first_name || auth.info.name&.split(" ")&.first || "User"
       user.last_name = auth.info.last_name || auth.info.name&.split(" ")&.last || ""
     end
+  end
+
+  # Generates a 6-digit login PIN, stores it, and emails it to the user.
+  # PIN expires after 10 minutes.
+  def send_login_pin
+    pin = SecureRandom.random_number(999_999).to_s.rjust(6, "0")
+    update!(login_pin: pin, login_pin_sent_at: Time.current)
+    LoginPinMailer.login_pin(self, pin).deliver_now
+  end
+
+  # Verifies the provided PIN matches and hasn't expired (10 minutes)
+  def verify_login_pin(pin)
+    return false if login_pin.blank? || login_pin_sent_at.blank?
+    return false if login_pin_sent_at < 10.minutes.ago
+
+    ActiveSupport::SecurityUtils.secure_compare(login_pin, pin)
+  end
+
+  # Clears the login PIN after successful verification
+  def clear_login_pin!
+    update!(login_pin: nil, login_pin_sent_at: nil)
   end
 
   # Returns true if the user has been soft-deleted
