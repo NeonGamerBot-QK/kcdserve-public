@@ -130,10 +130,10 @@ export default function LogHoursPage1() {
         longitude: pos.coords.longitude,
       });
 
-      const address =
-        place
-          ? [place.city, place.region].filter(Boolean).join(", ") || "Unknown location"
-          : "Unknown location";
+      const address = place
+        ? [place.city, place.region].filter(Boolean).join(", ") ||
+          "Unknown location"
+        : "Unknown location";
 
       setLocationAddress(address);
       setValue("location", address);
@@ -292,14 +292,8 @@ export default function LogHoursPage1() {
 
           {/* iOS date picker modal */}
           {Platform.OS === "ios" && (
-            <Modal
-              visible={showDatePicker}
-              transparent
-              animationType="slide"
-            >
-              <View
-                style={{ flex: 1, justifyContent: "flex-end" }}
-              >
+            <Modal visible={showDatePicker} transparent animationType="slide">
+              <View style={{ flex: 1, justifyContent: "flex-end" }}>
                 <View
                   style={{
                     backgroundColor: "white",
