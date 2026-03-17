@@ -1,6 +1,6 @@
 class Session < ApplicationRecord
   belongs_to :user
-
+  has_paper_trail
   validates :token, presence: true, uniqueness: true
   validates :expires_at, presence: true
 
