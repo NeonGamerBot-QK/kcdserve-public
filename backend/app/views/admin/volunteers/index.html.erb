@@ -1,0 +1,169 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Volunteers</h1>
+  <div>
+    <button class="btn btn-outline-secondary btn-sm" onclick="toggleColumnSelector()">
+      <i class="bi bi-layout-columns"></i> Columns
+    </button>
+    <button class="btn btn-outline-secondary btn-sm" onclick="copyTable()">
+      <i class="bi bi-clipboard"></i> Copy as Table
+    </button>
+  </div>
+</div>
+
+<div id="column-selector" class="card mb-3" style="display: none;">
+  <div class="card-body">
+    <h6 class="card-title">Select Columns</h6>
+    <div class="row">
+      <% [ { id: 'col-name', label: 'Name' },
+           { id: 'col-email', label: 'Email' },
+           { id: 'col-phone', label: 'Phone' },
+           { id: 'col-role', label: 'Role' },
+           { id: 'col-hours', label: 'Total Hours' },
+           { id: 'col-birthday', label: 'Birthday' },
+           { id: 'col-age', label: 'Age' },
+           { id: 'col-groups', label: 'Groups' },
+           { id: 'col-joined', label: 'Joined' },
+           { id: 'col-status', label: 'Status' } ].each do |col| %>
+        <div class="col-3">
+          <div class="form-check">
+            <input class="form-check-input column-toggle" type="checkbox" value="<%= col[:id] %>" id="<%= col[:id] %>" data-label="<%= col[:label] %>">
+            <label class="form-check-label" for="<%= col[:id] %>"><%= col[:label] %></label>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="mt-2">
+      <button class="btn btn-primary btn-sm" onclick="applyColumns()">Apply</button>
+      <button class="btn btn-secondary btn-sm" onclick="selectAllColumns()">Select All</button>
+      <button class="btn btn-outline-secondary btn-sm" onclick="toggleColumnSelector()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover table-sm" id="volunteers-table">
+    <thead class="table-light">
+      <tr>
+        <th class="text-nowrap col-name">Name</th>
+        <th class="text-nowrap col-email">Email</th>
+        <th class="text-nowrap col-phone">Phone</th>
+        <th class="text-nowrap col-role">Role</th>
+        <th class="text-nowrap text-end col-hours">Total Hours</th>
+        <th class="text-nowrap col-birthday">Birthday</th>
+        <th class="text-nowrap text-center col-age">Age</th>
+        <th class="text-nowrap col-groups">Groups</th>
+        <th class="text-nowrap col-joined">Joined</th>
+        <th class="text-nowrap col-status">Status</th>
+        <th class="text-nowrap"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @volunteers.each do |user| %>
+        <tr>
+          <td class="col-name"><%= link_to user.full_name, admin_user_path(user) %></td>
+          <td class="col-email"><%= user.email %></td>
+          <td class="col-phone"><%= user.phone || "—" %></td>
+          <td class="col-role"><span class="badge bg-secondary"><%= user.role.humanize %></span></td>
+          <td class="text-end col-hours"><%= user.total_approved_hours.to_i %></td>
+          <td class="col-birthday"><%= user.birthday&.strftime("%m/%d/%Y") || "—" %></td>
+          <td class="text-center col-age"><%= user.age || "—" %></td>
+          <td class="col-groups"><%= user.groups.pluck(:name).join(", ") || "—" %></td>
+          <td class="col-joined"><%= user.created_at.strftime("%m/%d/%Y") %></td>
+          <td class="col-status">
+            <% if user.deleted? %>
+              <span class="badge bg-danger">Deactivated</span>
+            <% else %>
+              <span class="badge bg-success">Active</span>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "View", profile_path(user), class: "btn btn-sm btn-outline-secondary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-3">
+  <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
+</div>
+
+<script>
+const DEFAULT_COLUMNS = ['col-name', 'col-email', 'col-role', 'col-hours', ''];
+
+function getStoredColumns() {
+  const stored = localStorage.getItem('volunteer_columns');
+  return stored ? JSON.parse(stored) : null;
+}
+
+function saveColumns(columns) {
+  localStorage.setItem('volunteer_columns', JSON.stringify(columns));
+}
+
+function applyColumns() {
+  const checkboxes = document.querySelectorAll('.column-toggle:checked');
+  const selected = Array.from(checkboxes).map(c => c.value);
+  saveColumns(selected);
+  updateColumnVisibility(selected);
+  document.getElementById('column-selector').style.display = 'none';
+}
+
+function updateColumnVisibility(selected) {
+  const allCols = ['col-name', 'col-email', 'col-phone', 'col-role', 'col-hours', 'col-birthday', 'col-age', 'col-groups', 'col-joined', 'col-status'];
+  allCols.forEach(col => {
+    const cells = document.querySelectorAll('.' + col + ', th.' + col + ', td.' + col);
+    const isSelected = selected.includes(col);
+    cells.forEach(cell => {
+      cell.style.display = isSelected ? '' : 'none';
+    });
+  });
+}
+
+function selectAllColumns() {
+  document.querySelectorAll('.column-toggle').forEach(cb => cb.checked = true);
+}
+
+function toggleColumnSelector() {
+  const selector = document.getElementById('column-selector');
+  selector.style.display = selector.style.display === 'none' ? 'block' : 'none';
+}
+
+function copyTable() {
+  const table = document.getElementById('volunteers-table');
+  const rows = table.querySelectorAll('tr');
+  let text = '';
+  
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('th, td');
+    const rowData = [];
+    cells.forEach(cell => {
+      if (cell.style.display !== 'none') {
+        rowData.push(cell.innerText.trim());
+      }
+    });
+    if (rowData.length > 0) {
+      text += rowData.join('\t') + '\n';
+    }
+  });
+  
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Table copied to clipboard!');
+  });
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+  let columns = getStoredColumns();
+  if (!columns) {
+    columns = ['col-name', 'col-email', 'col-role', 'col-hours', 'col-status'];
+  }
+  
+  // Set checkboxes
+  document.querySelectorAll('.column-toggle').forEach(cb => {
+    cb.checked = columns.includes(cb.value);
+  });
+  
+  updateColumnVisibility(columns);
+});
+</script>

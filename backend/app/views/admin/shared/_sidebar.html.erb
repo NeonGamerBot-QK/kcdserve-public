@@ -1,53 +1,53 @@
-<div class="bg-dark text-white d-flex flex-column p-3" style="width: 250px; min-height: 100vh;">
-  <h4 class="mb-3"><%= link_to "KCDServe Admin", admin_root_path, class: "text-white text-decoration-none" %></h4>
-  <hr class="border-secondary">
-  <ul class="nav nav-pills flex-column mb-auto">
-    <li class="nav-item">
-      <%= link_to admin_root_path, class: "nav-link text-white #{'active' if controller_name == 'dashboard'}" do %>
-        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+<div class="bg-gray-900 text-white flex flex-col p-4" style="width: 250px; min-height: 100vh;">
+  <h4 class="mb-3"><%= link_to "KCDServe Admin", admin_root_path, class: "text-white no-underline" %></h4>
+  <hr class="border-gray-700">
+  <ul class="flex flex-col space-y-1 mb-auto">
+    <li>
+      <%= link_to admin_root_path, class: "block px-3 py-2 rounded #{controller_name == 'dashboard' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
+        <span class="mr-2">&#128202;</span> Dashboard
       <% end %>
     </li>
-    <li class="nav-item">
-      <%= link_to admin_users_path, class: "nav-link text-white #{'active' if controller_name == 'users'}" do %>
-        <i class="bi bi-people me-2"></i> Users
+    <li>
+      <%= link_to admin_users_path, class: "block px-3 py-2 rounded #{controller_name == 'users' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
+        <span class="mr-2">&#128101;</span> Users
       <% end %>
     </li>
-    <li class="nav-item">
-      <%= link_to admin_service_hours_path, class: "nav-link text-white #{'active' if controller_name == 'service_hours'}" do %>
-        <i class="bi bi-clock-history me-2"></i> Service Hours
+    <li>
+      <%= link_to admin_service_hours_path, class: "block px-3 py-2 rounded #{controller_name == 'service_hours' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
+        <span class="mr-2">&#9201;</span> Service Hours
       <% end %>
     </li>
     <% if current_user.admin_or_above? %>
-      <li class="nav-item">
-        <%= link_to admin_categories_path, class: "nav-link text-white #{'active' if controller_name == 'categories'}" do %>
-          <i class="bi bi-tags me-2"></i> Categories
+      <li>
+        <%= link_to admin_categories_path, class: "block px-3 py-2 rounded #{controller_name == 'categories' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
+          <span class="mr-2">&#127991;</span> Categories
         <% end %>
       </li>
     <% end %>
-    <li class="nav-item">
-      <%= link_to admin_reports_path, class: "nav-link text-white #{'active' if controller_name == 'reports'}" do %>
-        <i class="bi bi-bar-chart me-2"></i> Reports
+    <li>
+      <%= link_to admin_reports_path, class: "block px-3 py-2 rounded #{controller_name == 'reports' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
+        <span class="mr-2">&#128200;</span> Reports
       <% end %>
     </li>
     <% if current_user.super_admin? %>
-      <li class="nav-item">
-        <%= link_to admin_audit_log_index_path, class: "nav-link text-white #{'active' if controller_name == 'audit_log'}", style: "border: 2px dashed #dc3545; border-radius: 6px; margin: 4px 0;" do %>
-          <i class="bi bi-journal-text me-2"></i> Audit Logs RAW
+      <li>
+        <%= link_to admin_audit_log_index_path, class: "block px-3 py-2 rounded text-white #{controller_name == 'audit_log' ? 'bg-blue-600' : ''}" style="border: 2px dashed #dc3545; margin: 4px 0;" do %>
+          <span class="mr-2">&#128221;</span> Audit Logs RAW
         <% end %>
       </li>
       <% if Rails.env.development? %>
-        <li class="nav-item">
-          <%= link_to "/flipper", class: "nav-link text-white", style: "border: 2px dashed #dc3545; border-radius: 6px; margin: 4px 0;" do %>
-            <i class="bi bi-toggles me-2"></i> Flipper
+        <li>
+          <%= link_to "/flipper", class: "block px-3 py-2 rounded text-white", style: "border: 2px dashed #dc3545; margin: 4px 0;" do %>
+            <span class="mr-2">&#9881;</span> Flipper
           <% end %>
         </li>
       <% end %>
     <% end %>
   </ul>
-  <hr class="border-secondary">
+  <hr class="border-gray-700">
   <div>
-    <%= link_to root_path, class: "nav-link text-white" do %>
-      <i class="bi bi-arrow-left me-2"></i> Back to Site
+    <%= link_to root_path, class: "block px-3 py-2 rounded text-white hover:bg-gray-800" do %>
+      <span class="mr-2">&#8592;</span> Back to Site
     <% end %>
   </div>
 </div>

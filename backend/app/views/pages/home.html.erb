@@ -1,87 +1,81 @@
 <% if Rails.env.development? %>
   <div class="text-center my-3">
-    <%= button_to "Dev Login", dev_login_path, method: :post, class: "btn btn-outline-success", style: "border-style: dashed;" %>
+    <%= button_to "Dev Login", dev_login_path, method: :post, class: "border-2 border-dashed border-green-500 rounded px-4 py-2 text-green-700 hover:bg-green-50" %>
   </div>
 <% end %>
 
-<div class="text-center py-5">
-  <h1 class="display-4 fw-bold">Make a Difference in Your Community</h1>
-  <p class="lead text-muted">Track your volunteer hours, discover opportunities, and build your service resume.</p>
+<div class="text-center py-12">
+  <h1 class="text-4xl font-bold mb-4">Make a Difference in Your Community</h1>
+  <p class="text-xl text-gray-600 mb-8">Track your volunteer hours, discover opportunities, and build your service resume.</p>
 </div>
 
 <% unless user_signed_in? %>
-  <div class="row justify-content-center mb-5">
-    <div class="col-md-5">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title text-center mb-3">Sign In or Sign Up</h5>
+  <div class="flex justify-center mb-12">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h5 class="text-center text-lg font-semibold mb-4">Sign In or Sign Up</h5>
 
-          <%# Magic link form with optional name fields for new users %>
-          <%= form_with(url: auth_magic_login_path, local: true) do |f| %>
-            <div class="row g-2 mb-3">
-              <div class="col-6">
-                <%= f.label :first_name, "First Name", class: "form-label" %>
-                <%= f.text_field :first_name, class: "form-control", placeholder: "Jane" %>
-              </div>
-              <div class="col-6">
-                <%= f.label :last_name, "Last Name", class: "form-label" %>
-                <%= f.text_field :last_name, class: "form-control", placeholder: "Doe" %>
-              </div>
+        <%= form_with(url: auth_magic_login_path, local: true) do |f| %>
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <%= f.label :first_name, "First Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= f.text_field :first_name, class: "w-full px-3 py-2 border rounded", placeholder: "Jane" %>
             </div>
-            <p class="text-muted small mb-3">Name fields are only needed for first-time sign up.</p>
+            <div>
+              <%= f.label :last_name, "Last Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= f.text_field :last_name, class: "w-full px-3 py-2 border rounded", placeholder: "Doe" %>
+            </div>
+          </div>
+          <p class="text-sm text-gray-500 mb-3">Name fields are only needed for first-time sign up.</p>
 
-            <div class="mb-3">
-              <%= f.label :email, "Email Address", class: "form-label" %>
-              <%= f.email_field :email, class: "form-control", placeholder: "you@example.com", required: true %>
-            </div>
-            <div class="d-grid">
-              <%= f.submit "Send Magic Link", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+          <div class="mb-4">
+            <%= f.label :email, "Email Address", class: "block text-sm font-medium text-gray-700 mb-1" %>
+            <%= f.email_field :email, class: "w-full px-3 py-2 border rounded", placeholder: "you@example.com", required: true %>
+          </div>
+          <div class="grid">
+            <%= f.submit "Send Magic Link", class: "w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700" %>
+          </div>
+        <% end %>
 
-          <%# Google OAuth2 button (only shown when configured) %>
-          <% if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present? %>
-            <div class="text-center my-3">
-              <span class="text-muted">— or —</span>
-            </div>
-            <div class="d-grid">
-              <%= button_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, method: :post, class: "btn btn-outline-dark", data: { turbo: false } %>
-            </div>
-          <% end %>
-        </div>
+        <% if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present? %>
+          <div class="text-center my-4">
+            <span class="text-gray-500">— or —</span>
+          </div>
+          <div class="grid">
+            <%= button_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, method: :post, class: "w-full border border-gray-300 rounded px-4 py-2 text-gray-700 hover:bg-gray-50", data: { turbo: false } %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
 <% end %>
 
-<div class="text-center mb-4">
-  <%= link_to "Browse Opportunities", opportunities_path, class: "btn btn-outline-primary btn-lg" %>
+<div class="text-center mb-8">
+  <%= link_to "Browse Opportunities", opportunities_path, class: "inline-block bg-white border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 text-lg" %>
 </div>
 
 <% if @upcoming_opportunities.any? %>
-  <hr class="my-5">
-  <h2 class="text-center mb-4">Upcoming Opportunities</h2>
-  <div class="row g-4">
+  <hr class="my-12 border-gray-200">
+  <h2 class="text-center text-2xl font-bold mb-6">Upcoming Opportunities</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <% @upcoming_opportunities.each do |opportunity| %>
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title"><%= opportunity.title %></h5>
-            <p class="text-muted">
-              <i class="bi bi-calendar me-1"></i> <%= opportunity.date.strftime("%B %d, %Y") %>
-            </p>
-            <p class="text-muted">
-              <i class="bi bi-geo-alt me-1"></i> <%= opportunity.location || "TBD" %>
-            </p>
-            <% if opportunity.category %>
-              <span class="badge" style="background-color: <%= opportunity.category.color %>;">
-                <%= opportunity.category.name %>
-              </span>
-            <% end %>
-          </div>
-          <div class="card-footer bg-transparent">
-            <%= link_to "View Details", opportunity_path(opportunity), class: "btn btn-sm btn-outline-primary" %>
-          </div>
+      <div class="bg-white rounded-lg shadow-sm border h-full">
+        <div class="p-4">
+          <h5 class="font-semibold text-lg mb-2"><%= opportunity.title %></h5>
+          <p class="text-gray-600 mb-1">
+            <span class="mr-1">&#128197;</span> <%= opportunity.date.strftime("%B %d, %Y") %>
+          </p>
+          <p class="text-gray-600 mb-2">
+            <span class="mr-1">&#128205;</span> <%= opportunity.location || "TBD" %>
+          </p>
+          <% if opportunity.category %>
+            <span class="inline-block px-2 py-1 rounded text-sm text-white" style="background-color: <%= opportunity.category.color %>;">
+              <%= opportunity.category.name %>
+            </span>
+          <% end %>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 border-t">
+          <%= link_to "View Details", opportunity_path(opportunity), class: "text-blue-600 hover:text-blue-800 text-sm" %>
         </div>
       </div>
     <% end %>

@@ -1,8 +1,8 @@
 <%= form_with(model: service_hour, html: { novalidate: true }) do |f| %>
   <% if service_hour.errors.any? %>
-    <div class="alert alert-danger">
-      <h6><%= pluralize(service_hour.errors.count, "error") %> prevented saving:</h6>
-      <ul class="mb-0">
+    <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-4">
+      <h6 class="font-semibold"><%= pluralize(service_hour.errors.count, "error") %> prevented saving:</h6>
+      <ul class="mb-0 list-disc list-inside">
         <% service_hour.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
@@ -10,85 +10,85 @@
     </div>
   <% end %>
 
-  <div class="row g-3">
-    <div class="col-12">
-      <div class="mb-3">
-        <%= f.label :title, "Title (optional)", class: "form-label" %>
-        <%= f.text_field :title, class: "form-control", maxlength: 64, minlength: 5, placeholder: "Short summary of the service (5–64 chars)" %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="md:col-span-3">
+      <div class="mb-4">
+        <%= f.label :title, "Title (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :title, class: "w-full px-3 py-2 border rounded", maxlength: 64, minlength: 5, placeholder: "Short summary of the service (5–64 chars)" %>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="mb-3">
-        <%= f.label :service_date, "Date of Service", class: "form-label" %>
-        <%= f.date_field :service_date, class: "form-control", required: true %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :service_date, "Date of Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.date_field :service_date, class: "w-full px-3 py-2 border rounded", required: true %>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="mb-3">
-        <%= f.label :hours, class: "form-label" %>
-        <%= f.number_field :hours, class: "form-control", step: 0.25, min: 0.25, max: 24, required: true %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :hours, class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :hours, class: "w-full px-3 py-2 border rounded", step: 0.25, min: 0.25, max: 24, required: true %>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="mb-3">
-        <%= f.label :category_id, "Category", class: "form-label" %>
-        <%= f.collection_select :category_id, Category.order(:name), :id, :name, { prompt: "Select category" }, class: "form-select", required: true %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.collection_select :category_id, Category.order(:name), :id, :name, { prompt: "Select category" }, class: "w-full px-3 py-2 border rounded", required: true %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :group_id, "Group (optional)", class: "form-label" %>
-        <%= f.collection_select :group_id, current_user.groups.order(:name), :id, :name, { include_blank: "No group" }, class: "form-select" %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :group_id, "Group (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.collection_select :group_id, current_user.groups.order(:name), :id, :name, { include_blank: "No group" }, class: "w-full px-3 py-2 border rounded" %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :opportunity_id, "Opportunity (optional)", class: "form-label" %>
-        <%= f.collection_select :opportunity_id, Opportunity.published.order(:title), :id, :title, { include_blank: "No specific opportunity" }, class: "form-select" %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :opportunity_id, "Opportunity (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.collection_select :opportunity_id, Opportunity.published.order(:title), :id, :title, { include_blank: "No specific opportunity" }, class: "w-full px-3 py-2 border rounded" %>
       </div>
     </div>
-    <div class="col-12">
-      <div class="mb-3">
-        <%= f.label :description, "Description of Service", class: "form-label" %>
-        <%= f.text_area :description, class: "form-control", rows: 4, required: true, minlength: 10, maxlength: 2000 %>
+    <div class="md:col-span-3">
+      <div class="mb-4">
+        <%= f.label :description, "Description of Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_area :description, class: "w-full px-3 py-2 border rounded", rows: 4, required: true, minlength: 10, maxlength: 2000 %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :photos, "Photo Proof (optional)", class: "form-label" %>
-        <%= f.file_field :photos, class: "form-control", multiple: true, accept: "image/*,video/*,application/pdf" %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :photos, "Photo Proof (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.file_field :photos, class: "w-full px-3 py-2 border rounded", multiple: true, accept: "image/*,video/*,application/pdf" %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :organization_name, "Organization Name (optional)", class: "form-label" %>
-        <%= f.text_field :organization_name, class: "form-control", maxlength: 150, placeholder: "Name of the organization served" %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :organization_name, "Organization Name (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :organization_name, class: "w-full px-3 py-2 border rounded", maxlength: 150, placeholder: "Name of the organization served" %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :contact_name, "Supervisor / Contact Name (optional)", class: "form-label" %>
-        <%= f.text_field :contact_name, class: "form-control", maxlength: 100, placeholder: "Name of your supervisor or contact" %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :contact_name, "Supervisor / Contact Name (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :contact_name, class: "w-full px-3 py-2 border rounded", maxlength: 100, placeholder: "Name of your supervisor or contact" %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3">
-        <%= f.label :contact_email, "Contact Email (optional)", class: "form-label" %>
-        <%= f.email_field :contact_email, class: "form-control", maxlength: 150, placeholder: "supervisor@example.com" %>
+    <div>
+      <div class="mb-4">
+        <%= f.label :contact_email, "Contact Email (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.email_field :contact_email, class: "w-full px-3 py-2 border rounded", maxlength: 150, placeholder: "supervisor@example.com" %>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="mb-3 d-flex align-items-end h-100">
-        <div class="form-check">
-          <%= f.check_box :on_campus, class: "form-check-input", id: "on_campus" %>
-          <%= f.label :on_campus, "On Campus Service", class: "form-check-label", for: "on_campus" %>
+    <div>
+      <div class="mb-4 h-full flex items-end">
+        <div class="flex items-center">
+          <%= f.check_box :on_campus, class: "mr-2 h-4 w-4", id: "on_campus" %>
+          <%= f.label :on_campus, "On Campus Service", class: "text-sm text-gray-700", for: "on_campus" %>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="mt-3">
-    <%= f.submit class: "btn btn-primary" %>
-    <%= link_to "Cancel", service_hours_path, class: "btn btn-outline-secondary ms-2" %>
+  <div class="mt-4">
+    <%= f.submit class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+    <%= link_to "Cancel", service_hours_path, class: "ml-2 text-gray-600 hover:text-gray-800" %>
   </div>
 <% end %>
