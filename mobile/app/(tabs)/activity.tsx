@@ -123,7 +123,9 @@ export default function ActivityScreen() {
     <SafeAreaView className={`flex-1 ${bgPage}`}>
       <TopBar />
 
-      <Text className={`font-inter-semibold text-2xl ${textPrimary} px-5 mt-2 mb-3`}>
+      <Text
+        className={`font-inter-semibold text-2xl ${textPrimary} px-5 mt-2 mb-3`}
+      >
         Activity Log
       </Text>
 
