@@ -37,7 +37,7 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={SHOW_DEV_BORDER ? { flex: 1, borderWidth: 2, borderColor: '#86efac' } : { flex: 1 }}>
+    <View style={SHOW_DEV_BORDER ? { flex: 1, borderWidth: 10, borderColor: '#86efac', borderStyle: 'dashed' } : { flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(auth)" />

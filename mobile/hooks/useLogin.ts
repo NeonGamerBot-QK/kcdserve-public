@@ -1,18 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
-import { login } from "../lib/api/auth";
+import { requestLoginPin, verifyLoginPin } from "../lib/api/auth";
 import { useAuthStore } from "../store/authStore";
 
+/** Mutation hook to request a login PIN email. */
+export function useRequestPin() {
+  return useMutation({
+    mutationFn: ({ email }: { email: string }) => requestLoginPin(email),
+  });
+}
+
 /**
- * Mutation hook for email/password login.
+ * Mutation hook to verify the emailed PIN.
  * On success, stores the token and navigates to the dashboard.
  */
-export function useLogin() {
+export function useVerifyPin() {
   const setAuth = useAuthStore((s) => s.setAuth);
 
   return useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      login(email, password),
+    mutationFn: ({ email, pin }: { email: string; pin: string }) =>
+      verifyLoginPin(email, pin),
     onSuccess: (data) => {
       setAuth(data.token, data.expires_at, data.user);
       router.replace("/(tabs)/dashboard");

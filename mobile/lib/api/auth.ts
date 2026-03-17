@@ -9,7 +9,11 @@ export type AuthUser = {
   total_approved_hours: number;
 };
 
-type LoginResponse = {
+type RequestPinResponse = {
+  message: string;
+};
+
+type VerifyPinResponse = {
   token: string;
   expires_at: string;
   user: AuthUser;
@@ -23,11 +27,19 @@ type MeResponse = {
   };
 };
 
-/** Authenticate with email + password. Returns token + user. */
-export function login(email: string, password: string) {
-  return apiFetch<LoginResponse>("/login", {
+/** Request a 6-digit login PIN to be emailed to the user. */
+export function requestLoginPin(email: string) {
+  return apiFetch<RequestPinResponse>("/login", {
     method: "POST",
-    body: { email, password },
+    body: { email },
+  });
+}
+
+/** Verify the emailed PIN. Returns token + user on success. */
+export function verifyLoginPin(email: string, pin: string) {
+  return apiFetch<VerifyPinResponse>("/login/verify", {
+    method: "POST",
+    body: { email, pin },
   });
 }
 
