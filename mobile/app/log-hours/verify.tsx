@@ -224,11 +224,7 @@ export default function LogHoursPage2() {
                     right: 8,
                   }}
                 >
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={20}
-                    color="#22c55e"
-                  />
+                  <Ionicons name="checkmark-circle" size={20} color="#22c55e" />
                 </View>
               </View>
             ) : (
@@ -300,8 +296,7 @@ export default function LogHoursPage2() {
 
           {/* Photos */}
           <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
-            Photos{" "}
-            <Text className="font-inter text-slate-400">(optional)</Text>
+            Photos <Text className="font-inter text-slate-400">(optional)</Text>
           </Text>
           <View className="flex-row gap-3 mb-3">
             <Pressable
