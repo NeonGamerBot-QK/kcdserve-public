@@ -12,6 +12,7 @@ import FilterChip from "../../components/FilterChip";
 import ServiceHourCard from "../../components/ServiceHourCard";
 import { USE_API } from "../../lib/config";
 import { useServiceHours } from "../../hooks/useServiceHours";
+import { useTheme } from "../../hooks/useTheme";
 import type { ServiceHourEntry } from "../../lib/api/serviceHours";
 
 // Fallback mock data for dev mode without SERVER_URL
@@ -103,6 +104,7 @@ function formatDate(iso: string) {
 export default function ActivityScreen() {
   const [activeFilter, setActiveFilter] = useState(0);
   const { data, isLoading, isError } = useServiceHours();
+  const { isDark } = useTheme();
 
   const hours = USE_API ? (data?.service_hours ?? []) : MOCK_HOURS;
 
@@ -114,11 +116,14 @@ export default function ActivityScreen() {
 
   const sections = useMemo(() => groupByMonth(filtered), [filtered]);
 
+  const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
+    <SafeAreaView className={`flex-1 ${bgPage}`}>
       <TopBar />
 
-      <Text className="font-inter-semibold text-2xl text-slate-900 px-5 mt-2 mb-3">
+      <Text className={`font-inter-semibold text-2xl ${textPrimary} px-5 mt-2 mb-3`}>
         Activity Log
       </Text>
 
@@ -165,7 +170,7 @@ export default function ActivityScreen() {
         sections={sections}
         keyExtractor={(item) => String(item.id)}
         renderSectionHeader={({ section: { title } }) => (
-          <View className="px-5 pt-4 pb-1 bg-slate-50 dark:bg-slate-950">
+          <View className={`px-5 pt-4 pb-1 ${bgPage}`}>
             <Text className="font-inter-semibold text-xs uppercase tracking-wider text-accent-600">
               {title}
             </Text>

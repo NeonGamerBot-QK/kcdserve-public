@@ -4,32 +4,35 @@ import { Appearance } from "react-native";
 
 const THEME_KEY = "kcdserve_theme";
 
-// Default to dark while we sort out NativeWind's cache issue
-const DEFAULT_DARK = true;
+/** Restore persisted preference once on startup, before any component mounts. */
+AsyncStorage.getItem(THEME_KEY).then((saved) => {
+  if (saved === "dark" || saved === "light") {
+    Appearance.setColorScheme(saved);
+  } else {
+    // Default to dark
+    Appearance.setColorScheme("dark");
+  }
+});
 
+/**
+ * Shared dark mode hook. Every instance subscribes to Appearance changes
+ * so toggling in one screen updates all screens simultaneously.
+ */
 export function useTheme() {
-  const [isDark, setIsDark] = useState(DEFAULT_DARK);
+  const [isDark, setIsDark] = useState(
+    () => (Appearance.getColorScheme() ?? "dark") === "dark"
+  );
 
-  // Apply color scheme to React Native Appearance (NativeWind reads from this)
-  const applyScheme = (dark: boolean) => {
-    Appearance.setColorScheme(dark ? "dark" : "light");
-    setIsDark(dark);
-  };
-
-  // On mount, set default + restore persisted preference
   useEffect(() => {
-    applyScheme(DEFAULT_DARK);
-    AsyncStorage.getItem(THEME_KEY).then((saved) => {
-      if (saved === "dark" || saved === "light") {
-        applyScheme(saved === "dark");
-      }
+    const sub = Appearance.addChangeListener(({ colorScheme }) => {
+      setIsDark((colorScheme ?? "dark") === "dark");
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => sub.remove();
   }, []);
 
   const toggleDarkMode = async () => {
     const next = !isDark;
-    applyScheme(next);
+    Appearance.setColorScheme(next ? "dark" : "light");
     await AsyncStorage.setItem(THEME_KEY, next ? "dark" : "light");
   };
 

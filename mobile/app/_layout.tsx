@@ -11,7 +11,8 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { View } from "react-native";
 import "../global.css";
-import { useTheme } from "../hooks/useTheme";
+// Side-effect import: restores persisted theme on module load
+import "../hooks/useTheme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,9 +27,6 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
   });
-
-  // Initializes persisted theme preference on mount
-  useTheme();
 
   useEffect(() => {
     if (fontsLoaded) {

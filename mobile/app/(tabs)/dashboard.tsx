@@ -10,6 +10,7 @@ import TopBar from "../../components/TopBar";
 import OrgCard from "../../components/OrgCard";
 import { USE_API } from "../../lib/config";
 import { useDashboard } from "../../hooks/useDashboard";
+import { useTheme } from "../../hooks/useTheme";
 
 // Fallback mock data for dev mode without SERVER_URL
 const MOCK = {
@@ -34,11 +35,18 @@ const MOCK = {
 
 export default function DashboardScreen() {
   const { data, isLoading, isError } = useDashboard();
+  const { isDark } = useTheme();
 
   const dashboard = USE_API ? data : MOCK;
 
+  const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
+  const bgCard = isDark ? "bg-slate-900" : "bg-white";
+  const borderCard = isDark ? "border-slate-700" : "border-gray-200";
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const textMuted = isDark ? "text-slate-400" : "text-slate-500";
+
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
+    <SafeAreaView className={`flex-1 ${bgPage}`}>
       <ScrollView className="flex-1">
         <TopBar />
 
@@ -60,22 +68,22 @@ export default function DashboardScreen() {
           <>
             {/* Stats hero */}
             <View className="items-center mt-4 mb-5">
-              <Text className="font-inter-medium text-sm uppercase tracking-wider text-slate-500 mb-1">
+              <Text className={`font-inter-medium text-sm uppercase tracking-wider ${textMuted} mb-1`}>
                 TOTAL APPROVED
               </Text>
-              <Text className="font-inter-semibold text-6xl text-slate-900 mt-1.5">
+              <Text className={`font-inter-semibold text-6xl ${textPrimary} mt-1.5`}>
                 {dashboard.approved_hours}
               </Text>
-              <Text className="font-inter text-base text-slate-500 mt-1">
+              <Text className={`font-inter text-base ${textMuted} mt-1`}>
                 Hours completed this year
               </Text>
             </View>
 
             {/* Pending pill */}
             <View className="items-center mb-8">
-              <View className="flex-row items-center bg-white rounded-2xl px-5 py-4 border border-gray-200">
+              <View className={`flex-row items-center ${bgCard} rounded-2xl px-5 py-4 border ${borderCard}`}>
                 <View className="w-2 h-2 rounded-full bg-status-pending mr-2" />
-                <Text className="font-inter-medium text-sm text-slate-900 dark:text-white">
+                <Text className={`font-inter-medium text-sm ${textPrimary}`}>
                   {dashboard.pending_hours} Pending
                 </Text>
               </View>
@@ -85,7 +93,7 @@ export default function DashboardScreen() {
             {dashboard.groups.length > 0 && (
               <View className="px-5">
                 <View className="flex-row justify-between items-center mb-3">
-                  <Text className="font-inter-semibold text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <Text className={`font-inter-semibold text-sm uppercase tracking-wider ${textMuted}`}>
                     GROUPS
                   </Text>
                   <Pressable>

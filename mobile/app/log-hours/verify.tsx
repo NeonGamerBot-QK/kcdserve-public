@@ -21,11 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 import { page2Schema, Page2Values } from "../../lib/schemas/serviceHour";
 import { useLogHoursFormStore } from "../../store/logHoursForm";
 import { useSubmitServiceHour } from "../../hooks/useSubmitServiceHour";
+import { useTheme } from "../../hooks/useTheme";
 import type { ServiceHourFormValues } from "../../lib/schemas/serviceHour";
 
 export default function LogHoursPage2() {
   const store = useLogHoursFormStore();
   const submitMutation = useSubmitServiceHour();
+  const { isDark } = useTheme();
 
   const [signatureData, setSignatureData] = useState<string | null>(
     store.page2.signature ?? null,
@@ -47,12 +49,21 @@ export default function LogHoursPage2() {
     },
   });
 
-  const focusedFieldClass = (focused: boolean) =>
-    `bg-slate-50 border rounded-xl px-4 py-3 font-inter text-base text-slate-900 ${
-      focused ? "border-primary-500" : "border-slate-200"
-    }`;
-
   const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  const bgPage = isDark ? "bg-slate-900" : "bg-white";
+  const bgInput = isDark ? "bg-slate-800" : "bg-slate-50";
+  const borderInput = isDark ? "border-slate-700" : "border-slate-200";
+  const borderHeader = isDark ? "border-slate-700" : "border-slate-100";
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const textLabel = isDark ? "text-slate-200" : "text-slate-700";
+  const bgPhotoBtn = isDark ? "bg-slate-800" : "bg-slate-50";
+  const textPhotoBtn = isDark ? "text-slate-300" : "text-slate-600";
+
+  const focusedFieldClass = (focused: boolean) =>
+    `${bgInput} border rounded-xl px-4 py-3 font-inter text-base ${textPrimary} ${
+      focused ? "border-primary-500" : borderInput
+    }`;
 
   async function pickPhoto(source: "camera" | "library") {
     let result: ImagePicker.ImagePickerResult;
@@ -116,16 +127,16 @@ export default function LogHoursPage2() {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className={`flex-1 ${bgPage}`}>
       {/* Header */}
-      <View className="flex-row items-center px-4 py-3 border-b border-slate-100">
+      <View className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}>
         <Pressable
           onPress={() => router.back()}
           className="w-9 h-9 items-center justify-center"
         >
-          <Ionicons name="arrow-back" size={24} color="#0f172a" />
+          <Ionicons name="arrow-back" size={24} color={isDark ? "#f1f5f9" : "#0f172a"} />
         </Pressable>
-        <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900 dark:text-white">
+        <Text className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}>
           Review & Submit
         </Text>
         <View className="w-9" />
@@ -141,7 +152,7 @@ export default function LogHoursPage2() {
           contentContainerStyle={{ paddingTop: 24, paddingBottom: 40 }}
         >
           {/* Supervisor Name */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5">
+          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5`}>
             Supervisor Name
           </Text>
           <Controller
@@ -169,7 +180,7 @@ export default function LogHoursPage2() {
           )}
 
           {/* Supervisor Email */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
             Supervisor Email
           </Text>
           <Controller
@@ -201,13 +212,13 @@ export default function LogHoursPage2() {
           )}
 
           {/* Signature */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
             Supervisor Signature{" "}
             <Text className="font-inter text-slate-400">(optional)</Text>
           </Text>
           <Pressable
             onPress={() => setShowSignatureModal(true)}
-            className="border border-slate-200 rounded-xl bg-slate-50 items-center justify-center overflow-hidden"
+            className={`border ${borderInput} rounded-xl ${bgInput} items-center justify-center overflow-hidden`}
             style={{ height: 80 }}
           >
             {signatureData ? (
@@ -251,15 +262,15 @@ export default function LogHoursPage2() {
             animationType="slide"
             onRequestClose={() => setShowSignatureModal(false)}
           >
-            <SafeAreaView className="flex-1 bg-white">
-              <View className="flex-row items-center px-4 py-3 border-b border-slate-100">
+            <SafeAreaView className={`flex-1 ${bgPage}`}>
+              <View className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}>
                 <Pressable
                   onPress={() => setShowSignatureModal(false)}
                   className="w-9 h-9 items-center justify-center"
                 >
-                  <Ionicons name="close" size={24} color="#0f172a" />
+                  <Ionicons name="close" size={24} color={isDark ? "#f1f5f9" : "#0f172a"} />
                 </Pressable>
-                <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900 dark:text-white">
+                <Text className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}>
                   Supervisor Signature
                 </Text>
                 <View className="w-9" />
@@ -285,8 +296,8 @@ export default function LogHoursPage2() {
                   webStyle={`
                     .m-signature-pad { box-shadow: none; border: none; }
                     .m-signature-pad--body { border: none; }
-                    .m-signature-pad--footer { background-color: white; padding: 8px 16px; }
-                    .button.clear { background-color: #f1f5f9; color: #0f172a; border-radius: 8px; }
+                    .m-signature-pad--footer { background-color: ${isDark ? "#1e293b" : "white"}; padding: 8px 16px; }
+                    .button.clear { background-color: ${isDark ? "#334155" : "#f1f5f9"}; color: ${isDark ? "#f1f5f9" : "#0f172a"}; border-radius: 8px; }
                     .button.save { background-color: #22c55e; color: white; border-radius: 8px; }
                   `}
                 />
@@ -295,25 +306,25 @@ export default function LogHoursPage2() {
           </Modal>
 
           {/* Photos */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
             Photos <Text className="font-inter text-slate-400">(optional)</Text>
           </Text>
           <View className="flex-row gap-3 mb-3">
             <Pressable
               onPress={() => pickPhoto("camera")}
-              className="flex-1 flex-row items-center justify-center gap-2 border border-slate-200 rounded-xl py-3 bg-slate-50 dark:bg-slate-950"
+              className={`flex-1 flex-row items-center justify-center gap-2 border ${borderInput} rounded-xl py-3 ${bgPhotoBtn}`}
             >
               <Ionicons name="camera-outline" size={18} color="#64748b" />
-              <Text className="font-inter-medium text-sm text-slate-600 dark:text-slate-300">
+              <Text className={`font-inter-medium text-sm ${textPhotoBtn}`}>
                 Take Photo
               </Text>
             </Pressable>
             <Pressable
               onPress={() => pickPhoto("library")}
-              className="flex-1 flex-row items-center justify-center gap-2 border border-slate-200 rounded-xl py-3 bg-slate-50 dark:bg-slate-950"
+              className={`flex-1 flex-row items-center justify-center gap-2 border ${borderInput} rounded-xl py-3 ${bgPhotoBtn}`}
             >
               <Ionicons name="images-outline" size={18} color="#64748b" />
-              <Text className="font-inter-medium text-sm text-slate-600 dark:text-slate-300">
+              <Text className={`font-inter-medium text-sm ${textPhotoBtn}`}>
                 From Library
               </Text>
             </Pressable>

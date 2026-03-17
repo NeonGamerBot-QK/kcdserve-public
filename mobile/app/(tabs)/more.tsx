@@ -6,24 +6,30 @@ import { useTheme } from '../../hooks/useTheme';
 export default function MoreScreen() {
   const { isDark, toggleDarkMode } = useTheme();
 
+  const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
+  const bgCard = isDark ? "bg-slate-900" : "bg-white";
+  const borderCard = isDark ? "border-slate-700" : "border-slate-200";
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const textMuted = isDark ? "text-slate-400" : "text-slate-500";
+
   return (
-    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
+    <SafeAreaView className={`flex-1 ${bgPage}`}>
       <TopBar />
       <View className="flex-1 px-4 pt-6">
-        <Text className="font-inter-semibold text-xl text-slate-900 dark:text-white">
+        <Text className={`font-inter-semibold text-xl ${textPrimary}`}>
           Settings
         </Text>
 
         <View className="mt-6">
           <Pressable
             onPress={toggleDarkMode}
-            className="bg-white dark:bg-slate-900 rounded-xl p-4 flex-row items-center justify-between border border-slate-200 dark:border-slate-700"
+            className={`${bgCard} rounded-xl p-4 flex-row items-center justify-between border ${borderCard}`}
           >
             <View>
-              <Text className="font-inter-semibold text-base text-slate-900 dark:text-white">
+              <Text className={`font-inter-semibold text-base ${textPrimary}`}>
                 Dark Mode
               </Text>
-              <Text className="font-inter text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              <Text className={`font-inter text-sm ${textMuted} mt-0.5`}>
                 {isDark ? 'On' : 'Off'}
               </Text>
             </View>
