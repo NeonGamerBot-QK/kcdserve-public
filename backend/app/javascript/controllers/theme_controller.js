@@ -4,21 +4,16 @@ export default class extends Controller {
   static targets = ["toggle"];
 
   connect() {
-    this.updateToggle();
+    this.#updateLabel();
   }
 
   toggle() {
-    if (localStorage.theme === "dark") {
-      localStorage.theme = "light";
-      document.documentElement.classList.remove("dark");
-    } else {
-      localStorage.theme = "dark";
-      document.documentElement.classList.add("dark");
-    }
-    this.updateToggle();
+    const isDark = document.documentElement.classList.toggle("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    this.#updateLabel();
   }
 
-  updateToggle() {
+  #updateLabel() {
     const isDark = document.documentElement.classList.contains("dark");
     this.toggleTarget.textContent = isDark ? "☀️ Light" : "🌙 Dark";
   }

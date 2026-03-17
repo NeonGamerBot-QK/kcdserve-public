@@ -1,26 +1,28 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
 import { useEffect } from "react";
-import { useThemeStore } from "../store/theme";
+
+const THEME_KEY = "kcdserve_theme";
 
 export function useTheme() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  const { isDark, setIsDark, toggleDarkMode } = useThemeStore();
+  const { colorScheme, setColorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
 
+  // On mount, restore persisted preference
   useEffect(() => {
-    // Initialize dark mode based on system preference if no user preference exists
-    if (colorScheme && !useThemeStore.getState().isDark) {
-      setIsDark(colorScheme === "dark");
-    }
-  }, [colorScheme, setIsDark]);
+    AsyncStorage.getItem(THEME_KEY).then((saved) => {
+      if (saved === "dark" || saved === "light") {
+        setColorScheme(saved);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleToggleDarkMode = () => {
-    toggleDarkMode();
-    toggleColorScheme?.();
+  const toggleDarkMode = async () => {
+    const next = isDark ? "light" : "dark";
+    setColorScheme(next);
+    await AsyncStorage.setItem(THEME_KEY, next);
   };
 
-  return {
-    isDark,
-    colorScheme,
-    toggleDarkMode: handleToggleDarkMode,
-  };
+  return { isDark, toggleDarkMode };
 }

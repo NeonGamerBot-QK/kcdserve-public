@@ -8,12 +8,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useColorScheme } from "nativewind";
 import { useEffect } from "react";
 import { View } from "react-native";
 import "../global.css";
 import { useTheme } from "../hooks/useTheme";
-import { useThemeStore } from "../store/theme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,8 +27,8 @@ export default function RootLayout() {
     Inter_600SemiBold,
   });
 
-  useColorScheme();
-  const { isDark } = useTheme();
+  // Initializes persisted theme preference on mount
+  useTheme();
 
   useEffect(() => {
     if (fontsLoaded) {
@@ -54,7 +52,6 @@ export default function RootLayout() {
             }
           : { flex: 1 }
       }
-      className={isDark ? "dark" : ""}
     >
       <QueryClientProvider client={queryClient}>
         <Stack screenOptions={{ headerShown: false }}>
@@ -66,7 +63,7 @@ export default function RootLayout() {
             options={{ presentation: "modal", headerShown: false }}
           />
         </Stack>
-        <StatusBar style={isDark ? "light" : "dark"} />
+        <StatusBar style="auto" />
       </QueryClientProvider>
     </View>
   );

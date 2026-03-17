@@ -1,8 +1,8 @@
 import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useColorScheme } from "nativewind";
 import { useAuthStore } from "../store/authStore";
 import { USE_API } from "../lib/config";
-import { useTheme } from "../hooks/useTheme";
 
 type TopBarProps = {
   /** If provided, shows a teal avatar circle with the initial; otherwise shows a user icon */
@@ -11,7 +11,7 @@ type TopBarProps = {
 
 export default function TopBar({ initial }: TopBarProps) {
   const user = useAuthStore((s) => s.user);
-  const { isDark } = useTheme();
+  const { colorScheme } = useColorScheme();
   const isAdmin =
     USE_API && (user?.role === "admin" || user?.role === "super_admin");
 
@@ -29,7 +29,11 @@ export default function TopBar({ initial }: TopBarProps) {
         </View>
       ) : (
         <View className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 items-center justify-center">
-          <Ionicons name="person" size={18} color={isDark ? "#94a3b8" : "#64748b"} />
+          <Ionicons
+            name="person"
+            size={18}
+            color={colorScheme === "dark" ? "#94a3b8" : "#64748b"}
+          />
         </View>
       )}
       <View className="absolute left-0 right-0 items-center">
@@ -42,15 +46,15 @@ export default function TopBar({ initial }: TopBarProps) {
               borderRadius: 8,
               paddingHorizontal: 10,
               paddingVertical: 2,
-              backgroundColor: isDark ? "#7c2d12" : "#fff7ed",
+              backgroundColor: colorScheme === "dark" ? "#7c2d12" : "#fff7ed",
             }}
           >
-            <Text className={`font-inter-semibold text-lg ${isDark ? "text-orange-100" : "text-slate-900"}`}>
+            <Text className="font-inter-semibold text-lg text-slate-900 dark:text-orange-100">
               KCDServe
             </Text>
           </View>
         ) : (
-          <Text className={`font-inter-semibold text-lg ${isDark ? "text-white" : "text-slate-900"}`}>
+          <Text className="font-inter-semibold text-lg text-slate-900 dark:text-white">
             KCDServe
           </Text>
         )}
