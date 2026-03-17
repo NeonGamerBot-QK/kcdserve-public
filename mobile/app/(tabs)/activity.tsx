@@ -115,7 +115,7 @@ export default function ActivityScreen() {
   const sections = useMemo(() => groupByMonth(filtered), [filtered]);
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
       <TopBar />
 
       <Text className="font-inter-semibold text-2xl text-slate-900 px-5 mt-2 mb-3">
@@ -165,7 +165,7 @@ export default function ActivityScreen() {
         sections={sections}
         keyExtractor={(item) => String(item.id)}
         renderSectionHeader={({ section: { title } }) => (
-          <View className="px-5 pt-4 pb-1 bg-slate-50">
+          <View className="px-5 pt-4 pb-1 bg-slate-50 dark:bg-slate-950">
             <Text className="font-inter-semibold text-xs uppercase tracking-wider text-accent-600">
               {title}
             </Text>

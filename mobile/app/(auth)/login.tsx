@@ -87,13 +87,13 @@ export default function LoginScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
       <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
         <TopBar />
 
         {/* Welcome heading */}
         <View className="px-5 mt-4 mb-6">
-          <Text className="font-inter-semibold text-2xl text-slate-900">
+          <Text className="font-inter-semibold text-2xl text-slate-900 dark:text-white">
             Welcome back
           </Text>
           <Text className="font-inter text-base text-slate-500 mt-1">
@@ -182,10 +182,10 @@ export default function LoginScreen() {
                     className={`w-11 h-14 rounded-xl border-2 items-center justify-center ${
                       pin.length === i
                         ? "border-primary-500 bg-primary-50"
-                        : "border-slate-200 bg-slate-50"
+                        : "border-slate-200 bg-slate-50 dark:bg-slate-950"
                     }`}
                   >
-                    <Text className="font-inter-semibold text-xl text-slate-900">
+                    <Text className="font-inter-semibold text-xl text-slate-900 dark:text-white">
                       {pin[i] ?? ""}
                     </Text>
                   </View>

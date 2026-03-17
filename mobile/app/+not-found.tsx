@@ -4,9 +4,9 @@ import { router } from "expo-router";
 
 export default function NotFoundScreen() {
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
       <View className="flex-1 items-center justify-center px-5">
-        <Text className="font-inter-semibold text-xl text-slate-900">
+        <Text className="font-inter-semibold text-xl text-slate-900 dark:text-white">
           Page not found
         </Text>
         <Text className="font-inter text-base text-slate-500 mt-2 text-center">

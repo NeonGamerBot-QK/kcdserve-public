@@ -38,7 +38,7 @@ export default function DashboardScreen() {
   const dashboard = USE_API ? data : MOCK;
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50 dark:bg-slate-950">
       <ScrollView className="flex-1">
         <TopBar />
 
@@ -75,7 +75,7 @@ export default function DashboardScreen() {
             <View className="items-center mb-8">
               <View className="flex-row items-center bg-white rounded-2xl px-5 py-4 border border-gray-200">
                 <View className="w-2 h-2 rounded-full bg-status-pending mr-2" />
-                <Text className="font-inter-medium text-sm text-slate-900">
+                <Text className="font-inter-medium text-sm text-slate-900 dark:text-white">
                   {dashboard.pending_hours} Pending
                 </Text>
               </View>
@@ -85,7 +85,7 @@ export default function DashboardScreen() {
             {dashboard.groups.length > 0 && (
               <View className="px-5">
                 <View className="flex-row justify-between items-center mb-3">
-                  <Text className="font-inter-semibold text-sm uppercase tracking-wider text-slate-500">
+                  <Text className="font-inter-semibold text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     GROUPS
                   </Text>
                   <Pressable>

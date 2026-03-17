@@ -5,6 +5,7 @@ module.exports = {
     "./app/helpers/**/*.rb",
     "./app/assets/stylesheets/**/*.css",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {

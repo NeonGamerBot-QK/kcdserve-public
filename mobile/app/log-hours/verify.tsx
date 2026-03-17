@@ -125,7 +125,7 @@ export default function LogHoursPage2() {
         >
           <Ionicons name="arrow-back" size={24} color="#0f172a" />
         </Pressable>
-        <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900">
+        <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900 dark:text-white">
           Review & Submit
         </Text>
         <View className="w-9" />
@@ -259,7 +259,7 @@ export default function LogHoursPage2() {
                 >
                   <Ionicons name="close" size={24} color="#0f172a" />
                 </Pressable>
-                <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900">
+                <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900 dark:text-white">
                   Supervisor Signature
                 </Text>
                 <View className="w-9" />
@@ -301,19 +301,19 @@ export default function LogHoursPage2() {
           <View className="flex-row gap-3 mb-3">
             <Pressable
               onPress={() => pickPhoto("camera")}
-              className="flex-1 flex-row items-center justify-center gap-2 border border-slate-200 rounded-xl py-3 bg-slate-50"
+              className="flex-1 flex-row items-center justify-center gap-2 border border-slate-200 rounded-xl py-3 bg-slate-50 dark:bg-slate-950"
             >
               <Ionicons name="camera-outline" size={18} color="#64748b" />
-              <Text className="font-inter-medium text-sm text-slate-600">
+              <Text className="font-inter-medium text-sm text-slate-600 dark:text-slate-300">
                 Take Photo
               </Text>
             </Pressable>
             <Pressable
               onPress={() => pickPhoto("library")}
-              className="flex-1 flex-row items-center justify-center gap-2 border border-slate-200 rounded-xl py-3 bg-slate-50"
+              className="flex-1 flex-row items-center justify-center gap-2 border border-slate-200 rounded-xl py-3 bg-slate-50 dark:bg-slate-950"
             >
               <Ionicons name="images-outline" size={18} color="#64748b" />
-              <Text className="font-inter-medium text-sm text-slate-600">
+              <Text className="font-inter-medium text-sm text-slate-600 dark:text-slate-300">
                 From Library
               </Text>
             </Pressable>

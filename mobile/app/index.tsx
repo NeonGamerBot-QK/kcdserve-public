@@ -19,7 +19,7 @@ export default function Index() {
   }, [hydrated]);
 
   return (
-    <View className="flex-1 items-center justify-center bg-slate-50">
+    <View className="flex-1 items-center justify-center bg-slate-50 dark:bg-slate-950">
       <ActivityIndicator size="large" color="#3B82F6" />
     </View>
   );

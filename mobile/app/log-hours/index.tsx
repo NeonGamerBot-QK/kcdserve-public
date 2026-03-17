@@ -163,7 +163,7 @@ export default function LogHoursPage1() {
         >
           <Ionicons name="close" size={24} color="#0f172a" />
         </Pressable>
-        <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900">
+        <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900 dark:text-white">
           Log Hours
         </Text>
         <View className="w-9" />
@@ -277,7 +277,7 @@ export default function LogHoursPage1() {
                 onPress={() => setShowDatePicker(true)}
                 className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 flex-row items-center justify-between"
               >
-                <Text className="font-inter text-base text-slate-900">
+                <Text className="font-inter text-base text-slate-900 dark:text-white">
                   {formatDate(dateValue)}
                 </Text>
                 <Ionicons name="calendar-outline" size={18} color="#64748b" />
@@ -371,7 +371,7 @@ export default function LogHoursPage1() {
             render={({ field: { onChange } }) => (
               <View>
                 <TextInput
-                  className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900"
+                  className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900 dark:text-white"
                   placeholder="e.g. Red Cross, Local Food Bank"
                   placeholderTextColor="#94a3b8"
                   value={orgQuery}
@@ -463,7 +463,7 @@ export default function LogHoursPage1() {
             name="description"
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900"
+                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900 dark:text-white"
                 placeholder="Describe what you did (at least 10 characters)"
                 placeholderTextColor="#94a3b8"
                 multiline
@@ -488,7 +488,7 @@ export default function LogHoursPage1() {
           {/* Location */}
           <View className="flex-row items-center justify-between mt-5">
             <View>
-              <Text className="font-inter-medium text-sm text-slate-700">
+              <Text className="font-inter-medium text-sm text-slate-700 dark:text-slate-200">
                 Include Location
               </Text>
               {locationEnabled && locationAddress && (
