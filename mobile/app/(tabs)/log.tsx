@@ -1,6 +1,6 @@
-import { View, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import TopBar from '../../components/TopBar';
+import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../../components/TopBar";
 
 export default function LogScreen() {
   return (
