@@ -192,7 +192,8 @@ export default function LogHoursPage1() {
                     <Picker
                       selectedValue={value ?? ""}
                       onValueChange={onChange}
-                      style={{ color: "#0f172a" }}
+                      style={{ color: "#0f172a", height: 100 }}
+                      itemStyle={{fontSize: 16, height:100}}
                     >
                       <Picker.Item label="None" value="" />
                       {groups.map((g) => (
@@ -222,7 +223,8 @@ export default function LogHoursPage1() {
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: "#0f172a" }}
+                      style={{ color: "#0f172a" , height:150 }}
+                      itemStyle={{height:150}}
                     >
                       {Array.from({ length: 25 }, (_, i) => (
                         <Picker.Item key={i} label={String(i)} value={i} />
@@ -244,7 +246,8 @@ export default function LogHoursPage1() {
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: "#0f172a" }}
+                      style={{ color: "#0f172a" , height: 150 }}
+                      itemStyle={{height:150}}
                     >
                       {[0, 15, 30, 45].map((m) => (
                         <Picker.Item
