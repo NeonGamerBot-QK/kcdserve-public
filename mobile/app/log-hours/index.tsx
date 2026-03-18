@@ -196,7 +196,7 @@ export default function LogHoursPage1() {
                     >
                       <Picker.Item label="None" value="" />
                       {groups.map((g) => (
-                        <Picker.Item key={g.id} label={g.name} value={g.id} />
+                        <Picker.Item key={g.id} label={g.name} value={String(g.id)} />
                       ))}
                     </Picker>
                   </View>
