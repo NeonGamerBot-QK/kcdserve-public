@@ -52,7 +52,7 @@
     <% end %>
 
     <div class="mt-6">
-      <%== bootstrap_series_nav(@pagy) if @pagy.pages > 1 %>
+      <%== @pagy.series_nav(:bootstrap) if @pagy.pages > 1 %>
     </div>
   <% else %>
     <div class="text-center py-12">

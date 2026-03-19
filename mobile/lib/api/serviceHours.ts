@@ -1,4 +1,4 @@
-import { apiFetch } from "../api";
+import { apiFetch, apiFormData } from "../api";
 import type { ServiceHourFormValues } from "../schemas/serviceHour";
 
 export type ServiceHourEntry = {
@@ -23,25 +23,39 @@ export function fetchServiceHours() {
   return apiFetch<ServiceHoursResponse>("/service_hours");
 }
 
-/** Submit a new service hour entry. */
+/**
+ * Submit a new service hour entry as multipart/form-data.
+ * Photos are appended as file uploads using the React Native file object format.
+ */
 export function submitServiceHour(data: ServiceHourFormValues) {
   const totalHours = data.hours + data.minutes / 60;
-  return apiFetch("/service_hours", {
-    method: "POST",
-    body: {
-      service_hour: {
-        organization_name: data.organizationName,
-        service_date: data.serviceDate,
-        hours: totalHours,
-        description: data.description,
-        category: data.category,
-        group: data.suborg ?? null,
-        location: data.location ?? null,
-        supervisor_name: data.supervisorName,
-        supervisor_email: data.supervisorEmail,
-        signature: data.signature ?? null,
-        photos: data.photos ?? [],
-      },
-    },
-  });
+  const formData = new FormData();
+
+  // Scalar fields mapped to the backend's expected keys
+  formData.append("service_hour[description]", data.description);
+  formData.append("service_hour[service_date]", data.serviceDate);
+  formData.append("service_hour[hours]", String(totalHours));
+  formData.append("service_hour[organization_name]", data.organizationName);
+  formData.append("service_hour[category]", data.category);
+  formData.append("service_hour[contact_name]", data.supervisorName);
+  formData.append("service_hour[contact_email]", data.supervisorEmail);
+
+  // Optional fields — only append when truthy
+  if (data.suborg) {
+    formData.append("service_hour[group_id]", data.suborg);
+  }
+  if (data.location) {
+    formData.append("service_hour[location]", data.location);
+  }
+
+  // Photo file uploads in the format React Native's fetch expects
+  for (const [index, uri] of (data.photos ?? []).entries()) {
+    formData.append("service_hour[photos][]", {
+      uri,
+      type: "image/jpeg",
+      name: `photo-${index}.jpg`,
+    } as unknown as Blob);
+  }
+
+  return apiFormData("/service_hours", formData);
 }

@@ -4,7 +4,7 @@ module Api
   module V1
     class DashboardController < BaseController
       # GET /api/v1/dashboard
-      # Returns stats and group progress for the authenticated user.
+      # Returns stats, group progress, featured opportunities, and notification count.
       def show
         user = current_user
         hours = user.service_hours
@@ -22,11 +22,30 @@ module Api
           }
         end
 
+        featured = Opportunity.published.upcoming.includes(:category, :opportunity_signups).limit(5)
+
         render json: {
           approved_hours: approved_hours,
           pending_hours: pending_hours,
-          groups: groups
+          groups: groups,
+          unread_notifications_count: user.notifications.unread.count,
+          featured_opportunities: featured.map { |o| opportunity_summary(o) }
         }, status: :ok
+      end
+
+      private
+
+      def opportunity_summary(opportunity)
+        {
+          id: opportunity.id,
+          title: opportunity.title,
+          date: opportunity.date.iso8601,
+          location: opportunity.location,
+          category: opportunity.category&.name,
+          spots_remaining: opportunity.spots_remaining,
+          full: opportunity.full?,
+          signed_up: opportunity.opportunity_signups.any? { |s| s.user_id == current_user.id }
+        }
       end
     end
   end

@@ -14,12 +14,14 @@ import TopBar from "../../components/TopBar";
 import Card from "../../components/Card";
 import { USE_API } from "../../lib/config";
 import { useRequestPin, useVerifyPin } from "../../hooks/useLogin";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function LoginScreen() {
   const [step, setStep] = useState<"email" | "pin">("email");
   const [email, setEmail] = useState("");
   const [pin, setPin] = useState("");
   const pinInputRef = useRef<TextInput>(null);
+  const { isDark } = useTheme();
 
   const requestPinMutation = useRequestPin();
   const verifyPinMutation = useVerifyPin();
@@ -86,14 +88,22 @@ export default function LoginScreen() {
     requestPinMutation.mutate({ email: email.trim() });
   }
 
+  const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
+  const bgInput = isDark ? "bg-slate-800" : "bg-slate-50";
+  const borderInput = isDark ? "border-slate-700" : "border-slate-200";
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const textLabel = isDark ? "text-slate-200" : "text-slate-700";
+  const dividerBg = isDark ? "bg-slate-700" : "bg-slate-200";
+  const googleBtnBg = isDark ? "bg-slate-900" : "bg-white";
+
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className={`flex-1 ${bgPage}`}>
       <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
         <TopBar />
 
         {/* Welcome heading */}
         <View className="px-5 mt-4 mb-6">
-          <Text className="font-inter-semibold text-2xl text-slate-900">
+          <Text className={`font-inter-semibold text-2xl ${textPrimary}`}>
             Welcome back
           </Text>
           <Text className="font-inter text-base text-slate-500 mt-1">
@@ -112,11 +122,11 @@ export default function LoginScreen() {
           /* Step 1: Email */
           <View className="px-5 mb-4">
             <Card>
-              <Text className="font-inter-medium text-sm text-slate-700 mb-1.5">
+              <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5`}>
                 Email
               </Text>
               <TextInput
-                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900 mb-5"
+                className={`${bgInput} border ${borderInput} rounded-xl px-4 py-3 font-inter text-base ${textPrimary} mb-5`}
                 placeholder="student@school.edu"
                 placeholderTextColor="#94a3b8"
                 keyboardType="email-address"
@@ -168,7 +178,9 @@ export default function LoginScreen() {
                 We sent a 6-digit code to your email
               </Text>
 
-              <Text className="font-inter-medium text-sm text-slate-700 mb-4 text-center">
+              <Text
+                className={`font-inter-medium text-sm ${textLabel} mb-4 text-center`}
+              >
                 Enter your code
               </Text>
 
@@ -182,10 +194,12 @@ export default function LoginScreen() {
                     className={`w-11 h-14 rounded-xl border-2 items-center justify-center ${
                       pin.length === i
                         ? "border-primary-500 bg-primary-50"
-                        : "border-slate-200 bg-slate-50"
+                        : `border-slate-200 ${isDark ? "bg-slate-800" : "bg-slate-50"}`
                     }`}
                   >
-                    <Text className="font-inter-semibold text-xl text-slate-900">
+                    <Text
+                      className={`font-inter-semibold text-xl ${textPrimary}`}
+                    >
                       {pin[i] ?? ""}
                     </Text>
                   </View>
@@ -235,18 +249,20 @@ export default function LoginScreen() {
 
         {/* OR Divider */}
         <View className="flex-row items-center px-5 mb-6">
-          <View className="flex-1 h-px bg-slate-200" />
+          <View className={`flex-1 h-px ${dividerBg}`} />
           <Text className="font-inter-medium text-sm text-slate-400 mx-4">
             OR
           </Text>
-          <View className="flex-1 h-px bg-slate-200" />
+          <View className={`flex-1 h-px ${dividerBg}`} />
         </View>
 
         {/* Google Sign-In Button */}
         <View className="px-5 mb-8">
-          <Pressable className="flex-row items-center justify-center bg-white border border-slate-200 rounded-xl py-3.5">
+          <Pressable
+            className={`flex-row items-center justify-center ${googleBtnBg} border ${borderInput} rounded-xl py-3.5`}
+          >
             <Ionicons name="logo-google" size={20} color="#4285F4" />
-            <Text className="font-inter-medium text-base text-slate-700 ml-3">
+            <Text className={`font-inter-medium text-base ${textLabel} ml-3`}>
               Continue with Google
             </Text>
           </Pressable>

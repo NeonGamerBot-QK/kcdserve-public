@@ -42,10 +42,53 @@ export async function apiFetch<T = unknown>(
 
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    throw new ApiError(
-      errorBody.error || `Request failed (${res.status})`,
-      res.status,
+    const message =
+      errorBody.error ||
+      (Array.isArray(errorBody.errors) ? errorBody.errors.join(", ") : null) ||
+      `Request failed (${res.status})`;
+    throw new ApiError(message, res.status);
+  }
+
+  return res.json() as Promise<T>;
+}
+
+/**
+ * Multipart form-data API client for file uploads.
+ * Does NOT set Content-Type — lets fetch derive the multipart boundary automatically.
+ */
+export async function apiFormData<T = unknown>(
+  path: string,
+  formData: FormData,
+): Promise<T> {
+  if (!USE_API) {
+    throw new Error(
+      "apiFormData called without a SERVER_URL configured. This is a bug.",
     );
+  }
+
+  const token = useAuthStore.getState().token;
+
+  const res = await fetch(`${SERVER_URL}/api/v1${path}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  });
+
+  if (res.status === 401) {
+    useAuthStore.getState().logout();
+    throw new ApiError("Session expired. Please log in again.", 401);
+  }
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    const message =
+      errorBody.error ||
+      (Array.isArray(errorBody.errors) ? errorBody.errors.join(", ") : null) ||
+      `Request failed (${res.status})`;
+    throw new ApiError(message, res.status);
   }
 
   return res.json() as Promise<T>;

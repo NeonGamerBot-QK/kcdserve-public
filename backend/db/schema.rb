@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_031054) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_211324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -89,6 +89,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_031054) do
     t.index ["name"], name: "index_groups_on_name", unique: true
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "kind"
+    t.datetime "read_at"
+    t.integer "resource_id"
+    t.string "resource_type"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["resource_type", "resource_id"], name: "index_notifications_on_resource_type_and_resource_id"
+    t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "opportunities", force: :cascade do |t|
     t.bigint "category_id"
     t.datetime "created_at", null: false
@@ -131,6 +146,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_031054) do
     t.bigint "edited_by_id"
     t.bigint "group_id"
     t.decimal "hours", precision: 6, scale: 2, null: false
+    t.string "location"
     t.boolean "on_campus", default: false, null: false
     t.bigint "opportunity_id"
     t.string "organization_name"
@@ -205,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_031054) do
   add_foreign_key "group_memberships", "groups"
   add_foreign_key "group_memberships", "users"
   add_foreign_key "groups", "users", column: "leader_id"
+  add_foreign_key "notifications", "users"
   add_foreign_key "opportunities", "categories"
   add_foreign_key "opportunities", "users", column: "created_by_id"
   add_foreign_key "opportunity_signups", "opportunities"

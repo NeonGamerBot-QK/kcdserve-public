@@ -14,7 +14,7 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -23,7 +23,9 @@ import { page1Schema, Page1Values } from "../../lib/schemas/serviceHour";
 import { useLogHoursFormStore } from "../../store/logHoursForm";
 import { useDashboard } from "../../hooks/useDashboard";
 import FilterChip from "../../components/FilterChip";
-import { CATEGORIES, COMMON_ORGS } from "../../lib/constants";
+import { COMMON_ORGS } from "../../lib/constants";
+import { useTheme } from "../../hooks/useTheme";
+import { useCategories } from "../../hooks/useCategories";
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString("en-US", {
@@ -43,6 +45,8 @@ function toDateString(d: Date): string {
 export default function LogHoursPage1() {
   const store = useLogHoursFormStore();
   const { data: dashboard } = useDashboard();
+  const { isDark } = useTheme();
+  const { categories } = useCategories();
 
   // Date state
   const initialDate = store.page1.serviceDate
@@ -73,7 +77,7 @@ export default function LogHoursPage1() {
     setValue,
     watch,
   } = useForm<Page1Values>({
-    resolver: standardSchemaResolver(page1Schema),
+    resolver: zodResolver(page1Schema),
     defaultValues: {
       suborg: store.page1.suborg ?? "",
       hours: store.page1.hours ?? 1,
@@ -130,10 +134,10 @@ export default function LogHoursPage1() {
         longitude: pos.coords.longitude,
       });
 
-      const address =
-        place
-          ? [place.city, place.region].filter(Boolean).join(", ") || "Unknown location"
-          : "Unknown location";
+      const address = place
+        ? [place.city, place.region].filter(Boolean).join(", ") ||
+          "Unknown location"
+        : "Unknown location";
 
       setLocationAddress(address);
       setValue("location", address);
@@ -145,25 +149,51 @@ export default function LogHoursPage1() {
     }
   }
 
-  const onNext = handleSubmit((data) => {
-    store.setPage1(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    router.push("/log-hours/verify" as any);
-  });
+  const onNext = handleSubmit(
+    (data) => {
+      console.log("[onNext] valid data:", JSON.stringify(data));
+      store.setPage1(data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      router.push("/log-hours/verify" as any);
+    },
+    (errors) => {
+      console.log("[onNext] validation errors:", JSON.stringify(errors));
+      Alert.alert("Validation Errors", JSON.stringify(errors, null, 2));
+    },
+  );
 
   const groups = dashboard?.groups ?? [];
 
+  const bgPage = isDark ? "bg-slate-950" : "bg-white";
+  const bgInput = isDark ? "bg-slate-800" : "bg-slate-50";
+  const borderInput = isDark ? "border-slate-700" : "border-slate-200";
+  const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const textLabel = isDark ? "text-slate-200" : "text-slate-700";
+  const textMuted = isDark ? "text-slate-400" : "text-slate-500";
+  const bgSuggestions = isDark ? "bg-slate-800" : "bg-white";
+  const borderSuggestions = isDark ? "border-slate-700" : "border-slate-200";
+  const suggestionBorder = isDark ? "border-slate-700" : "border-slate-100";
+  const pickerTextColor = isDark ? "#f1f5f9" : "#0f172a";
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className={`flex-1 ${bgPage}`}>
       {/* Header */}
-      <View className="flex-row items-center px-4 py-3 border-b border-slate-100">
+      <View
+        className={`flex-row items-center px-4 py-3 border-b ${borderInput}`}
+      >
         <Pressable
           onPress={() => router.back()}
           className="w-9 h-9 items-center justify-center"
         >
-          <Ionicons name="close" size={24} color="#0f172a" />
+          <Ionicons
+            name="close"
+            size={24}
+            color={isDark ? "#f1f5f9" : "#0f172a"}
+          />
         </Pressable>
-        <Text className="flex-1 text-center font-inter-semibold text-lg text-slate-900">
+        <Text
+          className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}
+        >
           Log Hours
         </Text>
         <View className="w-9" />
@@ -181,23 +211,38 @@ export default function LogHoursPage1() {
           {/* Suborg */}
           {groups.length > 0 && (
             <>
-              <Text className="font-inter-medium text-sm text-slate-700 mb-1.5">
+              <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5`}>
                 Sub-organization
               </Text>
               <Controller
                 control={control}
                 name="suborg"
                 render={({ field: { onChange, value } }) => (
-                  <View className="border border-slate-200 rounded-xl bg-slate-50 overflow-hidden mb-1">
+                  <View
+                    className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden mb-1`}
+                  >
                     <Picker
                       selectedValue={value ?? ""}
                       onValueChange={onChange}
-                      style={{ color: "#0f172a", height: 100 }}
+                      style={{
+                        color: pickerTextColor,
+                        backgroundColor: isDark ? "#1e293b" : "#f8fafc",
+                        height: 100 
+                      }}
                       itemStyle={{fontSize: 16, height:100}}
                     >
-                      <Picker.Item label="None" value="" />
+                      <Picker.Item
+                        label="None"
+                        value=""
+                        color={pickerTextColor}
+                      />
                       {groups.map((g) => (
-                        <Picker.Item key={g.id} label={g.name} value={String(g.id)} />
+                        <Picker.Item
+                          key={g.id}
+                          label={g.name}
+                          value={g.id}
+                          color={pickerTextColor}
+                        />
                       ))}
                     </Picker>
                   </View>
@@ -207,27 +252,40 @@ export default function LogHoursPage1() {
           )}
 
           {/* Hours + Minutes */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Time
           </Text>
           <View className="flex-row gap-3">
             <View className="flex-1">
-              <Text className="font-inter text-xs text-slate-500 mb-1">
+              <Text className={`font-inter text-xs ${textMuted} mb-1`}>
                 Hours
               </Text>
               <Controller
                 control={control}
                 name="hours"
                 render={({ field: { onChange, value } }) => (
-                  <View className="border border-slate-200 rounded-xl bg-slate-50 overflow-hidden">
+                  <View
+                    className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden`}
+                  >
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: "#0f172a" , height:150 }}
+                      style={{
+                        color: pickerTextColor,
+                        backgroundColor: isDark ? "#1e293b" : "#f8fafc",
+                        height: 150
+                      }}
                       itemStyle={{height:150}}
                     >
                       {Array.from({ length: 25 }, (_, i) => (
-                        <Picker.Item key={i} label={String(i)} value={i} />
+                        <Picker.Item
+                          key={i}
+                          label={String(i)}
+                          value={i}
+                          color={pickerTextColor}
+                        />
                       ))}
                     </Picker>
                   </View>
@@ -235,18 +293,24 @@ export default function LogHoursPage1() {
               />
             </View>
             <View className="flex-1">
-              <Text className="font-inter text-xs text-slate-500 mb-1">
+              <Text className={`font-inter text-xs ${textMuted} mb-1`}>
                 Minutes
               </Text>
               <Controller
                 control={control}
                 name="minutes"
                 render={({ field: { onChange, value } }) => (
-                  <View className="border border-slate-200 rounded-xl bg-slate-50 overflow-hidden">
+                  <View
+                    className={`border ${borderInput} rounded-xl ${bgInput} overflow-hidden`}
+                  >
                     <Picker
                       selectedValue={value}
                       onValueChange={(v) => onChange(Number(v))}
-                      style={{ color: "#0f172a" , height: 150 }}
+                      style={{
+                        color: pickerTextColor,
+                        backgroundColor: isDark ? "#1e293b" : "#f8fafc",
+                        height: 150
+                      }}
                       itemStyle={{height:150}}
                     >
                       {[0, 15, 30, 45].map((m) => (
@@ -254,6 +318,7 @@ export default function LogHoursPage1() {
                           key={m}
                           label={m === 0 ? "0 min" : `${m} min`}
                           value={m}
+                          color={pickerTextColor}
                         />
                       ))}
                     </Picker>
@@ -269,7 +334,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Service Date */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Service Date
           </Text>
           <Controller
@@ -278,9 +345,9 @@ export default function LogHoursPage1() {
             render={() => (
               <Pressable
                 onPress={() => setShowDatePicker(true)}
-                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 flex-row items-center justify-between"
+                className={`${bgInput} border ${borderInput} rounded-xl px-4 py-3 flex-row items-center justify-between`}
               >
-                <Text className="font-inter text-base text-slate-900">
+                <Text className={`font-inter text-base ${textPrimary}`}>
                   {formatDate(dateValue)}
                 </Text>
                 <Ionicons name="calendar-outline" size={18} color="#64748b" />
@@ -295,17 +362,11 @@ export default function LogHoursPage1() {
 
           {/* iOS date picker modal */}
           {Platform.OS === "ios" && (
-            <Modal
-              visible={showDatePicker}
-              transparent
-              animationType="slide"
-            >
-              <View
-                style={{ flex: 1, justifyContent: "flex-end" }}
-              >
+            <Modal visible={showDatePicker} transparent animationType="slide">
+              <View style={{ flex: 1, justifyContent: "flex-end" }}>
                 <View
                   style={{
-                    backgroundColor: "white",
+                    backgroundColor: isDark ? "#1e293b" : "white",
                     paddingBottom: 20,
                     borderTopLeftRadius: 16,
                     borderTopRightRadius: 16,
@@ -371,7 +432,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Organization */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Organization
           </Text>
           <Controller
@@ -380,7 +443,7 @@ export default function LogHoursPage1() {
             render={({ field: { onChange } }) => (
               <View>
                 <TextInput
-                  className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900"
+                  className={`${bgInput} border ${borderInput} rounded-xl px-4 py-3 font-inter text-base ${textPrimary}`}
                   placeholder="e.g. Red Cross, Local Food Bank"
                   placeholderTextColor="#94a3b8"
                   value={orgQuery}
@@ -393,7 +456,9 @@ export default function LogHoursPage1() {
                 />
                 {showSuggestions &&
                   (orgSuggestions.length > 0 || showAddNew) && (
-                    <View className="border border-slate-200 rounded-xl mt-1 bg-white overflow-hidden">
+                    <View
+                      className={`border ${borderSuggestions} rounded-xl mt-1 ${bgSuggestions} overflow-hidden`}
+                    >
                       {orgSuggestions.map((org) => (
                         <Pressable
                           key={org}
@@ -402,9 +467,11 @@ export default function LogHoursPage1() {
                             onChange(org);
                             setShowSuggestions(false);
                           }}
-                          className="px-4 py-3 border-b border-slate-100"
+                          className={`px-4 py-3 border-b ${suggestionBorder}`}
                         >
-                          <Text className="font-inter text-base text-slate-800">
+                          <Text
+                            className={`font-inter text-base ${textPrimary}`}
+                          >
                             {org}
                           </Text>
                         </Pressable>
@@ -433,7 +500,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Category */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Category
           </Text>
           <Controller
@@ -446,7 +515,7 @@ export default function LogHoursPage1() {
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{ paddingBottom: 4 }}
               >
-                {CATEGORIES.map((cat) => (
+                {categories.map((cat) => (
                   <FilterChip
                     key={cat}
                     label={cat}
@@ -464,7 +533,9 @@ export default function LogHoursPage1() {
           )}
 
           {/* Description */}
-          <Text className="font-inter-medium text-sm text-slate-700 mb-1.5 mt-5">
+          <Text
+            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+          >
             Description
           </Text>
           <Controller
@@ -472,7 +543,7 @@ export default function LogHoursPage1() {
             name="description"
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-inter text-base text-slate-900"
+                className={`${bgInput} border ${borderInput} rounded-xl px-4 py-3 font-inter text-base ${textPrimary}`}
                 placeholder="Describe what you did (at least 10 characters)"
                 placeholderTextColor="#94a3b8"
                 multiline
@@ -485,7 +556,9 @@ export default function LogHoursPage1() {
               />
             )}
           />
-          <Text className="text-xs text-slate-400 text-right mt-1">
+          <Text
+            className={`text-xs ${isDark ? "text-slate-500" : "text-slate-400"} text-right mt-1`}
+          >
             {descriptionValue.length}/500
           </Text>
           {errors.description && (
@@ -497,11 +570,11 @@ export default function LogHoursPage1() {
           {/* Location */}
           <View className="flex-row items-center justify-between mt-5">
             <View>
-              <Text className="font-inter-medium text-sm text-slate-700">
+              <Text className={`font-inter-medium text-sm ${textLabel}`}>
                 Include Location
               </Text>
               {locationEnabled && locationAddress && (
-                <Text className="font-inter text-xs text-slate-500 mt-0.5">
+                <Text className={`font-inter text-xs ${textMuted} mt-0.5`}>
                   {locationAddress}
                 </Text>
               )}

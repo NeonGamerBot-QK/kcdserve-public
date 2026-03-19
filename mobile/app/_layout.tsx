@@ -11,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { View } from "react-native";
 import "../global.css";
+import { initTheme } from "../hooks/useTheme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,6 +26,10 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
   });
+
+  useEffect(() => {
+    initTheme();
+  }, []);
 
   useEffect(() => {
     if (fontsLoaded) {

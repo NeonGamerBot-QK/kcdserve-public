@@ -58,6 +58,12 @@
             <p class="text-slate-900"><%= @service_hour.organization_name %></p>
           </div>
         <% end %>
+        <% if @service_hour.location.present? %>
+          <div>
+            <p class="text-slate-500 text-xs mb-0.5">Location</p>
+            <p class="text-slate-900"><%= @service_hour.location %></p>
+          </div>
+        <% end %>
         <% if @service_hour.contact_name.present? %>
           <div>
             <p class="text-slate-500 text-xs mb-0.5">Contact</p>
