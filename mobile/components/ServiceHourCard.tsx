@@ -24,7 +24,7 @@ export default function ServiceHourCard({
   const { isDark } = useTheme();
 
   return (
-    <Card className="flex-row items-center py-3 px-5 mx-5 my-1">
+    <Card className="flex-row items-center py-5 px-5 mx-5 my-1">
       <View
         className={`w-10 h-10 rounded-full ${isDark ? "bg-primary-950" : "bg-primary-50"} items-center justify-center mr-3`}
       >

@@ -99,10 +99,10 @@ const hours = await fetch('/api/service_hours')
 - Never do manual validation logic in components. Put it in the schema.
 - For the multi-step log-hours flow, each step validates its own partial schema before advancing.
 
-### Styling (NativeWind v2)
+### Styling (NativeWind v4)
 - Use `className` props for all styling — no inline `style` objects unless unavoidable (e.g. dynamic values).
 - Stick to Tailwind utility classes. Custom values go in `tailwind.config.js` theme extension — do not use arbitrary values like `w-[143px]` unless truly necessary.
-- NativeWind v2 is pinned — do not upgrade to v4 without careful testing.
+- NativeWind v4 is being used — do not downgrade to v2.
 
 ### Auth
 - Tokens stored in `expo-secure-store` via the Zustand auth store.
