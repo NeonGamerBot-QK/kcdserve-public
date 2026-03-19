@@ -227,9 +227,9 @@ export default function LogHoursPage1() {
                       style={{
                         color: pickerTextColor,
                         backgroundColor: isDark ? "#1e293b" : "#f8fafc",
-                        height: 100 
+                        height: 100,
                       }}
-                      itemStyle={{fontSize: 16, height:100}}
+                      itemStyle={{ fontSize: 16, height: 100 }}
                     >
                       <Picker.Item
                         label="None"
@@ -275,9 +275,9 @@ export default function LogHoursPage1() {
                       style={{
                         color: pickerTextColor,
                         backgroundColor: isDark ? "#1e293b" : "#f8fafc",
-                        height: 150
+                        height: 150,
                       }}
-                      itemStyle={{height:150}}
+                      itemStyle={{ height: 150 }}
                     >
                       {Array.from({ length: 25 }, (_, i) => (
                         <Picker.Item
@@ -309,9 +309,9 @@ export default function LogHoursPage1() {
                       style={{
                         color: pickerTextColor,
                         backgroundColor: isDark ? "#1e293b" : "#f8fafc",
-                        height: 150
+                        height: 150,
                       }}
-                      itemStyle={{height:150}}
+                      itemStyle={{ height: 150 }}
                     >
                       {[0, 15, 30, 45].map((m) => (
                         <Picker.Item
