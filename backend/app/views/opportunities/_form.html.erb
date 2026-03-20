@@ -1,6 +1,6 @@
 <%= form_with(model: opportunity, html: { novalidate: true }) do |f| %>
   <% if opportunity.errors.any? %>
-    <div class="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 mb-6">
+    <div class="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 rounded-xl p-4 mb-6">
       <h6 class="font-semibold text-sm"><%= pluralize(opportunity.errors.count, "error") %> prevented saving:</h6>
       <ul class="list-disc list-inside text-sm mt-1">
         <% opportunity.errors.full_messages.each do |msg| %>
@@ -10,52 +10,52 @@
     </div>
   <% end %>
 
-  <div class="bg-white rounded-2xl border border-gray-200 p-6">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="md:col-span-2">
-        <%= f.label :title, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.text_field :title, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", required: true %>
+        <%= f.label :title, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_field :title, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", required: true %>
       </div>
       <div>
-        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.collection_select :category_id, Category.order(:name), :id, :name, { include_blank: "Select category" }, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.collection_select :category_id, Category.order(:name), :id, :name, { include_blank: "Select category" }, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
       </div>
       <div class="md:col-span-3">
-        <%= f.label :description, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.text_area :description, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", rows: 5 %>
+        <%= f.label :description, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_area :description, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", rows: 5 %>
       </div>
       <div>
-        <%= f.label :date, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.date_field :date, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", required: true %>
+        <%= f.label :date, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.date_field :date, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", required: true %>
       </div>
       <div>
-        <%= f.label :start_time, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.time_field :start_time, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        <%= f.label :start_time, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.time_field :start_time, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
       </div>
       <div>
-        <%= f.label :end_time, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.time_field :end_time, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        <%= f.label :end_time, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.time_field :end_time, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
       </div>
       <div class="md:col-span-2">
-        <%= f.label :location, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.text_field :location, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        <%= f.label :location, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_field :location, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
       </div>
       <div>
-        <%= f.label :required_hours, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.number_field :required_hours, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", step: 0.25 %>
+        <%= f.label :required_hours, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.number_field :required_hours, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", step: 0.25 %>
       </div>
       <div>
-        <%= f.label :max_volunteers, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.number_field :max_volunteers, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        <%= f.label :max_volunteers, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.number_field :max_volunteers, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
       </div>
       <div>
-        <%= f.label :photos, class: "block text-sm font-medium text-slate-700 mb-1" %>
-        <%= f.file_field :photos, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm text-slate-900", multiple: true, accept: "image/*" %>
+        <%= f.label :photos, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.file_field :photos, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white", multiple: true, accept: "image/*" %>
       </div>
       <div class="flex items-end pb-1">
         <div class="flex items-center">
           <%= f.check_box :published, class: "mr-2 h-4 w-4 rounded border-slate-300 text-primary-500 focus:ring-primary-500" %>
-          <%= f.label :published, "Publish (visible to public)", class: "text-sm text-slate-700" %>
+          <%= f.label :published, "Publish (visible to public)", class: "text-sm text-slate-700 dark:text-slate-300" %>
         </div>
       </div>
     </div>
@@ -63,6 +63,6 @@
 
   <div class="mt-4 flex items-center space-x-3">
     <%= f.submit class: "bg-primary-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-primary-600 cursor-pointer" %>
-    <%= link_to "Cancel", opportunities_path, class: "border border-slate-300 text-slate-700 px-5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50" %>
+    <%= link_to "Cancel", opportunities_path, class: "border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700" %>
   </div>
 <% end %>

@@ -1,35 +1,35 @@
-<h1 class="text-2xl font-semibold text-slate-900 mb-6">Service Hours Review</h1>
+<h1 class="text-2xl font-semibold text-slate-900 dark:text-white mb-6">Service Hours Review</h1>
 
 <div class="flex items-center space-x-2 mb-6">
-  <%= link_to "All", admin_service_hours_path, class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status].blank? ? 'bg-primary-500 text-white' : 'border border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
-  <%= link_to "Pending", admin_service_hours_path(status: :pending), class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status] == 'pending' ? 'bg-status-pending text-white' : 'border border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
-  <%= link_to "Approved", admin_service_hours_path(status: :approved), class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status] == 'approved' ? 'bg-status-approved text-white' : 'border border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
-  <%= link_to "Rejected", admin_service_hours_path(status: :rejected), class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status] == 'rejected' ? 'bg-status-rejected text-white' : 'border border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
+  <%= link_to "All", admin_service_hours_path, class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status].blank? ? 'bg-primary-500 text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
+  <%= link_to "Pending", admin_service_hours_path(status: :pending), class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status] == 'pending' ? 'bg-status-pending text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
+  <%= link_to "Approved", admin_service_hours_path(status: :approved), class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status] == 'approved' ? 'bg-status-approved text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
+  <%= link_to "Rejected", admin_service_hours_path(status: :rejected), class: "px-4 py-1.5 rounded-full text-sm font-medium #{params[:status] == 'rejected' ? 'bg-status-rejected text-white' : 'border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
 </div>
 
-<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+<div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
   <table class="w-full text-sm">
-    <thead class="bg-slate-50">
+    <thead class="bg-slate-50 dark:bg-slate-700">
       <tr>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Volunteer</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Date</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Hours</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Category</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Group</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Status</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Volunteer</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Date</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Hours</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Category</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Group</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Status</th>
         <th class="px-4 py-3"></th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-100">
+    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
       <% @service_hours.each do |sh| %>
-        <tr class="hover:bg-slate-50">
-          <td class="px-4 py-3 text-slate-900"><%= sh.user&.full_name || "Deleted User" %></td>
-          <td class="px-4 py-3 text-slate-600"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
-          <td class="px-4 py-3 text-slate-600"><%= sh.hours %></td>
-          <td class="px-4 py-3 text-slate-600"><%= sh.category.name %></td>
-          <td class="px-4 py-3 text-slate-600"><%= sh.group&.name || "—" %></td>
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700">
+          <td class="px-4 py-3 text-slate-900 dark:text-white"><%= sh.user&.full_name || "Deleted User" %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= sh.hours %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= sh.category.name %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= sh.group&.name || "—" %></td>
           <td class="px-4 py-3">
-            <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 text-status-approved' : sh.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 dark:bg-green-950 text-status-approved' : sh.pending? ? 'bg-amber-50 dark:bg-amber-950 text-status-pending' : 'bg-red-50 dark:bg-red-950 text-status-rejected' %>">
               <%= sh.status.humanize %>
             </span>
           </td>

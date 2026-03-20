@@ -1,61 +1,61 @@
-<h1 class="text-2xl font-semibold text-slate-900 mb-1">
+<h1 class="text-2xl font-semibold text-slate-900 dark:text-white mb-1">
   <%= @user.full_name %>
   <% if @user.deleted? %>
-    <span class="ml-2 px-2 py-0.5 rounded-full bg-red-50 text-status-rejected text-xs font-medium">Deactivated</span>
+    <span class="ml-2 px-2 py-0.5 rounded-full bg-red-50 dark:bg-red-950 text-status-rejected text-xs font-medium">Deactivated</span>
   <% end %>
 </h1>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 mb-6">
-  <div class="bg-white rounded-2xl border border-gray-200 p-6">
-    <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Email:</span> <span class="text-slate-900"><%= @user.email %></span></p>
-    <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Role:</span> <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"><%= @user.role.humanize %></span></p>
-    <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Phone:</span> <span class="text-slate-900"><%= @user.phone || "N/A" %></span></p>
-    <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Provider:</span> <span class="text-slate-900"><%= @user.provider || "Email" %></span></p>
+  <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Email:</span> <span class="text-slate-900 dark:text-white"><%= @user.email %></span></p>
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Role:</span> <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium"><%= @user.role.humanize %></span></p>
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Phone:</span> <span class="text-slate-900 dark:text-white"><%= @user.phone || "N/A" %></span></p>
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Provider:</span> <span class="text-slate-900 dark:text-white"><%= @user.provider || "Email" %></span></p>
     <% if @user.birthday.present? %>
-      <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Birthday:</span> <span class="text-slate-900"><%= @user.birthday.strftime("%B %d, %Y") %> (age <%= @user.age %>)</span></p>
+      <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Birthday:</span> <span class="text-slate-900 dark:text-white"><%= @user.birthday.strftime("%B %d, %Y") %> (age <%= @user.age %>)</span></p>
     <% end %>
-    <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Total Hours:</span> <span class="text-slate-900 font-semibold"><%= @user.total_approved_hours %></span></p>
-    <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Joined:</span> <span class="text-slate-900"><%= @user.created_at.strftime("%B %d, %Y") %></span></p>
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Total Hours:</span> <span class="text-slate-900 dark:text-white font-semibold"><%= @user.total_approved_hours %></span></p>
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Joined:</span> <span class="text-slate-900 dark:text-white"><%= @user.created_at.strftime("%B %d, %Y") %></span></p>
     <% if @user.deleted? %>
-      <p class="mb-2 text-sm"><span class="font-medium text-slate-500">Deleted On:</span> <span class="text-slate-900"><%= @user.deleted_at.strftime("%B %d, %Y") %></span></p>
+      <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Deleted On:</span> <span class="text-slate-900 dark:text-white"><%= @user.deleted_at.strftime("%B %d, %Y") %></span></p>
     <% end %>
   </div>
   <div class="space-y-2">
     <% if current_user.admin_or_above? && !@user.deleted? %>
-      <%= link_to "Edit User", edit_admin_user_path(@user), class: "block w-full text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2 hover:bg-primary-50 font-medium text-sm" %>
+      <%= link_to "Edit User", edit_admin_user_path(@user), class: "block w-full text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2 hover:bg-primary-50 dark:hover:bg-primary-950 font-medium text-sm" %>
     <% end %>
     <% unless @user.deleted? %>
-      <%= link_to "View Profile", profile_path(@user), class: "block w-full text-center border border-slate-300 text-slate-700 rounded-xl px-4 py-2 hover:bg-slate-50 font-medium text-sm" %>
+      <%= link_to "View Profile", profile_path(@user), class: "block w-full text-center border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium text-sm" %>
     <% end %>
     <% if current_user.admin_or_above? && @user != current_user %>
       <% if @user.deleted? %>
-        <%= button_to "Restore User", restore_admin_user_path(@user), method: :patch, class: "w-full border border-green-500 text-green-600 rounded-xl px-4 py-2 hover:bg-green-50 font-medium text-sm", data: { turbo_confirm: "Restore this user?" } %>
+        <%= button_to "Restore User", restore_admin_user_path(@user), method: :patch, class: "w-full border border-green-500 text-green-600 rounded-xl px-4 py-2 hover:bg-green-50 dark:hover:bg-green-950 font-medium text-sm", data: { turbo_confirm: "Restore this user?" } %>
       <% else %>
-        <%= button_to "Deactivate User", admin_user_path(@user), method: :delete, class: "w-full border border-red-500 text-red-500 rounded-xl px-4 py-2 hover:bg-red-50 font-medium text-sm", data: { turbo_confirm: "This will deactivate the user. Are you sure?" } %>
+        <%= button_to "Deactivate User", admin_user_path(@user), method: :delete, class: "w-full border border-red-500 text-red-500 rounded-xl px-4 py-2 hover:bg-red-50 dark:hover:bg-red-950 font-medium text-sm", data: { turbo_confirm: "This will deactivate the user. Are you sure?" } %>
       <% end %>
     <% end %>
   </div>
 </div>
 
-<h4 class="text-lg font-semibold text-slate-900 mb-3">Service Hours</h4>
-<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+<h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">Service Hours</h4>
+<div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
   <table class="w-full text-sm">
-    <thead class="bg-slate-50">
+    <thead class="bg-slate-50 dark:bg-slate-700">
       <tr>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Date</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Hours</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Category</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Status</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Date</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Hours</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Category</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Status</th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-100">
+    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
       <% @service_hours.each do |sh| %>
         <tr>
-          <td class="px-4 py-3 text-slate-900"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
-          <td class="px-4 py-3 text-slate-600"><%= sh.hours %></td>
-          <td class="px-4 py-3 text-slate-600"><%= sh.category.name %></td>
+          <td class="px-4 py-3 text-slate-900 dark:text-white"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= sh.hours %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= sh.category.name %></td>
           <td class="px-4 py-3">
-            <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 text-status-approved' : sh.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 dark:bg-green-950 text-status-approved' : sh.pending? ? 'bg-amber-50 dark:bg-amber-950 text-status-pending' : 'bg-red-50 dark:bg-red-950 text-status-rejected' %>">
               <%= sh.status.humanize %>
             </span>
           </td>

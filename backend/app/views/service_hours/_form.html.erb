@@ -1,6 +1,6 @@
 <%= form_with(model: service_hour, html: { novalidate: true }) do |f| %>
   <% if service_hour.errors.any? %>
-    <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-4">
+    <div class="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 rounded-lg p-4 mb-4">
       <h6 class="font-semibold"><%= pluralize(service_hour.errors.count, "error") %> prevented saving:</h6>
       <ul class="mb-0 list-disc list-inside">
         <% service_hour.errors.full_messages.each do |msg| %>
@@ -13,82 +13,82 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
     <div class="md:col-span-3">
       <div class="mb-4">
-        <%= f.label :title, "Title (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_field :title, class: "w-full px-3 py-2 border rounded", maxlength: 64, minlength: 5, placeholder: "Short summary of the service (5–64 chars)" %>
+        <%= f.label :title, "Title (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_field :title, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", maxlength: 64, minlength: 5, placeholder: "Short summary of the service (5–64 chars)" %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :service_date, "Date of Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.date_field :service_date, class: "w-full px-3 py-2 border rounded", required: true %>
+        <%= f.label :service_date, "Date of Service", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.date_field :service_date, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", required: true %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :hours, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.number_field :hours, class: "w-full px-3 py-2 border rounded", step: 0.25, min: 0.25, max: 24, required: true %>
+        <%= f.label :hours, class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.number_field :hours, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", step: 0.25, min: 0.25, max: 24, required: true %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.collection_select :category_id, Category.order(:name), :id, :name, { prompt: "Select category" }, class: "w-full px-3 py-2 border rounded", required: true %>
+        <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.collection_select :category_id, Category.order(:name), :id, :name, { prompt: "Select category" }, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", required: true %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :group_id, "Group (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.collection_select :group_id, current_user.groups.order(:name), :id, :name, { include_blank: "No group" }, class: "w-full px-3 py-2 border rounded" %>
+        <%= f.label :group_id, "Group (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.collection_select :group_id, current_user.groups.order(:name), :id, :name, { include_blank: "No group" }, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :opportunity_id, "Opportunity (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.collection_select :opportunity_id, Opportunity.published.order(:title), :id, :title, { include_blank: "No specific opportunity" }, class: "w-full px-3 py-2 border rounded" %>
+        <%= f.label :opportunity_id, "Opportunity (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.collection_select :opportunity_id, Opportunity.published.order(:title), :id, :title, { include_blank: "No specific opportunity" }, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white" %>
       </div>
     </div>
     <div class="md:col-span-3">
       <div class="mb-4">
-        <%= f.label :description, "Description of Service", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_area :description, class: "w-full px-3 py-2 border rounded", rows: 4, required: true, minlength: 10, maxlength: 2000 %>
+        <%= f.label :description, "Description of Service", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_area :description, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", rows: 4, required: true, minlength: 10, maxlength: 2000 %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :photos, "Photo Proof (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.file_field :photos, class: "w-full px-3 py-2 border rounded", multiple: true, accept: "image/*,video/*,application/pdf" %>
+        <%= f.label :photos, "Photo Proof (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.file_field :photos, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", multiple: true, accept: "image/*,video/*,application/pdf" %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :organization_name, "Organization Name (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_field :organization_name, class: "w-full px-3 py-2 border rounded", maxlength: 150, placeholder: "Name of the organization served" %>
+        <%= f.label :organization_name, "Organization Name (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_field :organization_name, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", maxlength: 150, placeholder: "Name of the organization served" %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :contact_name, "Supervisor / Contact Name (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_field :contact_name, class: "w-full px-3 py-2 border rounded", maxlength: 100, placeholder: "Name of your supervisor or contact" %>
+        <%= f.label :contact_name, "Supervisor / Contact Name (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_field :contact_name, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", maxlength: 100, placeholder: "Name of your supervisor or contact" %>
       </div>
     </div>
     <div>
       <div class="mb-4">
-        <%= f.label :contact_email, "Contact Email (optional)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.email_field :contact_email, class: "w-full px-3 py-2 border rounded", maxlength: 150, placeholder: "supervisor@example.com" %>
+        <%= f.label :contact_email, "Contact Email (optional)", class: "block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1" %>
+        <%= f.email_field :contact_email, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded bg-white dark:bg-slate-700 text-slate-900 dark:text-white", maxlength: 150, placeholder: "supervisor@example.com" %>
       </div>
     </div>
     <div>
       <div class="mb-4 h-full flex items-end">
         <div class="flex items-center">
           <%= f.check_box :on_campus, class: "mr-2 h-4 w-4", id: "on_campus" %>
-          <%= f.label :on_campus, "On Campus Service", class: "text-sm text-gray-700", for: "on_campus" %>
+          <%= f.label :on_campus, "On Campus Service", class: "text-sm text-gray-700 dark:text-slate-300", for: "on_campus" %>
         </div>
       </div>
     </div>
   </div>
 
   <div class="mt-4">
-    <%= f.submit class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
-    <%= link_to "Cancel", service_hours_path, class: "ml-2 text-gray-600 hover:text-gray-800" %>
+    <%= f.submit class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer" %>
+    <%= link_to "Cancel", service_hours_path, class: "ml-2 text-gray-600 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-300" %>
   </div>
 <% end %>

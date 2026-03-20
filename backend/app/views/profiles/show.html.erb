@@ -7,19 +7,19 @@
         <%= @user.first_name[0] %><%= @user.last_name[0] %>
       </div>
     <% end %>
-    <h3 class="text-xl font-semibold text-slate-900"><%= @user.full_name %></h3>
-    <p class="text-slate-500 text-sm"><%= @user.role.humanize %></p>
+    <h3 class="text-xl font-semibold text-slate-900 dark:text-white"><%= @user.full_name %></h3>
+    <p class="text-slate-500 dark:text-slate-400 text-sm"><%= @user.role.humanize %></p>
     <% if @user.bio.present? %>
-      <p class="text-slate-600 text-sm mt-2"><%= @user.bio %></p>
+      <p class="text-slate-600 dark:text-slate-300 text-sm mt-2"><%= @user.bio %></p>
     <% end %>
     <% if @user.phone.present? %>
-      <p class="text-slate-500 text-sm mt-1">&#128222; <%= @user.phone %></p>
+      <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">&#128222; <%= @user.phone %></p>
     <% end %>
     <% if @user == current_user %>
       <div class="mt-4 space-y-2">
-        <%= link_to "Edit Profile", edit_profile_path(@user), class: "block w-full text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2 hover:bg-primary-50 font-medium text-sm" %>
-        <%= link_to "Download Resume (PDF)", resume_path(@user), class: "block w-full text-center border border-slate-300 text-slate-700 rounded-xl px-4 py-2 hover:bg-slate-50 font-medium text-sm" %>
-        <%= link_to "Export Hours (CSV)", resume_csv_path(@user), class: "block w-full text-center border border-slate-300 text-slate-700 rounded-xl px-4 py-2 hover:bg-slate-50 font-medium text-sm" %>
+        <%= link_to "Edit Profile", edit_profile_path(@user), class: "block w-full text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2 hover:bg-primary-50 dark:hover:bg-primary-950 font-medium text-sm" %>
+        <%= link_to "Download Resume (PDF)", resume_path(@user), class: "block w-full text-center border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium text-sm" %>
+        <%= link_to "Export Hours (CSV)", resume_csv_path(@user), class: "block w-full text-center border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium text-sm" %>
       </div>
     <% end %>
   </div>
@@ -30,28 +30,28 @@
         <h3 class="text-2xl font-bold"><%= @total_hours %></h3>
         <p class="text-primary-100 text-xs mt-1">Approved Hours</p>
       </div>
-      <div class="bg-white rounded-2xl border border-gray-200 p-4 text-center">
-        <h3 class="text-2xl font-bold text-slate-900"><%= @groups.count %></h3>
-        <p class="text-slate-500 text-xs mt-1">Groups</p>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-4 text-center">
+        <h3 class="text-2xl font-bold text-slate-900 dark:text-white"><%= @groups.count %></h3>
+        <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Groups</p>
       </div>
-      <div class="bg-white rounded-2xl border border-gray-200 p-4 text-center">
-        <h3 class="text-2xl font-bold text-slate-900"><%= @service_hours.count %></h3>
-        <p class="text-slate-500 text-xs mt-1">Entries</p>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-4 text-center">
+        <h3 class="text-2xl font-bold text-slate-900 dark:text-white"><%= @service_hours.count %></h3>
+        <p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Entries</p>
       </div>
     </div>
 
     <% if @hours_by_category.any? %>
-      <div class="bg-white rounded-2xl border border-gray-200 mb-4">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h5 class="font-semibold text-slate-900">Hours by Category</h5>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 mb-4">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+          <h5 class="font-semibold text-slate-900 dark:text-white">Hours by Category</h5>
         </div>
         <div class="p-6">
           <table class="w-full text-sm">
             <tbody>
               <% @hours_by_category.each do |name, hours| %>
-                <tr class="border-b border-gray-100">
-                  <td class="py-2 text-slate-900"><%= name %></td>
-                  <td class="py-2 text-right text-slate-600 font-semibold"><%= hours.to_f.round(2) %> hrs</td>
+                <tr class="border-b border-gray-100 dark:border-slate-700">
+                  <td class="py-2 text-slate-900 dark:text-white"><%= name %></td>
+                  <td class="py-2 text-right text-slate-600 dark:text-slate-300 font-semibold"><%= hours.to_f.round(2) %> hrs</td>
                 </tr>
               <% end %>
             </tbody>
@@ -61,11 +61,11 @@
     <% end %>
 
     <% if @groups.any? %>
-      <div class="bg-white rounded-2xl border border-gray-200 mb-4">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h5 class="font-semibold text-slate-900">Groups</h5>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 mb-4">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+          <h5 class="font-semibold text-slate-900 dark:text-white">Groups</h5>
         </div>
-        <ul class="divide-y divide-gray-100">
+        <ul class="divide-y divide-gray-100 dark:divide-slate-700">
           <% @groups.each do |group| %>
             <li class="px-6 py-3">
               <%= link_to group.name, group_path(group), class: "text-primary-500 hover:text-primary-700 font-medium text-sm" %>
@@ -75,26 +75,26 @@
       </div>
     <% end %>
 
-    <div class="bg-white rounded-2xl border border-gray-200">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h5 class="font-semibold text-slate-900">Service History</h5>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700">
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+        <h5 class="font-semibold text-slate-900 dark:text-white">Service History</h5>
       </div>
       <div class="p-6">
         <% if @service_hours.any? %>
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-gray-200">
-                <th class="text-left py-2 text-slate-500 font-medium">Date</th>
-                <th class="text-left py-2 text-slate-500 font-medium">Category</th>
-                <th class="text-left py-2 text-slate-500 font-medium">Hours</th>
+              <tr class="border-b border-gray-200 dark:border-slate-700">
+                <th class="text-left py-2 text-slate-500 dark:text-slate-400 font-medium">Date</th>
+                <th class="text-left py-2 text-slate-500 dark:text-slate-400 font-medium">Category</th>
+                <th class="text-left py-2 text-slate-500 dark:text-slate-400 font-medium">Hours</th>
               </tr>
             </thead>
             <tbody>
               <% @service_hours.limit(15).each do |sh| %>
-                <tr class="border-b border-gray-100">
-                  <td class="py-2 text-slate-900"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
-                  <td class="py-2 text-slate-600"><%= sh.category.name %></td>
-                  <td class="py-2 text-slate-600"><%= sh.hours %></td>
+                <tr class="border-b border-gray-100 dark:border-slate-700">
+                  <td class="py-2 text-slate-900 dark:text-white"><%= sh.service_date.strftime("%m/%d/%Y") %></td>
+                  <td class="py-2 text-slate-600 dark:text-slate-300"><%= sh.category.name %></td>
+                  <td class="py-2 text-slate-600 dark:text-slate-300"><%= sh.hours %></td>
                 </tr>
               <% end %>
             </tbody>

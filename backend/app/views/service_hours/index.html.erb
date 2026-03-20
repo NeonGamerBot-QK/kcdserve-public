@@ -1,6 +1,6 @@
 <div class="max-w-lg mx-auto">
   <div class="flex justify-between items-center mb-3">
-    <h1 class="font-semibold text-2xl text-slate-900">Activity Log</h1>
+    <h1 class="font-semibold text-2xl text-slate-900 dark:text-white">Activity Log</h1>
     <%= link_to new_service_hour_path, class: "bg-primary-500 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-primary-600" do %>
       + Log Hours
     <% end %>
@@ -8,10 +8,10 @@
 
   <%# Filter chips — matches mobile FilterChip component %>
   <div class="flex space-x-2 mt-2 mb-6 overflow-x-auto pb-1">
-    <%= link_to "All", service_hours_path, class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status].blank? ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
-    <%= link_to "Approved", service_hours_path(status: :approved), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'approved' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
-    <%= link_to "Pending", service_hours_path(status: :pending), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'pending' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
-    <%= link_to "Rejected", service_hours_path(status: :rejected), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'rejected' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'}" %>
+    <%= link_to "All", service_hours_path, class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status].blank? ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
+    <%= link_to "Approved", service_hours_path(status: :approved), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'approved' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
+    <%= link_to "Pending", service_hours_path(status: :pending), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'pending' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
+    <%= link_to "Rejected", service_hours_path(status: :rejected), class: "whitespace-nowrap rounded-full px-4 py-2 border text-sm font-medium #{params[:status] == 'rejected' ? 'bg-primary-500 border-primary-500 text-white' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'}" %>
   </div>
 
   <% if @service_hours.any? %>
@@ -26,22 +26,22 @@
       <div class="space-y-2">
         <% hours.each do |sh| %>
           <%= link_to service_hour_path(sh), class: "block" do %>
-            <div class="bg-white rounded-2xl border border-gray-200 flex items-center py-3 px-5">
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 flex items-center py-3 px-5">
               <%# Icon circle — matches mobile w-10 h-10 rounded-full bg-primary-50 %>
-              <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center mr-3 flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-500/20 flex items-center justify-center mr-3 flex-shrink-0">
                 <span class="text-primary-500 text-lg">&#9201;</span>
               </div>
               <%# Title + org + date — matches mobile flex-1 layout %>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-sm text-slate-900 truncate"><%= sh.title.presence || sh.description.truncate(40) %></p>
-                <p class="text-xs text-slate-500 mt-0.5">
+                <p class="font-medium text-sm text-slate-900 dark:text-white truncate"><%= sh.title.presence || sh.description.truncate(40) %></p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   <%= sh.group&.name || sh.category.name %> · <%= sh.service_date.strftime("%b %d") %>
                 </p>
               </div>
               <%# Hours + StatusBadge — matches mobile items-end layout %>
               <div class="text-right ml-3 flex-shrink-0">
-                <p class="font-semibold text-sm text-slate-900"><%= sh.hours %>h</p>
-                <span class="inline-block mt-0.5 px-2.5 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 text-status-approved' : sh.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+                <p class="font-semibold text-sm text-slate-900 dark:text-white"><%= sh.hours %>h</p>
+                <span class="inline-block mt-0.5 px-2.5 py-0.5 rounded-full text-xs font-medium <%= sh.approved? ? 'bg-green-50 dark:bg-green-950 text-status-approved' : sh.pending? ? 'bg-amber-50 dark:bg-amber-950 text-status-pending' : 'bg-red-50 dark:bg-red-950 text-status-rejected' %>">
                   <%= sh.status.upcase %>
                 </span>
               </div>

@@ -1,18 +1,18 @@
 <div class="max-w-2xl mx-auto">
   <div class="mb-6">
-    <%= link_to "← Back to Activity Log", service_hours_path, class: "text-sm text-slate-500 hover:text-slate-700" %>
+    <%= link_to "← Back to Activity Log", service_hours_path, class: "text-sm text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300" %>
   </div>
 
   <%# Main detail card — matches mobile Card style %>
-  <div class="bg-white rounded-2xl border border-gray-200 p-6 mb-4">
+  <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6 mb-4">
     <div class="flex items-start justify-between mb-4">
       <div>
         <% if @service_hour.title.present? %>
-          <h1 class="font-semibold text-xl text-slate-900"><%= @service_hour.title %></h1>
+          <h1 class="font-semibold text-xl text-slate-900 dark:text-white"><%= @service_hour.title %></h1>
         <% end %>
-        <p class="text-sm text-slate-500 mt-0.5"><%= @service_hour.user&.full_name || "Deleted User" %></p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5"><%= @service_hour.user&.full_name || "Deleted User" %></p>
       </div>
-      <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= @service_hour.approved? ? 'bg-green-50 text-status-approved' : @service_hour.pending? ? 'bg-amber-50 text-status-pending' : 'bg-red-50 text-status-rejected' %>">
+      <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= @service_hour.approved? ? 'bg-green-50 dark:bg-green-950 text-status-approved' : @service_hour.pending? ? 'bg-amber-50 dark:bg-amber-950 text-status-pending' : 'bg-red-50 dark:bg-red-950 text-status-rejected' %>">
         <%= @service_hour.status.upcase %>
       </span>
     </div>
@@ -20,87 +20,87 @@
     <%# Stats row — like mobile OrgCard %>
     <div class="flex items-center space-x-6 mb-5">
       <div class="flex items-center">
-        <div class="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center mr-2">
+        <div class="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-500/20 flex items-center justify-center mr-2">
           <span class="text-primary-500 text-lg">&#9201;</span>
         </div>
         <div>
-          <p class="font-semibold text-lg text-slate-900"><%= @service_hour.hours %>h</p>
-          <p class="text-xs text-slate-500">Hours</p>
+          <p class="font-semibold text-lg text-slate-900 dark:text-white"><%= @service_hour.hours %>h</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Hours</p>
         </div>
       </div>
       <div>
-        <p class="font-medium text-sm text-slate-900"><%= @service_hour.service_date.strftime("%B %d, %Y") %></p>
-        <p class="text-xs text-slate-500">Date</p>
+        <p class="font-medium text-sm text-slate-900 dark:text-white"><%= @service_hour.service_date.strftime("%B %d, %Y") %></p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Date</p>
       </div>
       <div>
-        <p class="font-medium text-sm text-slate-900"><%= @service_hour.category.name %></p>
-        <p class="text-xs text-slate-500">Category</p>
+        <p class="font-medium text-sm text-slate-900 dark:text-white"><%= @service_hour.category.name %></p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">Category</p>
       </div>
     </div>
 
-    <div class="border-t border-gray-100 pt-4 mb-4">
+    <div class="border-t border-gray-100 dark:border-slate-700 pt-4 mb-4">
       <div class="grid grid-cols-2 gap-3 text-sm">
         <div>
-          <p class="text-slate-500 text-xs mb-0.5">Group</p>
-          <p class="text-slate-900"><%= @service_hour.group&.name || "N/A" %></p>
+          <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">Group</p>
+          <p class="text-slate-900 dark:text-white"><%= @service_hour.group&.name || "N/A" %></p>
         </div>
         <div>
-          <p class="text-slate-500 text-xs mb-0.5">Opportunity</p>
-          <p class="text-slate-900"><%= @service_hour.opportunity&.title || "N/A" %></p>
+          <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">Opportunity</p>
+          <p class="text-slate-900 dark:text-white"><%= @service_hour.opportunity&.title || "N/A" %></p>
         </div>
         <div>
-          <p class="text-slate-500 text-xs mb-0.5">On Campus</p>
-          <p class="text-slate-900"><%= @service_hour.on_campus? ? "Yes" : "No" %></p>
+          <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">On Campus</p>
+          <p class="text-slate-900 dark:text-white"><%= @service_hour.on_campus? ? "Yes" : "No" %></p>
         </div>
         <% if @service_hour.organization_name.present? %>
           <div>
-            <p class="text-slate-500 text-xs mb-0.5">Organization</p>
-            <p class="text-slate-900"><%= @service_hour.organization_name %></p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">Organization</p>
+            <p class="text-slate-900 dark:text-white"><%= @service_hour.organization_name %></p>
           </div>
         <% end %>
         <% if @service_hour.location.present? %>
           <div>
-            <p class="text-slate-500 text-xs mb-0.5">Location</p>
-            <p class="text-slate-900"><%= @service_hour.location %></p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">Location</p>
+            <p class="text-slate-900 dark:text-white"><%= @service_hour.location %></p>
           </div>
         <% end %>
         <% if @service_hour.contact_name.present? %>
           <div>
-            <p class="text-slate-500 text-xs mb-0.5">Contact</p>
-            <p class="text-slate-900"><%= @service_hour.contact_name %></p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">Contact</p>
+            <p class="text-slate-900 dark:text-white"><%= @service_hour.contact_name %></p>
           </div>
         <% end %>
         <% if @service_hour.contact_email.present? %>
           <div>
-            <p class="text-slate-500 text-xs mb-0.5">Contact Email</p>
-            <p class="text-slate-900"><%= mail_to @service_hour.contact_email, class: "text-primary-500 hover:text-primary-700" %></p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs mb-0.5">Contact Email</p>
+            <p class="text-slate-900 dark:text-white"><%= mail_to @service_hour.contact_email, class: "text-primary-500 hover:text-primary-700" %></p>
           </div>
         <% end %>
       </div>
     </div>
 
-    <div class="border-t border-gray-100 pt-4">
-      <p class="font-semibold text-sm text-slate-900 mb-2">Description</p>
-      <p class="text-sm text-slate-600"><%= simple_format(@service_hour.description) %></p>
+    <div class="border-t border-gray-100 dark:border-slate-700 pt-4">
+      <p class="font-semibold text-sm text-slate-900 dark:text-white mb-2">Description</p>
+      <p class="text-sm text-slate-600 dark:text-slate-300"><%= simple_format(@service_hour.description) %></p>
     </div>
 
     <% if @service_hour.admin_comment.present? %>
-      <div class="border-t border-gray-100 pt-4 mt-4">
-        <p class="font-semibold text-sm text-slate-900 mb-2">Admin Comment</p>
-        <p class="text-sm text-slate-500"><%= @service_hour.admin_comment %></p>
+      <div class="border-t border-gray-100 dark:border-slate-700 pt-4 mt-4">
+        <p class="font-semibold text-sm text-slate-900 dark:text-white mb-2">Admin Comment</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400"><%= @service_hour.admin_comment %></p>
       </div>
     <% end %>
 
     <% if @service_hour.reviewer %>
-      <div class="border-t border-gray-100 pt-4 mt-4 text-xs text-slate-400">
+      <div class="border-t border-gray-100 dark:border-slate-700 pt-4 mt-4 text-xs text-slate-400">
         Reviewed by <%= @service_hour.reviewer.full_name %> on <%= @service_hour.reviewed_at&.strftime("%B %d, %Y %I:%M %p") %>
       </div>
     <% end %>
   </div>
 
   <% if @service_hour.photos.attached? %>
-    <div class="bg-white rounded-2xl border border-gray-200 p-5 mb-4">
-      <p class="font-semibold text-sm text-slate-900 mb-3">Photos</p>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-5 mb-4">
+      <p class="font-semibold text-sm text-slate-900 dark:text-white mb-3">Photos</p>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
         <% @service_hour.photos.each do |photo| %>
           <%= image_tag photo, class: "w-full rounded-xl" %>
@@ -110,7 +110,7 @@
   <% end %>
 
   <% if @service_hour.editor.present? %>
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 text-xs text-blue-800">
+    <div class="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-4 text-xs text-blue-800 dark:text-blue-300">
       &#9998; Last edited by <strong><%= @service_hour.editor.full_name %></strong>
       on <%= @service_hour.edited_at&.strftime("%B %d, %Y %I:%M %p") %>
     </div>
@@ -119,23 +119,23 @@
   <%# Actions %>
   <% if @service_hour.user == current_user && @service_hour.pending? %>
     <div class="flex space-x-2 mb-4">
-      <%= link_to "Edit", edit_service_hour_path(@service_hour), class: "flex-1 text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-primary-50" %>
-      <%= button_to "Delete", service_hour_path(@service_hour), method: :delete, class: "flex-1 text-center border border-red-500 text-red-500 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-red-50", data: { turbo_confirm: "Are you sure?" } %>
+      <%= link_to "Edit", edit_service_hour_path(@service_hour), class: "flex-1 text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-950" %>
+      <%= button_to "Delete", service_hour_path(@service_hour), method: :delete, class: "flex-1 text-center border border-red-500 text-red-500 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950", data: { turbo_confirm: "Are you sure?" } %>
     </div>
   <% elsif current_user.staff? %>
     <div class="mb-4">
-      <%= link_to "Edit", edit_service_hour_path(@service_hour), class: "block w-full text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-primary-50" %>
+      <%= link_to "Edit", edit_service_hour_path(@service_hour), class: "block w-full text-center border border-primary-500 text-primary-500 rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-primary-50 dark:hover:bg-primary-950" %>
     </div>
   <% end %>
 
   <%# Review panel %>
   <% if current_user.admin_or_above? && @service_hour.pending? %>
-    <div class="bg-white rounded-2xl border-2 border-dashed border-orange-400 p-6">
-      <p class="font-semibold text-slate-900 mb-4">Review</p>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-orange-400 p-6">
+      <p class="font-semibold text-slate-900 dark:text-white mb-4">Review</p>
       <%= form_with(url: review_service_hour_path(@service_hour), method: :patch, local: true) do |f| %>
         <div class="mb-4">
-          <%= f.label :admin_comment, "Comment", class: "block text-sm font-medium text-slate-700 mb-1" %>
-          <%= f.text_area :admin_comment, class: "w-full px-3 py-2 border border-slate-200 rounded-xl bg-slate-50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500", rows: 3, name: "admin_comment" %>
+          <%= f.label :admin_comment, "Comment", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+          <%= f.text_area :admin_comment, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500", rows: 3, name: "admin_comment" %>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <button type="submit" name="status" value="approved" class="bg-status-approved text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:opacity-90">
