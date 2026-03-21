@@ -9,7 +9,7 @@ class ServiceHourMailer < ApplicationMailer
     @service_hour = service_hour
     @user = service_hour.user
 
-    admin_emails = User.where(role: [:admin, :super_admin]).pluck(:email)
+    admin_emails = User.where(role: [ :admin, :super_admin ]).pluck(:email)
     return if admin_emails.empty?
 
     mail(

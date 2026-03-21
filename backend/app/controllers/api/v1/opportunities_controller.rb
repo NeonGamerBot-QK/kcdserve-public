@@ -5,7 +5,7 @@ module Api
     class OpportunitiesController < BaseController
       include Pundit::Authorization
 
-      before_action :set_opportunity, only: [:show, :signup, :withdraw]
+      before_action :set_opportunity, only: [ :show, :signup, :withdraw ]
 
       # GET /api/v1/opportunities
       # Returns paginated upcoming opportunities with optional category and search filters.

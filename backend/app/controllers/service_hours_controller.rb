@@ -3,7 +3,7 @@
 # Manages service hour submission, listing, and admin review workflow
 class ServiceHoursController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_service_hour, only: [:show, :edit, :update, :destroy, :review]
+  before_action :set_service_hour, only: [ :show, :edit, :update, :destroy, :review ]
 
   def index
     @pagy, @service_hours = pagy(policy_scope(ServiceHour).recent.includes(:user, :category, :group))

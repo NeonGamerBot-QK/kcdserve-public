@@ -3,7 +3,7 @@
 module Admin
   # Admin review and management of all service hour submissions
   class ServiceHoursController < BaseController
-    before_action :set_service_hour, only: [:show, :edit, :update, :review]
+    before_action :set_service_hour, only: [ :show, :edit, :update, :review ]
 
     def index
       @scope = ServiceHour.recent.includes(:user, :category, :group)

@@ -19,7 +19,7 @@ module Api
       def create
         category = Category.find_by("LOWER(name) = ?", params[:service_hour][:category]&.downcase)
         unless category
-          render json: { errors: ["Category not found"] }, status: :unprocessable_entity
+          render json: { errors: [ "Category not found" ] }, status: :unprocessable_entity
           return
         end
 

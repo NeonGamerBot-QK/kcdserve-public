@@ -72,9 +72,9 @@ class ResumesControllerTest < ActionDispatch::IntegrationTest
     get resume_csv_path(@user)
 
     csv = CSV.parse(response.body, headers: true)
-    expected_headers = ["Date", "Title", "Category", "Opportunity", "Group",
+    expected_headers = [ "Date", "Title", "Category", "Opportunity", "Group",
                         "Hours", "On Campus", "Organization", "Contact Name",
-                        "Contact Email", "Description"]
+                        "Contact Email", "Description" ]
     assert_equal expected_headers, csv.headers
     assert_equal 1, csv.size
     assert_equal "Park Cleanup", csv.first["Title"]
