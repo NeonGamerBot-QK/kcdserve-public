@@ -1,15 +1,29 @@
-<h2>Upcoming Opportunity Reminder</h2>
-<p>Hi <%= @user.first_name %>,</p>
+<p style="margin: 0 0 16px; font-size: 16px; color: #1e293b;">Hi <%= @user.first_name %>,</p>
 
-<p>This is a reminder that you are signed up for:</p>
+<p style="margin: 0 0 24px; font-size: 15px; color: #475569; line-height: 1.6;">This is a friendly reminder that you're signed up for an upcoming opportunity:</p>
 
-<h3><%= @opportunity.title %></h3>
-<ul>
-  <li><strong>Date:</strong> <%= @opportunity.date.strftime("%B %d, %Y") %></li>
-  <li><strong>Location:</strong> <%= @opportunity.location || "TBD" %></li>
-  <% if @opportunity.start_time %>
-    <li><strong>Time:</strong> <%= @opportunity.start_time.strftime("%I:%M %p") %></li>
-  <% end %>
-</ul>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+  <tr>
+    <td style="padding: 20px 24px;">
+      <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #1e293b;"><%= @opportunity.title %></p>
+      <table role="presentation" cellpadding="0" cellspacing="0" style="font-size: 14px; color: #475569; line-height: 1.8;">
+        <tr>
+          <td style="padding-right: 8px; color: #94a3b8;">Date</td>
+          <td style="font-weight: 500; color: #1e293b;"><%= @opportunity.date.strftime("%B %d, %Y") %></td>
+        </tr>
+        <tr>
+          <td style="padding-right: 8px; color: #94a3b8;">Location</td>
+          <td style="font-weight: 500; color: #1e293b;"><%= @opportunity.location || "TBD" %></td>
+        </tr>
+        <% if @opportunity.start_time %>
+          <tr>
+            <td style="padding-right: 8px; color: #94a3b8;">Time</td>
+            <td style="font-weight: 500; color: #1e293b;"><%= @opportunity.start_time.strftime("%I:%M %p") %></td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+</table>
 
-<p>We look forward to seeing you there!</p>
+<p style="margin: 0; font-size: 15px; color: #475569;">We look forward to seeing you there!</p>
