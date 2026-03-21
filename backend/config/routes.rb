@@ -74,6 +74,7 @@ Rails.application.routes.draw do
         get :export_csv
       end
     end
+    resources :volunteers, only: [ :index ]
     resources :audit_log, only: [ :index, :show ]
   end
 

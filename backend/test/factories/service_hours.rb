@@ -5,7 +5,7 @@ FactoryBot.define do
     user
     category
     hours { 2.0 }
-    description { "Volunteered at the food bank" }
+    sequence(:description) { |n| "Volunteered at the food bank session #{n}" }
     service_date { Date.current }
     on_campus { false }
     organization_name { nil }

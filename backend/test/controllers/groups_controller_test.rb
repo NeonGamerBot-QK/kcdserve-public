@@ -30,9 +30,10 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   test "create requires admin authorization" do
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      post groups_path, params: { group: { name: "Sneaky Group" } }
-    end
+    post groups_path, params: { group: { name: "Sneaky Group" } }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "create succeeds for admin" do
@@ -50,9 +51,10 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   test "update requires admin or leader authorization" do
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      patch group_path(@group), params: { group: { name: "Hacked" } }
-    end
+    patch group_path(@group), params: { group: { name: "Hacked" } }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "update succeeds for the group leader" do
@@ -67,9 +69,10 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   test "destroy requires admin authorization" do
     sign_in @leader # leader cannot destroy, only admin
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      delete group_path(@group)
-    end
+    delete group_path(@group)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "destroy succeeds for admin" do
@@ -121,9 +124,10 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
   test "add_member requires admin or leader authorization" do
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      post add_member_group_path(@group), params: { user_id: create(:user).id }
-    end
+    post add_member_group_path(@group), params: { user_id: create(:user).id }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "add_member succeeds for admin" do
@@ -154,9 +158,10 @@ class GroupsControllerTest < ActionDispatch::IntegrationTest
     create(:group_membership, user: member, group: @group)
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      delete remove_member_group_path(@group), params: { user_id: member.id }
-    end
+    delete remove_member_group_path(@group), params: { user_id: member.id }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "remove_member succeeds for admin" do

@@ -32,10 +32,10 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     other_user = create(:user)
     sign_in @user
 
-    # UserPolicy#show? only allows self or admin
-    assert_raises(Pundit::NotAuthorizedError) do
-      get profile_path(other_user)
-    end
+    get profile_path(other_user)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "show allows admin to view any user's profile" do
