@@ -19,18 +19,18 @@ export default function OrgCard({
   const { isDark } = useTheme();
 
   return (
-    <Card className="mb-3">
+    <Card className="mb-3 px-6 py-5">
       <View className="flex-row justify-between mb-4">
         <View>
           <Text
-            className={`font-inter-semibold text-base ${isDark ? "text-white" : "text-slate-900"}`}
+            className={`font-inter-semibold text-lg ${isDark ? "text-white" : "text-slate-900"}`}
           >
             {name}
           </Text>
           <Text
             className={`font-inter-medium text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}
           >
-            {deadline}
+            Deadline: {deadline}
           </Text>
         </View>
         <View className="items-end">

@@ -240,7 +240,7 @@ export default function LogHoursPage1() {
                         <Picker.Item
                           key={g.id}
                           label={g.name}
-                          value={g.id}
+                          value={String(g.id)}
                           color={pickerTextColor}
                         />
                       ))}

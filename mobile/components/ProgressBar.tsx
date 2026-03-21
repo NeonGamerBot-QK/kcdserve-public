@@ -11,7 +11,7 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
   return (
     <View className="h-2 rounded-full bg-slate-100 overflow-hidden">
       <View
-        className="h-full rounded-full bg-primary-500"
+        className="h-full rounded-full bg-primary-500 mb-1"
         style={{ width: `${pct}%` }}
       />
     </View>
