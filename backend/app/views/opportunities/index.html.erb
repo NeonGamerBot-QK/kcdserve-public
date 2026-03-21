@@ -1,5 +1,5 @@
 <div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-bold text-slate-900">Volunteer Opportunities</h1>
+  <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Volunteer Opportunities</h1>
   <% if user_signed_in? && current_user.admin_or_above? %>
     <%= link_to "New Opportunity", new_opportunity_path, class: "bg-primary-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary-600" %>
   <% end %>
@@ -7,16 +7,16 @@
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
   <% @opportunities.each do |opportunity| %>
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden h-full flex flex-col">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden h-full flex flex-col">
       <% if opportunity.photos.attached? %>
         <%= image_tag opportunity.photos.first, class: "w-full h-48 object-cover" %>
       <% end %>
       <div class="p-5 flex-1">
-        <h5 class="font-semibold text-lg text-slate-900 mb-2"><%= opportunity.title %></h5>
-        <p class="text-slate-500 text-sm mb-1">
+        <h5 class="font-semibold text-lg text-slate-900 dark:text-white mb-2"><%= opportunity.title %></h5>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mb-1">
           <span class="mr-1">&#128197;</span> <%= opportunity.date.strftime("%B %d, %Y") %>
         </p>
-        <p class="text-slate-500 text-sm mb-3">
+        <p class="text-slate-500 dark:text-slate-400 text-sm mb-3">
           <span class="mr-1">&#128205;</span> <%= opportunity.location || "TBD" %>
         </p>
         <div class="flex flex-wrap gap-2">
@@ -26,13 +26,13 @@
             </span>
           <% end %>
           <% if opportunity.max_volunteers %>
-            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
+            <span class="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium">
               <%= opportunity.spots_remaining %> spots left
             </span>
           <% end %>
         </div>
       </div>
-      <div class="px-5 py-3 border-t border-gray-100 bg-slate-50">
+      <div class="px-5 py-3 border-t border-gray-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
         <%= link_to "View Details", opportunity_path(opportunity), class: "text-primary-500 hover:text-primary-700 text-sm font-medium" %>
       </div>
     </div>

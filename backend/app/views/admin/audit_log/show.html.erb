@@ -1,23 +1,23 @@
-<%= link_to "← Back to Audit Log", admin_audit_log_index_path, class: "text-slate-500 hover:text-slate-700 text-sm mb-4 inline-block" %>
+<%= link_to "← Back to Audit Log", admin_audit_log_index_path, class: "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-sm mb-4 inline-block" %>
 
-<h1 class="text-2xl font-semibold text-slate-900 mb-6">Audit Log Entry #<%= @version.id %></h1>
+<h1 class="text-2xl font-semibold text-slate-900 dark:text-white mb-6">Audit Log Entry #<%= @version.id %></h1>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
   <div>
-    <div class="bg-white rounded-2xl border border-gray-200 p-6">
-      <h6 class="font-semibold text-slate-900 mb-4">Metadata</h6>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
+      <h6 class="font-semibold text-slate-900 dark:text-white mb-4">Metadata</h6>
       <div class="space-y-2 text-sm">
         <p>
-          <span class="font-medium text-slate-500">Event:</span>
-          <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-medium <%= @version.event == 'create' ? 'bg-green-50 text-status-approved' : @version.event == 'update' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-status-rejected' %>">
+          <span class="font-medium text-slate-500 dark:text-slate-400">Event:</span>
+          <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-medium <%= @version.event == 'create' ? 'bg-green-50 dark:bg-green-950 text-status-approved' : @version.event == 'update' ? 'bg-blue-50 dark:bg-blue-950 text-blue-600' : 'bg-red-50 dark:bg-red-950 text-status-rejected' %>">
             <%= @version.event %>
           </span>
         </p>
-        <p><span class="font-medium text-slate-500">Model:</span> <span class="text-slate-900"><%= @version.item_type %></span></p>
-        <p><span class="font-medium text-slate-500">Item ID:</span> <span class="text-slate-900"><%= @version.item_id %></span></p>
-        <p><span class="font-medium text-slate-500">When:</span> <span class="text-slate-900"><%= @version.created_at.strftime("%B %d, %Y at %I:%M:%S %p") %></span></p>
+        <p><span class="font-medium text-slate-500 dark:text-slate-400">Model:</span> <span class="text-slate-900 dark:text-white"><%= @version.item_type %></span></p>
+        <p><span class="font-medium text-slate-500 dark:text-slate-400">Item ID:</span> <span class="text-slate-900 dark:text-white"><%= @version.item_id %></span></p>
+        <p><span class="font-medium text-slate-500 dark:text-slate-400">When:</span> <span class="text-slate-900 dark:text-white"><%= @version.created_at.strftime("%B %d, %Y at %I:%M:%S %p") %></span></p>
         <p>
-          <span class="font-medium text-slate-500">Who:</span>
+          <span class="font-medium text-slate-500 dark:text-slate-400">Who:</span>
           <% if @version.whodunnit.present? %>
             <% actor = User.with_deleted.find_by(id: @version.whodunnit) %>
             <%= actor ? link_to(actor.full_name, admin_user_path(actor), class: "text-primary-500 hover:text-primary-700") : "User ##{@version.whodunnit}" %>
@@ -31,26 +31,26 @@
 
   <% if @version.object_changes.present? %>
     <div class="md:col-span-2">
-      <div class="bg-white rounded-2xl border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h6 class="font-semibold text-slate-900">Changes</h6>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+          <h6 class="font-semibold text-slate-900 dark:text-white">Changes</h6>
         </div>
         <div class="p-6">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-gray-200">
-                <th class="text-left py-2 text-slate-500 font-medium">Attribute</th>
-                <th class="text-left py-2 text-slate-500 font-medium">Before</th>
-                <th class="text-left py-2 text-slate-500 font-medium">After</th>
+              <tr class="border-b border-gray-200 dark:border-slate-700">
+                <th class="text-left py-2 text-slate-500 dark:text-slate-400 font-medium">Attribute</th>
+                <th class="text-left py-2 text-slate-500 dark:text-slate-400 font-medium">Before</th>
+                <th class="text-left py-2 text-slate-500 dark:text-slate-400 font-medium">After</th>
               </tr>
             </thead>
             <tbody>
               <% @version.changeset&.each do |attribute, (before_val, after_val)| %>
                 <% next if %w[encrypted_password reset_password_token magic_link_token].include?(attribute) %>
-                <tr class="border-b border-gray-100">
-                  <td class="py-2"><code class="text-xs bg-slate-100 px-1.5 py-0.5 rounded text-slate-700"><%= attribute %></code></td>
-                  <td class="py-2 text-slate-600"><%= before_val.present? ? truncate(before_val.to_s, length: 200) : "<em class='text-slate-400'>blank</em>".html_safe %></td>
-                  <td class="py-2 text-slate-900"><%= after_val.present? ? truncate(after_val.to_s, length: 200) : "<em class='text-slate-400'>blank</em>".html_safe %></td>
+                <tr class="border-b border-gray-100 dark:border-slate-700">
+                  <td class="py-2"><code class="text-xs bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-700 dark:text-slate-300"><%= attribute %></code></td>
+                  <td class="py-2 text-slate-600 dark:text-slate-300"><%= before_val.present? ? truncate(before_val.to_s, length: 200) : "<em class='text-slate-400'>blank</em>".html_safe %></td>
+                  <td class="py-2 text-slate-900 dark:text-white"><%= after_val.present? ? truncate(after_val.to_s, length: 200) : "<em class='text-slate-400'>blank</em>".html_safe %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -62,12 +62,12 @@
 
   <% if @version.object.present? %>
     <div class="md:col-span-2">
-      <div class="bg-white rounded-2xl border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h6 class="font-semibold text-slate-900">Snapshot (state before this event)</h6>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+          <h6 class="font-semibold text-slate-900 dark:text-white">Snapshot (state before this event)</h6>
         </div>
         <div class="p-6">
-          <pre class="text-xs bg-slate-50 rounded-xl p-4 overflow-auto max-h-96 text-slate-700"><%= @version.object %></pre>
+          <pre class="text-xs bg-slate-50 dark:bg-slate-900 rounded-xl p-4 overflow-auto max-h-96 text-slate-700 dark:text-slate-300"><%= @version.object %></pre>
         </div>
       </div>
     </div>

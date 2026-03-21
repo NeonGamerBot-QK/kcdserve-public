@@ -1,29 +1,29 @@
 <div class="flex justify-between items-center mb-6">
-  <h1 class="text-2xl font-semibold text-slate-900">Manage Users</h1>
+  <h1 class="text-2xl font-semibold text-slate-900 dark:text-white">Manage Users</h1>
   <div class="flex space-x-2">
     <%= link_to "Add User", new_admin_user_path, class: "bg-primary-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary-600" %>
-    <%= link_to "Archived Users", archived_admin_users_path, class: "border border-slate-300 text-slate-700 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-50" %>
+    <%= link_to "Archived Users", archived_admin_users_path, class: "border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700" %>
   </div>
 </div>
 
-<div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+<div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 overflow-hidden">
   <table class="w-full text-sm">
-    <thead class="bg-slate-50">
+    <thead class="bg-slate-50 dark:bg-slate-700">
       <tr>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Name</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Email</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Role</th>
-        <th class="text-left px-4 py-3 text-slate-500 font-medium">Hours</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Name</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Email</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Role</th>
+        <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium">Hours</th>
         <th class="px-4 py-3"></th>
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-100">
+    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
       <% @users.each do |user| %>
-        <tr class="hover:bg-slate-50">
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700">
           <td class="px-4 py-3"><%= link_to user.full_name, admin_user_path(user), class: "text-primary-500 hover:text-primary-700 font-medium" %></td>
-          <td class="px-4 py-3 text-slate-600"><%= user.email %></td>
-          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium"><%= user.role.humanize %></span></td>
-          <td class="px-4 py-3 text-slate-600"><%= user.total_approved_hours %></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= user.email %></td>
+          <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium"><%= user.role.humanize %></span></td>
+          <td class="px-4 py-3 text-slate-600 dark:text-slate-300"><%= user.total_approved_hours %></td>
           <td class="px-4 py-3">
             <%= link_to "Edit", edit_admin_user_path(user), class: "text-primary-500 hover:text-primary-700 text-xs font-medium" %>
           </td>
