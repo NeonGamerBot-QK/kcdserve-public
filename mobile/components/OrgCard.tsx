@@ -39,7 +39,9 @@ export default function OrgCard({
           >
             {current} / {total}
           </Text>
-          <Text className={`font-inter-medium text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+          <Text
+            className={`font-inter-medium text-xs ${isDark ? "text-slate-400" : "text-slate-500"}`}
+          >
             HOURS
           </Text>
         </View>
