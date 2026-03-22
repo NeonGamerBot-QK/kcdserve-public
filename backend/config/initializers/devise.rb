@@ -277,11 +277,12 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
   # Google OAuth2 configuration (only in non-dev environments)
-  if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present?
+  if ENV["GOOGLE_CLIENT_ID"].present?
     config.omniauth :google_oauth2,
       ENV["GOOGLE_CLIENT_ID"],
       ENV["GOOGLE_CLIENT_SECRET"],
-      scope: "email,profile"
+      scope: "email,profile",
+      provider_ignores_state: Rails.env.development?
   end
 
   # ==> Warden configuration
