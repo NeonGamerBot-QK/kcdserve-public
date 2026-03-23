@@ -1,11 +1,19 @@
-import { View, Text } from 'react-native';
+import { View, Text } from "react-native";
 
-type Status = 'pending' | 'approved' | 'rejected';
+type Status = "pending" | "approved" | "rejected";
 
 const config: Record<Status, { bg: string; text: string; label: string }> = {
-  pending: { bg: 'bg-amber-50', text: 'text-status-pending', label: 'PENDING' },
-  approved: { bg: 'bg-green-50', text: 'text-status-approved', label: 'APPROVED' },
-  rejected: { bg: 'bg-red-50', text: 'text-status-rejected', label: 'REJECTED' },
+  pending: { bg: "bg-amber-50", text: "text-status-pending", label: "PENDING" },
+  approved: {
+    bg: "bg-green-50",
+    text: "text-status-approved",
+    label: "APPROVED",
+  },
+  rejected: {
+    bg: "bg-red-50",
+    text: "text-status-rejected",
+    label: "REJECTED",
+  },
 };
 
 type StatusBadgeProps = {
