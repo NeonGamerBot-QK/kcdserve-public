@@ -36,7 +36,7 @@
       <% end %>
     </div>
 
-    <% if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present? %>
+    <% if ENV["GOOGLE_CLIENT_ID"].present? %>
       <%# OR divider — matches mobile %>
       <div class="flex items-center mb-6">
         <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>

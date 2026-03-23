@@ -67,12 +67,12 @@ class ResumeGeneratorService
     pdf.move_down 8
 
     summary_data = [
-      ["Total Approved Hours", total_hours.to_s],
-      ["Total Entries", entry_count.to_s],
-      ["Service Period", format_date_range(earliest, latest)]
+      [ "Total Approved Hours", total_hours.to_s ],
+      [ "Total Entries", entry_count.to_s ],
+      [ "Service Period", format_date_range(earliest, latest) ]
     ]
 
-    pdf.table(summary_data, width: pdf.bounds.width, cell_style: { size: 11, padding: [6, 10] }) do
+    pdf.table(summary_data, width: pdf.bounds.width, cell_style: { size: 11, padding: [ 6, 10 ] }) do
       column(0).font_style = :bold
       column(0).width = 200
     end
@@ -87,16 +87,16 @@ class ResumeGeneratorService
     pdf.text "Hours by Category", size: 14, style: :bold, color: SECTION_COLOR
     pdf.move_down 8
 
-    table_data = [["Category", "Hours"]]
+    table_data = [ [ "Category", "Hours" ] ]
     hours_by_category.sort_by { |_, h| -h }.each do |name, hours|
-      table_data << [name, hours.to_f.round(2).to_s]
+      table_data << [ name, hours.to_f.round(2).to_s ]
     end
 
     pdf.table(table_data, header: true, width: pdf.bounds.width) do
       row(0).font_style = :bold
       row(0).background_color = HEADER_BG
       row(0).text_color = HEADER_TEXT
-      cells.padding = [6, 10]
+      cells.padding = [ 6, 10 ]
     end
     pdf.move_down 15
   end
@@ -108,17 +108,17 @@ class ResumeGeneratorService
     pdf.text "Group Involvement", size: 14, style: :bold, color: SECTION_COLOR
     pdf.move_down 8
 
-    table_data = [["Group", "Hours"]]
+    table_data = [ [ "Group", "Hours" ] ]
     @user.groups.each do |group|
       group_hours = @approved_hours.where(group: group).sum(:hours).to_f.round(2)
-      table_data << [group.name, group_hours.to_s]
+      table_data << [ group.name, group_hours.to_s ]
     end
 
     pdf.table(table_data, header: true, width: pdf.bounds.width) do
       row(0).font_style = :bold
       row(0).background_color = HEADER_BG
       row(0).text_color = HEADER_TEXT
-      cells.padding = [6, 10]
+      cells.padding = [ 6, 10 ]
     end
     pdf.move_down 15
   end
@@ -134,7 +134,7 @@ class ResumeGeneratorService
     pdf.text "Complete Service History", size: 14, style: :bold, color: SECTION_COLOR
     pdf.move_down 8
 
-    table_data = [["Date", "Title", "Category", "Opportunity", "Group", "Hours", "Description"]]
+    table_data = [ [ "Date", "Title", "Category", "Opportunity", "Group", "Hours", "Description" ] ]
     all_hours.each do |sh|
       category_label = sh.category&.name || "—"
       category_label += " *" if sh.category&.restitution?
@@ -153,7 +153,7 @@ class ResumeGeneratorService
       row(0).font_style = :bold
       row(0).background_color = HEADER_BG
       row(0).text_color = HEADER_TEXT
-      cells.padding = [3, 4]
+      cells.padding = [ 3, 4 ]
       # Alternate row shading for readability
       (1...row_length).each do |i|
         row(i).background_color = ROW_ALT_BG if i.odd?
@@ -181,7 +181,7 @@ class ResumeGeneratorService
   # Adds page numbers to the bottom of every page
   def render_page_numbers(pdf)
     pdf.number_pages "Page <page> of <total>  •  KCDServe Community Service Platform",
-                     at: [0, -10],
+                     at: [ 0, -10 ],
                      align: :center,
                      size: 8,
                      color: "999999"

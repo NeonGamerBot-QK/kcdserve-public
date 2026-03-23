@@ -1,16 +1,52 @@
-<h2>Service Hour Review Update</h2>
-<p>Hi <%= @user.first_name %>,</p>
+<p style="margin: 0 0 16px; font-size: 16px; color: #1e293b;">Hi <%= @user.first_name %>,</p>
 
-<p>Your service hour submission for <strong><%= @service_hour.service_date.strftime("%B %d, %Y") %></strong> has been
-  <strong><%= @service_hour.status %></strong>.</p>
+<p style="margin: 0 0 24px; font-size: 15px; color: #475569; line-height: 1.6;">
+  Your service hour submission for
+  <strong style="color: #1e293b;"><%= @service_hour.service_date.strftime("%B %d, %Y") %></strong>
+  has been
+  <% if @service_hour.approved? %>
+    <span style="color: #16a34a; font-weight: 600;">approved</span>.
+  <% else %>
+    <span style="color: #dc2626; font-weight: 600;">rejected</span>.
+  <% end %>
+</p>
 
-<ul>
-  <li><strong>Hours:</strong> <%= @service_hour.hours %></li>
-  <li><strong>Category:</strong> <%= @service_hour.category.name %></li>
-</ul>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+  <tr>
+    <td style="padding: 20px 24px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" style="font-size: 14px; color: #475569; line-height: 2;">
+        <tr>
+          <td style="padding-right: 12px; color: #94a3b8;">Hours</td>
+          <td style="font-weight: 500; color: #1e293b;"><%= @service_hour.hours %></td>
+        </tr>
+        <tr>
+          <td style="padding-right: 12px; color: #94a3b8;">Category</td>
+          <td style="font-weight: 500; color: #1e293b;"><%= @service_hour.category.name %></td>
+        </tr>
+        <tr>
+          <td style="padding-right: 12px; color: #94a3b8;">Status</td>
+          <td>
+            <% if @service_hour.approved? %>
+              <span style="display: inline-block; padding: 2px 10px; font-size: 12px; font-weight: 600; color: #16a34a; background-color: #f0fdf4; border-radius: 9999px;">Approved</span>
+            <% else %>
+              <span style="display: inline-block; padding: 2px 10px; font-size: 12px; font-weight: 600; color: #dc2626; background-color: #fef2f2; border-radius: 9999px;">Rejected</span>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
 <% if @service_hour.admin_comment.present? %>
-  <p><strong>Admin Comment:</strong> <%= @service_hour.admin_comment %></p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
+    <tr>
+      <td style="border-left: 3px solid #3b82f6; padding: 12px 16px; background-color: #f8fafc; border-radius: 0 8px 8px 0;">
+        <p style="margin: 0 0 4px; font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">Reviewer Comment</p>
+        <p style="margin: 0; font-size: 14px; color: #1e293b; line-height: 1.5;"><%= @service_hour.admin_comment %></p>
+      </td>
+    </tr>
+  </table>
 <% end %>
 
-<p>Thank you for your service!</p>
+<p style="margin: 0; font-size: 15px; color: #475569;">Thank you for your service!</p>

@@ -28,6 +28,6 @@ class Opportunity < ApplicationRecord
   # Returns the number of remaining volunteer spots
   def spots_remaining
     return nil unless max_volunteers.present?
-    [max_volunteers - volunteers.count, 0].max
+    [ max_volunteers - volunteers.count, 0 ].max
   end
 end

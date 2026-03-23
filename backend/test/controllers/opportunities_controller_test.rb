@@ -31,10 +31,10 @@ class OpportunitiesControllerTest < ActionDispatch::IntegrationTest
   test "show denies access to unpublished opportunity for unauthenticated user" do
     opportunity = create(:opportunity, published: false, date: 1.week.from_now)
 
-    # Pundit redirects via rescue_from because there is no current_user
-    assert_raises(Pundit::NotAuthorizedError) do
-      get opportunity_path(opportunity)
-    end
+    get opportunity_path(opportunity)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   # -- Admin CRUD --
@@ -42,11 +42,12 @@ class OpportunitiesControllerTest < ActionDispatch::IntegrationTest
   test "create requires admin authorization" do
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      post opportunities_path, params: {
-        opportunity: { title: "New Event", date: 1.week.from_now, description: "Fun" }
-      }
-    end
+    post opportunities_path, params: {
+      opportunity: { title: "New Event", date: 1.week.from_now, description: "Fun" }
+    }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "create succeeds for admin and sets creator" do
@@ -73,11 +74,12 @@ class OpportunitiesControllerTest < ActionDispatch::IntegrationTest
     opportunity = create(:opportunity, published: true, date: 1.week.from_now)
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      patch opportunity_path(opportunity), params: {
-        opportunity: { title: "Hacked Title" }
-      }
-    end
+    patch opportunity_path(opportunity), params: {
+      opportunity: { title: "Hacked Title" }
+    }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "update succeeds for admin" do
@@ -96,9 +98,10 @@ class OpportunitiesControllerTest < ActionDispatch::IntegrationTest
     opportunity = create(:opportunity, date: 1.week.from_now)
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      delete opportunity_path(opportunity)
-    end
+    delete opportunity_path(opportunity)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "destroy succeeds for admin" do

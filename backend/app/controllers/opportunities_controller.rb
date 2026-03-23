@@ -2,8 +2,8 @@
 
 # Manages volunteer opportunity CRUD and public listing/signup
 class OpportunitiesController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_opportunity, only: [:show, :edit, :update, :destroy, :signup, :withdraw]
+  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :set_opportunity, only: [ :show, :edit, :update, :destroy, :signup, :withdraw ]
 
   def index
     @pagy, @opportunities = pagy(policy_scope(Opportunity).upcoming.includes(:category))

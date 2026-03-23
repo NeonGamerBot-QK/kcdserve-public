@@ -69,9 +69,10 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
     other_user_hour = create(:service_hour, category: @category)
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      get service_hour_path(other_user_hour)
-    end
+    get service_hour_path(other_user_hour)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   # -- Create --
@@ -129,12 +130,12 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
     hour = create(:service_hour, :approved, user: @volunteer, category: @category)
     sign_in @volunteer
 
-    # Pundit policy denies update on non-pending hours
-    assert_raises(Pundit::NotAuthorizedError) do
-      patch service_hour_path(hour), params: {
-        service_hour: { description: "Trying to change approved" }
-      }
-    end
+    patch service_hour_path(hour), params: {
+      service_hour: { description: "Trying to change approved" }
+    }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   # -- Destroy --
@@ -154,9 +155,10 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
     hour = create(:service_hour, :approved, user: @volunteer, category: @category)
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      delete service_hour_path(hour)
-    end
+    delete service_hour_path(hour)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   # -- Review (admin-only) --
@@ -184,8 +186,9 @@ class ServiceHoursControllerTest < ActionDispatch::IntegrationTest
     hour = create(:service_hour, user: @volunteer, category: @category)
     sign_in @volunteer
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      patch review_service_hour_path(hour), params: { status: "approved" }
-    end
+    patch review_service_hour_path(hour), params: { status: "approved" }
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 end

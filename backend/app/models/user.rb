@@ -9,7 +9,7 @@ class User < ApplicationRecord
   scope :only_deleted, -> { unscope(where: :deleted_at).where.not(deleted_at: nil) }
   scope :deleted_over_7_years_ago, -> { only_deleted.where(deleted_at: ...7.years.ago) }
 
-  if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present?
+  if ENV["GOOGLE_CLIENT_ID"].present?
     devise :omniauthable, omniauth_providers: [ :google_oauth2 ]
   end
 

@@ -2,8 +2,8 @@
 
 # Manages group CRUD and member management
 class GroupsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_group, only: [:show, :edit, :update, :destroy, :join, :leave, :add_member, :remove_member]
+  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :set_group, only: [ :show, :edit, :update, :destroy, :join, :leave, :add_member, :remove_member ]
 
   def index
     @pagy, @groups = pagy(policy_scope(Group).includes(:leader).order(:name))

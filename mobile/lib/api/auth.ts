@@ -43,6 +43,14 @@ export function verifyLoginPin(email: string, pin: string) {
   });
 }
 
+/** Exchange a Google ID token for a session token. */
+export function googleLogin(idToken: string) {
+  return apiFetch<VerifyPinResponse>("/login/google", {
+    method: "POST",
+    body: { id_token: idToken },
+  });
+}
+
 /** Invalidate the current API token on the server. */
 export function logout() {
   return apiFetch<{ message: string }>("/logout", { method: "DELETE" });

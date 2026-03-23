@@ -50,7 +50,7 @@ class ServiceHourMailerTest < ActionMailer::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size
 
     delivered = ActionMailer::Base.deliveries.last
-    assert_equal ["volunteer@example.com"], delivered.to
+    assert_equal [ "volunteer@example.com" ], delivered.to
   end
 
   # Verifies that the review_notification subject includes "approved" when the hour is approved

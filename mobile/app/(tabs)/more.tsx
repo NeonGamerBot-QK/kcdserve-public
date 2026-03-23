@@ -1,10 +1,35 @@
-import { Pressable, View, Text } from "react-native";
+import { Pressable, View, Text, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import TopBar from "../../components/TopBar";
 import { useTheme } from "../../hooks/useTheme";
+import { useAuthStore } from "../../store/authStore";
+import { logout } from "../../lib/api/auth";
+import { USE_API } from "../../lib/config";
 
 export default function MoreScreen() {
   const { isDark, toggleDarkMode } = useTheme();
+  const clearAuth = useAuthStore((s) => s.logout);
+
+  async function handleLogout() {
+    Alert.alert("Log out", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Log out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            if (USE_API) await logout();
+          } catch {
+            // Server-side cleanup is best-effort; clear local state regardless
+          }
+          clearAuth();
+          router.replace("/");
+        },
+      },
+    ]);
+  }
 
   const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
   const bgCard = isDark ? "bg-slate-900" : "bg-white";
@@ -41,6 +66,19 @@ export default function MoreScreen() {
                 className={`w-6 h-6 rounded-full bg-white shadow-sm ${isDark ? "self-end" : "self-start"}`}
               />
             </View>
+          </Pressable>
+
+          <Pressable
+            onPress={handleLogout}
+            className={`${bgCard} rounded-xl p-4 flex-row items-center justify-between border ${borderCard} mt-3`}
+          >
+            <View className="flex-row items-center">
+              <Ionicons name="log-out-outline" size={20} color="#ef4444" />
+              <Text className="font-inter-semibold text-base text-red-500 ml-3">
+                Log out
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
           </Pressable>
         </View>
       </View>

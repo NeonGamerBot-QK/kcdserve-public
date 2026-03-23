@@ -13,7 +13,7 @@ class OpportunityMailerTest < ActionMailer::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size
 
     delivered = ActionMailer::Base.deliveries.last
-    assert_equal ["volunteer@example.com"], delivered.to
+    assert_equal [ "volunteer@example.com" ], delivered.to
   end
 
   # Verifies that the reminder subject line includes the opportunity title

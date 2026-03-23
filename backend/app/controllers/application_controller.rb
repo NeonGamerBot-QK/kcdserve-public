@@ -18,8 +18,8 @@ class ApplicationController < ActionController::Base
 
   # Permits additional Devise parameters for sign up and account update
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :phone, :bio, :avatar])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :phone, :bio, :avatar])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [ :first_name, :last_name, :phone, :bio, :avatar ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :first_name, :last_name, :phone, :bio, :avatar ])
   end
 
   def user_not_authorized

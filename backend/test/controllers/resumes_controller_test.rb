@@ -40,9 +40,10 @@ class ResumesControllerTest < ActionDispatch::IntegrationTest
     other_user = create(:user)
     sign_in @user
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      get resume_path(other_user)
-    end
+    get resume_path(other_user)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "show allows admin to download any user's resume" do
@@ -72,9 +73,9 @@ class ResumesControllerTest < ActionDispatch::IntegrationTest
     get resume_csv_path(@user)
 
     csv = CSV.parse(response.body, headers: true)
-    expected_headers = ["Date", "Title", "Category", "Opportunity", "Group",
+    expected_headers = [ "Date", "Title", "Category", "Opportunity", "Group",
                         "Hours", "On Campus", "Organization", "Contact Name",
-                        "Contact Email", "Description"]
+                        "Contact Email", "Description" ]
     assert_equal expected_headers, csv.headers
     assert_equal 1, csv.size
     assert_equal "Park Cleanup", csv.first["Title"]
@@ -84,9 +85,10 @@ class ResumesControllerTest < ActionDispatch::IntegrationTest
     other_user = create(:user)
     sign_in @user
 
-    assert_raises(Pundit::NotAuthorizedError) do
-      get resume_csv_path(other_user)
-    end
+    get resume_csv_path(other_user)
+
+    assert_response :redirect
+    assert_equal "You are not authorized to perform this action.", flash[:alert]
   end
 
   test "export_csv allows admin to export any user's hours" do

@@ -45,7 +45,7 @@ class ServiceHour < ApplicationRecord
     year_end = year_start + 1.year - 1.day # August 31
     # Clamp visible end to June 30 (end of academic portion)
     academic_end = Date.new(year_start.year + 1, 6, 30)
-    [year_start, academic_end]
+    [ year_start, academic_end ]
   end
 
   def service_date_within_school_year

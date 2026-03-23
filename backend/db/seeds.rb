@@ -7,7 +7,7 @@ puts "Seeding database..."
 
 # Create categories
 categories = [
-  { name: "Community Service", description: "General community service and volunteer work", color: "#17a2b8" }, 
+  { name: "Community Service", description: "General community service and volunteer work", color: "#17a2b8" },
   { name: "Steam Service Hours", description: "Service hours for steam", color: "#ffffff"   }
 ].map { |attrs| Category.find_or_create_by!(name: attrs[:name]) { |c| c.assign_attributes(attrs) } }
 
@@ -51,7 +51,7 @@ puts "  Created super admin: neon@saahild.com / password123"
 
 # Create groups
 groups = [
-  { name: "KCD", description: "Kentucky Country Day School" },
+  { name: "KCD", description: "Kentucky Country Day School" }
 ].map do |attrs|
   Group.find_or_create_by!(name: attrs[:name]) do |g|
     g.description = attrs[:description]
@@ -69,7 +69,7 @@ end
 
 puts "  Added volunteers to groups"
 if Rails.env.development?
-    
+
   # Create opportunities
   opportunities = [
     { title: "Park Cleanup Day", description: "Help clean up Central Park and plant new trees.", date: Date.current + 7, location: "Central Park", required_hours: 4, max_volunteers: 25, published: true, category: categories[0] },
@@ -87,7 +87,7 @@ if Rails.env.development?
 
   puts "  Created #{opportunities.size} opportunities"
 
-# Create sample service hours
+  # Create sample service hours
   volunteers.each do |volunteer|
     3.times do |i|
       ServiceHour.find_or_create_by!(

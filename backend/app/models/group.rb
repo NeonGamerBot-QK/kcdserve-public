@@ -12,7 +12,7 @@ class Group < ApplicationRecord
 
   # Validations
   validates :name, presence: true, uniqueness: true
-  validates :invite_only, inclusion: { in: [true, false] }
+  validates :invite_only, inclusion: { in: [ true, false ] }
 
   # Returns total approved hours for all members in this group, excluding community restitution hours
   def total_approved_hours

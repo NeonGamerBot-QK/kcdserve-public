@@ -2,15 +2,10 @@
 
 Rails.application.routes.draw do
   # Devise authentication routes
-  if !Rails.env.development? && ENV["GOOGLE_CLIENT_ID"].present?
-    devise_for :users, controllers: {
-      omniauth_callbacks: "users/omniauth_callbacks"
-    }
-  else
-    devise_for :users, controllers: {
-      registrations: "users/registrations"
-    }
-  end
+  devise_for :users, controllers: {
+    omniauth_callbacks: "users/omniauth_callbacks",
+    registrations: "users/registrations"
+  }
 
   # Public-facing routes
   root "pages#home"
@@ -74,6 +69,7 @@ Rails.application.routes.draw do
         get :export_csv
       end
     end
+    resources :volunteers, only: [ :index ]
     resources :audit_log, only: [ :index, :show ]
   end
 
@@ -92,6 +88,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "login", to: "sessions#create"
       post "login/verify", to: "sessions#verify"
+      post "login/google", to: "sessions#google"
+      get "login/google/redirect", to: "sessions#google_redirect", as: :google_redirect
+      get "login/google/callback", to: "sessions#google_callback", as: :google_callback
       delete "logout", to: "sessions#destroy"
       get "me", to: "me#show"
       patch "me", to: "me#update"

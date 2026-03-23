@@ -17,7 +17,11 @@ module Users
     end
 
     def failure
-      redirect_to root_path
+      Rails.logger.error "OmniAuth failure: #{failure_message}"
+      Rails.logger.error "OmniAuth origin: #{request.env['omniauth.origin']}"
+      Rails.logger.error "OmniAuth error: #{request.env['omniauth.error'].inspect}"
+      Rails.logger.error "OmniAuth strategy: #{request.env['omniauth.error.strategy']&.name}"
+      redirect_to root_path, alert: "Authentication failed: #{failure_message}"
     end
   end
 end
