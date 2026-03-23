@@ -133,7 +133,7 @@ export default function ActivityScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="mt-2 mb-4 px-5"
+        className="mt-2 mb-4 px-5 flex-shrink-0 flex-grow-0"
         contentContainerStyle={{ paddingRight: 20, alignItems: "center" }}
       >
         {FILTERS.map((label, i) => (
@@ -168,7 +168,8 @@ export default function ActivityScreen() {
         </View>
       )}
 
-      <SectionList
+      <SectionList 
+        className="flex-1"
         sections={sections}
         keyExtractor={(item) => String(item.id)}
         renderSectionHeader={({ section: { title } }) => (
@@ -180,7 +181,7 @@ export default function ActivityScreen() {
         )}
         renderItem={({ item }) => (
           <ServiceHourCard
-            title={item.title || item.description.slice(0, 40)}
+            title={item.organization_name || item.title || item.description.slice(0, 20)}
             org={item.group || item.organization_name || item.category || "—"}
             date={formatDate(item.service_date)}
             hours={item.hours}

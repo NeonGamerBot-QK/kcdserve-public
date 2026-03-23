@@ -32,7 +32,7 @@ export default function ServiceHourCard({
       </View>
       <View className="flex-1">
         <Text
-          className={`font-inter-medium text-sm ${isDark ? "text-white" : "text-slate-900"}`}
+          className={`font-inter-semibold text-sm ${isDark ? "text-white" : "text-slate-900"}`}
         >
           {title}
         </Text>
@@ -44,7 +44,7 @@ export default function ServiceHourCard({
       </View>
       <View className="items-end">
         <Text
-          className={`font-inter-semibold text-sm ${isDark ? "text-white" : "text-slate-900"}`}
+          className={`font-inter-bold text-sm ${isDark ? "text-white" : "text-slate-900"}`}
         >
           {hours}h
         </Text>

@@ -17,7 +17,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <View className={`${bg} rounded-full px-2.5 py-0.5`}>
-      <Text className={`${text} font-inter-medium text-xs`}>{label}</Text>
+      <Text className={`${text} font-inter-semibold text-xs`}>{label}</Text>
     </View>
   );
 }
