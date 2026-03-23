@@ -88,6 +88,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "login", to: "sessions#create"
       post "login/verify", to: "sessions#verify"
+      post "login/google", to: "sessions#google"
+      get "login/google/redirect", to: "sessions#google_redirect", as: :google_redirect
+      get "login/google/callback", to: "sessions#google_callback", as: :google_callback
       delete "logout", to: "sessions#destroy"
       get "me", to: "me#show"
       patch "me", to: "me#update"

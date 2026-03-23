@@ -10,10 +10,13 @@ import { useEffect, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 import TopBar from "../../components/TopBar";
 import Card from "../../components/Card";
-import { USE_API } from "../../lib/config";
+import { USE_API, SERVER_URL } from "../../lib/config";
 import { useRequestPin, useVerifyPin } from "../../hooks/useLogin";
+import { useAuthStore } from "../../store/authStore";
 import { useTheme } from "../../hooks/useTheme";
 
 export default function LoginScreen() {
@@ -25,6 +28,8 @@ export default function LoginScreen() {
 
   const requestPinMutation = useRequestPin();
   const verifyPinMutation = useVerifyPin();
+  const setAuth = useAuthStore((s) => s.setAuth);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   // Auto-focus the hidden PIN input when entering the PIN step
   useEffect(() => {
@@ -86,6 +91,45 @@ export default function LoginScreen() {
     setPin("");
     verifyPinMutation.reset();
     requestPinMutation.mutate({ email: email.trim() });
+  }
+
+  async function handleGoogleSignIn() {
+    if (!USE_API || !SERVER_URL) {
+      router.replace("/(tabs)/dashboard");
+      return;
+    }
+
+    const scheme = Linking.createURL("/").split("://")[0];
+    const returnUrl = `${scheme}://auth/success`;
+    const authUrl = `${SERVER_URL}/api/v1/login/google/redirect?scheme=${encodeURIComponent(scheme)}`;
+
+    const result = await WebBrowser.openAuthSessionAsync(authUrl, returnUrl);
+
+    if (result.type !== "success") return;
+
+    // Parse the token from the deep-link URL
+    const url = new URL(result.url);
+    const token = url.searchParams.get("token");
+    const expiresAt = url.searchParams.get("expires_at");
+
+    console.log("[GoogleOAuth] result URL:", result.url);
+
+    if (token && expiresAt) {
+      const user = {
+        id: Number(url.searchParams.get("user_id")),
+        email: url.searchParams.get("email") ?? "",
+        first_name: url.searchParams.get("first_name") ?? "",
+        last_name: url.searchParams.get("last_name") ?? "",
+        role: url.searchParams.get("role") ?? "volunteer",
+        total_approved_hours: 0,
+      };
+      setAuth(token, expiresAt, user);
+      router.replace("/(tabs)/dashboard");
+    } else {
+      const errorMsg = url.searchParams.get("message") || "unknown";
+      console.log("[GoogleOAuth] error:", errorMsg);
+      Alert.alert("Sign-in failed", `Google sign-in error: ${errorMsg}`);
+    }
   }
 
   const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
@@ -259,11 +303,13 @@ export default function LoginScreen() {
         {/* Google Sign-In Button */}
         <View className="px-5 mb-8">
           <Pressable
-            className={`flex-row items-center justify-center ${googleBtnBg} border ${borderInput} rounded-xl py-3.5`}
+            className={`flex-row items-center justify-center ${googleBtnBg} border ${borderInput} rounded-xl py-3.5 ${googleLoading ? "opacity-60" : ""}`}
+            onPress={handleGoogleSignIn}
+            disabled={googleLoading}
           >
             <Ionicons name="logo-google" size={20} color="#4285F4" />
             <Text className={`font-inter-medium text-base ${textLabel} ml-3`}>
-              Continue with Google
+              {googleLoading ? "Signing in…" : "Continue with Google"}
             </Text>
           </Pressable>
         </View>

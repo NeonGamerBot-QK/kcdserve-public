@@ -6,6 +6,8 @@ Rails.application.configure do
   # Allow requests from GitHub Codespaces and localhost
   config.hosts << "localhost"
   config.hosts << /.*\.app\.github\.dev$/
+  config.hosts << /\A192\.168\.\d+\.\d+\z/
+  config.hosts << "port8000.saahild.com"
 
   # Allow CSRF for local development to work with changing origins
   config.action_controller.forgery_protection_origin_check = false

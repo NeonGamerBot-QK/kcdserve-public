@@ -9,6 +9,12 @@ export const SERVER_URL: string | undefined =
   process.env.EXPO_PUBLIC_SERVER_URL ??
   undefined;
 
+/** Google OAuth web client ID for native sign-in. */
+export const GOOGLE_CLIENT_ID: string | undefined =
+  Constants.expoConfig?.extra?.GOOGLE_CLIENT_ID ??
+  process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID ??
+  undefined;
+
 /** True when running in Expo's __DEV__ mode (local dev server). */
 export const IS_DEV = __DEV__;
 
