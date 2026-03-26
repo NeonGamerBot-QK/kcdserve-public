@@ -1,6 +1,4 @@
-import BottomSheet, {
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -57,7 +55,7 @@ function isInDateRange(
   iso: string,
   filter: DateFilter,
   start: string | null,
-  end: string | null
+  end: string | null,
 ): boolean {
   if (filter === "any") return true;
   const d = new Date(iso);
@@ -72,8 +70,7 @@ function isInDateRange(
   }
   if (filter === "this_month") {
     return (
-      d.getMonth() === now.getMonth() &&
-      d.getFullYear() === now.getFullYear()
+      d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
     );
   }
   if (filter === "custom" && start && end) {
@@ -96,10 +93,10 @@ export default function EventsScreen() {
   const [search, setSearch] = useState("");
   const [activeChip, setActiveChip] = useState("All");
   const [activeTab, setActiveTab] = useState<"upcoming" | "my_events">(
-    "upcoming"
+    "upcoming",
   );
   const [signedUpIds, setSignedUpIds] = useState<Set<number>>(
-    () => new Set(allEvents.filter((e) => e.isSignedUp).map((e) => e.id))
+    () => new Set(allEvents.filter((e) => e.isSignedUp).map((e) => e.id)),
   );
 
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -130,7 +127,7 @@ export default function EventsScreen() {
 
   const eventsWithSignup = useMemo(
     () => allEvents.map((e) => ({ ...e, isSignedUp: signedUpIds.has(e.id) })),
-    [allEvents, signedUpIds]
+    [allEvents, signedUpIds],
   );
 
   const filteredEvents = useMemo(() => {
@@ -145,13 +142,13 @@ export default function EventsScreen() {
       result = result.filter(
         (e) =>
           e.title.toLowerCase().includes(q) ||
-          e.organization.toLowerCase().includes(q)
+          e.organization.toLowerCase().includes(q),
       );
     }
 
     if (activeChip !== "All") {
       result = result.filter(
-        (e) => e.suborg === activeChip || e.category === activeChip
+        (e) => e.suborg === activeChip || e.category === activeChip,
       );
     }
 
@@ -164,7 +161,7 @@ export default function EventsScreen() {
     }
 
     result = result.filter((e) =>
-      isInDateRange(e.date, dateFilter, customDateStart, customDateEnd)
+      isInDateRange(e.date, dateFilter, customDateStart, customDateEnd),
     );
 
     return result;
@@ -488,7 +485,7 @@ export default function EventsScreen() {
                       if (d)
                         setCustomDateRange(
                           d.toISOString().slice(0, 10),
-                          customDateEnd
+                          customDateEnd,
                         );
                     }}
                   />
@@ -496,16 +493,14 @@ export default function EventsScreen() {
                 {showEndPicker && (
                   <DateTimePicker
                     mode="date"
-                    value={
-                      customDateEnd ? new Date(customDateEnd) : new Date()
-                    }
+                    value={customDateEnd ? new Date(customDateEnd) : new Date()}
                     display={Platform.OS === "ios" ? "inline" : "default"}
                     onChange={(_, d) => {
                       setShowEndPicker(false);
                       if (d)
                         setCustomDateRange(
                           customDateStart,
-                          d.toISOString().slice(0, 10)
+                          d.toISOString().slice(0, 10),
                         );
                     }}
                   />
@@ -527,9 +522,7 @@ export default function EventsScreen() {
                   key={org}
                   label={org}
                   active={filterSuborgs.includes(org)}
-                  onPress={() =>
-                    setSuborgs(toggleMulti(filterSuborgs, org))
-                  }
+                  onPress={() => setSuborgs(toggleMulti(filterSuborgs, org))}
                 />
               ))}
             </View>

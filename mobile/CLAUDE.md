@@ -67,12 +67,14 @@ mobile/
 ## Architecture Conventions
 
 ### Routing
+
 - All screens live in `app/`. File name = route. Expo Router handles navigation automatically.
 - Authenticated routes are grouped under `(tabs)/`. Auth screens under `(auth)/`.
 - Use `router.push()` / `router.replace()` for navigation — never pass navigation props manually.
 - The hour-logging flow (`log-hours/`) is a multi-step stack, not a tab.
 
 ### API & Server State (TanStack Query)
+
 - All API calls go through custom hooks in `hooks/` — never call fetch/axios directly from a component.
 - Queries: `useQuery` with a consistent key array, e.g. `['serviceHours', userId]`.
 - Mutations: `useMutation` with `onSuccess` / `onError` handlers.
@@ -81,41 +83,47 @@ mobile/
 
 ```ts
 // Good
-const { data: hours } = useServiceHours(userId)
+const { data: hours } = useServiceHours(userId);
 
 // Bad — never do this in a component
-const hours = await fetch('/api/service_hours')
+const hours = await fetch("/api/service_hours");
 ```
 
 ### Client State (Zustand)
+
 - Use Zustand only for state that isn't server data: auth session, UI flags, persisted form drafts.
 - Auth store (`store/auth.ts`) holds the JWT token and user object. Persist to `expo-secure-store`.
 - Log-hours form state (`store/logHoursForm.ts`) persists draft between steps so backgrounding the app doesn't wipe progress.
 - Do not put server data (hours, events, orgs) in Zustand — that belongs in TanStack Query cache.
 
 ### Forms (React Hook Form + Zod)
+
 - Every form uses `useForm` from RHF with a `zodResolver`.
 - Zod schemas live in `lib/schemas/` — one file per domain (e.g. `lib/schemas/serviceHour.ts`).
 - Never do manual validation logic in components. Put it in the schema.
 - For the multi-step log-hours flow, each step validates its own partial schema before advancing.
 
 ### Styling (NativeWind v4)
+
 - Use `className` props for all styling — no inline `style` objects unless unavoidable (e.g. dynamic values).
 - Stick to Tailwind utility classes. Custom values go in `tailwind.config.js` theme extension — do not use arbitrary values like `w-[143px]` unless truly necessary.
 - NativeWind v4 is being used — do not downgrade to v2.
 
 ### Auth
+
 - Tokens stored in `expo-secure-store` via the Zustand auth store.
 - Three login methods: Google OAuth, email/password, PIN.
 - PIN is a convenience shortcut set by the student after first login — it is not a standalone credential. The full credential (JWT) still lives in secure store; PIN just gates access locally.
 - Apple Sign-In must be added if Google Sign-In is offered (App Store requirement).
 
 ### Permissions
+
 - Camera and photo library access via `expo-image-picker`.
 - Request permissions at the moment they're needed (not on app launch).
 - Always handle the denial case gracefully — show a message explaining why the permission is needed.
 
 ### Signature Collection
+
 - Supervisor signature uses `react-native-signature-canvas`.
 - The signature screen should be large, clearly labeled, and include a "Clear" button.
 - Capture signature as base64 PNG and include it in the submission payload.
@@ -133,6 +141,7 @@ const hours = await fetch('/api/service_hours')
 ## Backend Contract
 
 The Rails API lives in `backend/`. Key things to know:
+
 - Service hours have a `status` field: `pending`, `approved`, `rejected`.
 - `hours` must be > 0 and ≤ 24.
 - `description` is required (10–2000 chars).
@@ -143,6 +152,7 @@ The Rails API lives in `backend/`. Key things to know:
 ## EAS Build Profiles
 
 Defined in `eas.json`:
+
 - `development` — local dev client
 - `preview` — internal TestFlight distribution
 - `production` — App Store release
@@ -150,6 +160,7 @@ Defined in `eas.json`:
 Always test on `preview` before submitting a `production` build.
 
 ## Git & Project Structure
+
 This project is a subfolder inside a monorepo at kcdserve/.
 The backend lives in kcdserve/backend/ — do not modify anything outside of mobile/.
 Never run `git init` inside this folder. A root-level git repo already exists at kcdserve/.
