@@ -40,47 +40,48 @@ export default function MoreScreen() {
   return (
     <SafeAreaView className={`flex-1 ${bgPage}`}>
       <TopBar />
-      <View className="flex-1 px-4 pt-6">
-        <Text className={`font-inter-semibold text-xl ${textPrimary}`}>
-          Settings
-        </Text>
-
-        <View className="mt-6">
-          <Pressable
-            onPress={toggleDarkMode}
-            className={`${bgCard} rounded-xl p-4 flex-row items-center justify-between border ${borderCard}`}
+      <Text
+        className={`font-inter-semibold text-2xl ${
+          isDark ? "text-white" : "text-slate-900"
+        } px-5 mt-2 mb-3`}
+      >
+        Settings
+      </Text>
+      <View className="flex-1 px-4 mt-4">
+        <Pressable
+          onPress={toggleDarkMode}
+          className={`${bgCard} rounded-xl p-4 flex-row items-center justify-between border ${borderCard}`}
+        >
+          <View>
+            <Text className={`font-inter-semibold text-base ${textPrimary}`}>
+              Dark Mode
+            </Text>
+            <Text className={`font-inter text-sm ${textMuted} mt-0.5`}>
+              {isDark ? "On" : "Off"}
+            </Text>
+          </View>
+          {/* Toggle pill */}
+          <View
+            className={`w-12 h-7 rounded-full justify-center px-0.5 ${isDark ? "bg-primary-500" : "bg-slate-300"}`}
           >
-            <View>
-              <Text className={`font-inter-semibold text-base ${textPrimary}`}>
-                Dark Mode
-              </Text>
-              <Text className={`font-inter text-sm ${textMuted} mt-0.5`}>
-                {isDark ? "On" : "Off"}
-              </Text>
-            </View>
-            {/* Toggle pill */}
             <View
-              className={`w-12 h-7 rounded-full justify-center px-0.5 ${isDark ? "bg-primary-500" : "bg-slate-300"}`}
-            >
-              <View
-                className={`w-6 h-6 rounded-full bg-white shadow-sm ${isDark ? "self-end" : "self-start"}`}
-              />
-            </View>
-          </Pressable>
+              className={`w-6 h-6 rounded-full bg-white shadow-sm ${isDark ? "self-end" : "self-start"}`}
+            />
+          </View>
+        </Pressable>
 
-          <Pressable
-            onPress={handleLogout}
-            className={`${bgCard} rounded-xl p-4 flex-row items-center justify-between border ${borderCard} mt-3`}
-          >
-            <View className="flex-row items-center">
-              <Ionicons name="log-out-outline" size={20} color="#ef4444" />
-              <Text className="font-inter-semibold text-base text-red-500 ml-3">
-                Log out
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-          </Pressable>
-        </View>
+        <Pressable
+          onPress={handleLogout}
+          className={`${bgCard} rounded-xl p-4 flex-row items-center justify-between border ${borderCard} mt-3`}
+        >
+          <View className="flex-row items-center">
+            <Ionicons name="log-out-outline" size={20} color="#ef4444" />
+            <Text className="font-inter-semibold text-base text-red-500 ml-3">
+              Log out
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
+        </Pressable>
       </View>
     </SafeAreaView>
   );
