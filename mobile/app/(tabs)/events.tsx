@@ -336,7 +336,7 @@ export default function EventsScreen() {
       >
         Events
       </Text>
-      
+
       <FlatList
         data={filteredEvents}
         keyExtractor={(item) => String(item.id)}
