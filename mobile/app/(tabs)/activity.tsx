@@ -168,7 +168,7 @@ export default function ActivityScreen() {
         </View>
       )}
 
-      <SectionList 
+      <SectionList
         className="flex-1"
         sections={sections}
         keyExtractor={(item) => String(item.id)}
@@ -181,7 +181,11 @@ export default function ActivityScreen() {
         )}
         renderItem={({ item }) => (
           <ServiceHourCard
-            title={item.organization_name || item.title || item.description.slice(0, 20)}
+            title={
+              item.organization_name ||
+              item.title ||
+              item.description.slice(0, 20)
+            }
             org={item.group || item.organization_name || item.category || "—"}
             date={formatDate(item.service_date)}
             hours={item.hours}
