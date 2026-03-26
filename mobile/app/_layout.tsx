@@ -10,7 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 import { initTheme } from "../hooks/useTheme";
 
@@ -44,7 +44,7 @@ export default function RootLayout() {
   }
 
   return (
-    <View
+    <GestureHandlerRootView
       style={
         SHOW_DEV_BORDER
           ? {
@@ -68,6 +68,6 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="auto" />
       </QueryClientProvider>
-    </View>
+    </GestureHandlerRootView>
   );
 }
