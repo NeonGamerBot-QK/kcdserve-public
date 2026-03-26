@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
 import { useTheme } from "../../hooks/useTheme";
 
-export default function OpportunitiesScreen() {
+export default function EventsScreen() {
   const { isDark } = useTheme();
   const textPrimary = isDark ? "text-white" : "text-slate-900";
 
@@ -15,7 +15,7 @@ export default function OpportunitiesScreen() {
       <Text
         className={`font-inter-semibold text-2xl ${textPrimary} px-5 mt-2 mb-3`}
       >
-        Opportunities
+        Events
       </Text>
       <View className="flex-1 items-center justify-center">
         <Text

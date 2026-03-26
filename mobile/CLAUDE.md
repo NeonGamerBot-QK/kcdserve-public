@@ -46,7 +46,7 @@ mobile/
 │   │   ├── dashboard.tsx       # Stats dashboard + Log Hours CTA
 │   │   ├── activity.tsx        # Log of student past volunteer activities
 │   │   ├── log.tsx             # Form for students to log hours
-│   │   ├── opportunities.tsx   # Admin-posted events browser
+│   │   ├── events.tsx   # Admin-posted events browser
 │   │   └── more.tsx            # Settings and other functionalities to be developed
 │   └── log-hours/
 │       ├── index.tsx       # Step 1: Org / event selection
