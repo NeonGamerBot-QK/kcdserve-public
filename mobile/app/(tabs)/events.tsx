@@ -15,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EventCard from "../../components/EventCard";
 import PillChip from "../../components/PillChip";
 import TopBar from "../../components/TopBar";
-import { useEvents, MOCK_EVENTS } from "../../hooks/useEvents";
+import { useEvents, useToggleSignup, MOCK_EVENTS } from "../../hooks/useEvents";
 import { useTheme } from "../../hooks/useTheme";
 import {
   useEventsFilterStore,
@@ -25,9 +25,8 @@ import {
 
 // ─── Derived chip data from mock events ──────────────────────────────────────
 
-const ALL_SUBORGS = [...new Set(MOCK_EVENTS.map((e) => e.suborg))];
 const ALL_CATEGORIES = [...new Set(MOCK_EVENTS.map((e) => e.category))];
-const CHIPS = ["All", ...ALL_SUBORGS, ...ALL_CATEGORIES];
+const CHIPS = ["All", ...ALL_CATEGORIES];
 
 const DATE_OPTIONS: { label: string; value: DateFilter }[] = [
   { label: "Any", value: "any" },
@@ -89,14 +88,12 @@ export default function EventsScreen() {
   const { isDark } = useTheme();
   const { data } = useEvents();
   const allEvents = data ?? MOCK_EVENTS;
+  const toggleSignup = useToggleSignup();
 
   const [search, setSearch] = useState("");
   const [activeChip, setActiveChip] = useState("All");
   const [activeTab, setActiveTab] = useState<"upcoming" | "my_events">(
     "upcoming",
-  );
-  const [signedUpIds, setSignedUpIds] = useState<Set<number>>(
-    () => new Set(allEvents.filter((e) => e.isSignedUp).map((e) => e.id)),
   );
 
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -109,29 +106,21 @@ export default function EventsScreen() {
     dateFilter,
     customDateStart,
     customDateEnd,
-    suborgs: filterSuborgs,
     distance,
     setCategories,
     setDateFilter,
     setCustomDateRange,
-    setSuborgs,
     setDistance,
     clearAll,
   } = useEventsFilterStore();
 
   const hasActiveFilters =
     filterCategories.length > 0 ||
-    filterSuborgs.length > 0 ||
     dateFilter !== "any" ||
     distance !== "any";
 
-  const eventsWithSignup = useMemo(
-    () => allEvents.map((e) => ({ ...e, isSignedUp: signedUpIds.has(e.id) })),
-    [allEvents, signedUpIds],
-  );
-
   const filteredEvents = useMemo(() => {
-    let result = eventsWithSignup;
+    let result = allEvents;
 
     if (activeTab === "my_events") {
       result = result.filter((e) => e.isSignedUp);
@@ -147,17 +136,11 @@ export default function EventsScreen() {
     }
 
     if (activeChip !== "All") {
-      result = result.filter(
-        (e) => e.suborg === activeChip || e.category === activeChip,
-      );
+      result = result.filter((e) => e.category === activeChip);
     }
 
     if (filterCategories.length > 0) {
       result = result.filter((e) => filterCategories.includes(e.category));
-    }
-
-    if (filterSuborgs.length > 0) {
-      result = result.filter((e) => filterSuborgs.includes(e.suborg));
     }
 
     result = result.filter((e) =>
@@ -166,25 +149,24 @@ export default function EventsScreen() {
 
     return result;
   }, [
-    eventsWithSignup,
+    allEvents,
     activeTab,
     search,
     activeChip,
     filterCategories,
-    filterSuborgs,
     dateFilter,
     customDateStart,
     customDateEnd,
   ]);
 
-  const handleToggleSignUp = useCallback((id: number) => {
-    setSignedUpIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
+  const handleToggleSignUp = useCallback(
+    (id: number) => {
+      const event = allEvents.find((e) => e.id === id);
+      if (!event) return;
+      toggleSignup.mutate({ id, isSignedUp: event.isSignedUp });
+    },
+    [allEvents, toggleSignup],
+  );
 
   const openFilters = useCallback(() => {
     bottomSheetRef.current?.expand();
@@ -507,25 +489,6 @@ export default function EventsScreen() {
                 )}
               </View>
             )}
-          </View>
-
-          {/* Suborg */}
-          <View className="px-5 mb-5">
-            <Text
-              className={`font-inter-semibold text-sm mb-3 ${isDark ? "text-slate-300" : "text-slate-700"}`}
-            >
-              Organization
-            </Text>
-            <View className="flex-row flex-wrap">
-              {ALL_SUBORGS.map((org) => (
-                <PillChip
-                  key={org}
-                  label={org}
-                  active={filterSuborgs.includes(org)}
-                  onPress={() => setSuborgs(toggleMulti(filterSuborgs, org))}
-                />
-              ))}
-            </View>
           </View>
 
           {/* Distance */}
