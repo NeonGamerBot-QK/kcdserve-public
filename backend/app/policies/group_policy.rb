@@ -39,11 +39,6 @@ class GroupPolicy < ApplicationPolicy
     def resolve
       if user&.staff?
         scope.all
-      elsif user.present?
-        # Show public groups + invite-only groups the user belongs to
-        scope.left_joins(:group_memberships)
-             .where("groups.invite_only = false OR group_memberships.user_id = ?", user.id)
-             .distinct
       else
         scope.where(invite_only: false)
       end
