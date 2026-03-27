@@ -57,12 +57,7 @@ module Api
           return
         end
 
-        user = User.where(provider: "google_oauth2", uid: google_user[:sub]).first_or_create do |u|
-          u.email = google_user[:email]
-          u.password = Devise.friendly_token[0, 20]
-          u.first_name = google_user[:given_name] || google_user[:name]&.split(" ")&.first || "User"
-          u.last_name = google_user[:family_name] || google_user[:name]&.split(" ")&.last || ""
-        end
+        user = find_or_create_google_user(google_user)
 
         unless user.persisted?
           render json: { error: "Could not create account: #{user.errors.full_messages.join(', ')}" }, status: :unprocessable_entity
@@ -130,15 +125,12 @@ module Api
           return
         end
 
-        user = User.where(provider: "google_oauth2", uid: google_user[:sub]).first_or_create do |u|
-          u.email = google_user[:email]
-          u.password = Devise.friendly_token[0, 20]
-          u.first_name = google_user[:given_name] || google_user[:name]&.split(" ")&.first || "User"
-          u.last_name = google_user[:family_name] || google_user[:name]&.split(" ")&.last || ""
-        end
+        user = find_or_create_google_user(google_user)
 
         unless user.persisted?
-          redirect_to "#{scheme}://auth/error?message=account_creation_failed", allow_other_host: true
+          errors = user.errors.full_messages.join(", ")
+          Rails.logger.error("[GoogleOAuth] Account creation failed: #{errors}")
+          redirect_to "#{scheme}://auth/error?message=account_creation_failed&details=#{CGI.escape(errors)}", allow_other_host: true
           return
         end
 
@@ -168,6 +160,35 @@ module Api
       end
 
       private
+
+      # Finds a user by Google UID, or links an existing account by email,
+      # or creates a brand-new user. This prevents duplicate email errors
+      # when a seeded/PIN-created account later signs in via Google.
+      def find_or_create_google_user(google_user)
+        # First, check for an existing Google-linked account (including soft-deleted)
+        user = User.with_deleted.find_by(provider: "google_oauth2", uid: google_user[:sub])
+        if user
+          user.update!(deleted_at: nil) if user.deleted_at.present?
+          return user
+        end
+
+        # If an account with this email already exists, link Google to it (including soft-deleted)
+        user = User.with_deleted.find_by(email: google_user[:email])
+        if user
+          user.update!(provider: "google_oauth2", uid: google_user[:sub])
+          return user
+        end
+
+        # No existing account — create a new one
+        User.create(
+          email: google_user[:email],
+          password: Devise.friendly_token[0, 20],
+          first_name: google_user[:given_name] || google_user[:name]&.split(" ")&.first || "User",
+          last_name: google_user[:family_name] || google_user[:name]&.split(" ")&.last || "",
+          provider: "google_oauth2",
+          uid: google_user[:sub]
+        )
+      end
 
       # Returns the Google OAuth callback URL.
       # Uses GOOGLE_OAUTH_CALLBACK_URL env var if set, otherwise derives from request.

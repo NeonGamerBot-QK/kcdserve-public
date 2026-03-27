@@ -100,7 +100,7 @@ export default function LoginScreen() {
     }
 
     const scheme = Linking.createURL("/").split("://")[0];
-    const returnUrl = `${scheme}://auth/success`;
+    const returnUrl = `${scheme}://auth`;
     const authUrl = `${SERVER_URL}/api/v1/login/google/redirect?scheme=${encodeURIComponent(scheme)}`;
 
     const result = await WebBrowser.openAuthSessionAsync(authUrl, returnUrl);
@@ -127,8 +127,9 @@ export default function LoginScreen() {
       router.replace("/(tabs)/dashboard");
     } else {
       const errorMsg = url.searchParams.get("message") || "unknown";
-      console.log("[GoogleOAuth] error:", errorMsg);
-      Alert.alert("Sign-in failed", `Google sign-in error: ${errorMsg}`);
+      const errorDetails = url.searchParams.get("details") || "";
+      console.log("[GoogleOAuth] error:", errorMsg, errorDetails);
+      Alert.alert("Sign-in failed", `Google sign-in error: ${errorMsg}${errorDetails ? `\n${errorDetails}` : ""}`);
     }
   }
 
