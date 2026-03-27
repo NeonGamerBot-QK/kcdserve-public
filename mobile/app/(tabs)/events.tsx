@@ -115,9 +115,7 @@ export default function EventsScreen() {
   } = useEventsFilterStore();
 
   const hasActiveFilters =
-    filterCategories.length > 0 ||
-    dateFilter !== "any" ||
-    distance !== "any";
+    filterCategories.length > 0 || dateFilter !== "any" || distance !== "any";
 
   const filteredEvents = useMemo(() => {
     let result = allEvents;
