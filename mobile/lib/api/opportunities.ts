@@ -50,9 +50,12 @@ export function fetchOpportunities(params: OpportunitiesParams = {}) {
 
 /** Signs up the current user for an opportunity. */
 export function signupForOpportunity(opportunityId: number) {
-  return apiFetch<{ message: string }>(`/opportunities/${opportunityId}/signup`, {
-    method: "POST",
-  });
+  return apiFetch<{ message: string }>(
+    `/opportunities/${opportunityId}/signup`,
+    {
+      method: "POST",
+    },
+  );
 }
 
 /** Withdraws the current user from an opportunity. */
