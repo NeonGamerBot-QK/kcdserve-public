@@ -129,7 +129,10 @@ export default function LoginScreen() {
       const errorMsg = url.searchParams.get("message") || "unknown";
       const errorDetails = url.searchParams.get("details") || "";
       console.log("[GoogleOAuth] error:", errorMsg, errorDetails);
-      Alert.alert("Sign-in failed", `Google sign-in error: ${errorMsg}${errorDetails ? `\n${errorDetails}` : ""}`);
+      Alert.alert(
+        "Sign-in failed",
+        `Google sign-in error: ${errorMsg}${errorDetails ? `\n${errorDetails}` : ""}`,
+      );
     }
   }
 
