@@ -14,6 +14,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def join?
+    return true if user.admin_or_above?
     return false if record.invite_only?
     true
   end
