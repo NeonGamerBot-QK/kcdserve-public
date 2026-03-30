@@ -21,7 +21,7 @@ class ServiceHour < ApplicationRecord
   enum :supervisor_status, { approved: 0, rejected: 1 }, prefix: :supervisor
 
   # Validations
-  validates :hours, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 24 }
+  validates :hours, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 100 }
   validates :description, presence: true, length: { minimum: 10, maximum: 2000 }
   validates :service_date, presence: true
   validates :title, length: { minimum: 5, maximum: 64 }, allow_blank: true
