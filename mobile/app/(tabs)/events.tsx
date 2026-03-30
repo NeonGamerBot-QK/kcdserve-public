@@ -6,7 +6,6 @@ import {
   FlatList,
   Platform,
   Pressable,
-  ScrollView,
   Text,
   TextInput,
   View,
@@ -26,7 +25,6 @@ import {
 // ─── Derived chip data from mock events ──────────────────────────────────────
 
 const ALL_CATEGORIES = [...new Set(MOCK_EVENTS.map((e) => e.category))];
-const CHIPS = ["All", ...ALL_CATEGORIES];
 
 const DATE_OPTIONS: { label: string; value: DateFilter }[] = [
   { label: "Any", value: "any" },
@@ -91,7 +89,6 @@ export default function EventsScreen() {
   const toggleSignup = useToggleSignup();
 
   const [search, setSearch] = useState("");
-  const [activeChip, setActiveChip] = useState("All");
   const [activeTab, setActiveTab] = useState<"upcoming" | "my_events">(
     "upcoming",
   );
@@ -133,10 +130,6 @@ export default function EventsScreen() {
       );
     }
 
-    if (activeChip !== "All") {
-      result = result.filter((e) => e.category === activeChip);
-    }
-
     if (filterCategories.length > 0) {
       result = result.filter((e) => filterCategories.includes(e.category));
     }
@@ -150,7 +143,6 @@ export default function EventsScreen() {
     allEvents,
     activeTab,
     search,
-    activeChip,
     filterCategories,
     dateFilter,
     customDateStart,
@@ -181,66 +173,32 @@ export default function EventsScreen() {
   // ── List header: search + chips + tabs + results label ──
   const ListHeader = (
     <View className="pt-2 pb-1">
-      {/* Search bar */}
-      <View
-        className={`mx-5 mb-4 flex-row items-center rounded-full px-4 py-3 ${
-          isDark ? "bg-slate-800" : "bg-slate-100"
-        }`}
-      >
-        <Ionicons
-          name="search-outline"
-          size={17}
-          color="#94a3b8"
-          style={{ marginRight: 8 }}
-        />
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search events..."
-          placeholderTextColor="#94a3b8"
-          className={`flex-1 font-inter text-sm ${isDark ? "text-white" : "text-slate-900"}`}
-          returnKeyType="search"
-          clearButtonMode="while-editing"
-        />
-      </View>
-
-      {/* Chips row + Filters button */}
-      <View className="flex-row items-center mb-4">
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="flex-1"
-          contentContainerStyle={{ paddingLeft: 20, alignItems: "center" }}
+      {/* Search bar + Filters button */}
+      <View className="mx-5 mb-4 flex-row items-center" style={{ gap: 8 }}>
+        <View
+          className={`flex-1 flex-row items-center rounded-full px-4 py-3 ${
+            isDark ? "bg-slate-800" : "bg-slate-100"
+          }`}
         >
-          {CHIPS.map((chip) => (
-            <Pressable
-              key={chip}
-              onPress={() => setActiveChip(chip)}
-              className={`rounded-full px-4 py-2 mr-2 border ${
-                activeChip === chip
-                  ? "bg-accent-500 border-accent-500"
-                  : isDark
-                    ? "bg-slate-800 border-slate-700"
-                    : "bg-white border-slate-200"
-              }`}
-            >
-              <Text
-                className={`font-inter-medium text-sm ${
-                  activeChip === chip
-                    ? "text-white"
-                    : isDark
-                      ? "text-slate-300"
-                      : "text-slate-600"
-                }`}
-              >
-                {chip}
-              </Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+          <Ionicons
+            name="search-outline"
+            size={17}
+            color="#94a3b8"
+            style={{ marginRight: 8 }}
+          />
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search events..."
+            placeholderTextColor="#94a3b8"
+            className={`flex-1 font-inter text-sm ${isDark ? "text-white" : "text-slate-900"}`}
+            returnKeyType="search"
+            clearButtonMode="while-editing"
+          />
+        </View>
 
         {/* Filters button */}
-        <View className="relative mr-5 ml-2">
+        <View className="relative">
           <Pressable
             onPress={openFilters}
             className={`flex-row items-center px-3 py-2 rounded-full border ${
@@ -530,6 +488,7 @@ export default function EventsScreen() {
               Show Results ({filteredEvents.length})
             </Text>
           </Pressable>
+          <View className="h-20"/>
         </View>
       </BottomSheet>
     </SafeAreaView>

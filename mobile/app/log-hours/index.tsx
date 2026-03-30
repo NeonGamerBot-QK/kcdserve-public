@@ -279,7 +279,7 @@ export default function LogHoursPage1() {
                       }}
                       itemStyle={{ height: 150 }}
                     >
-                      {Array.from({ length: 25 }, (_, i) => (
+                      {Array.from({ length: 101 }, (_, i) => (
                         <Picker.Item
                           key={i}
                           label={String(i)}

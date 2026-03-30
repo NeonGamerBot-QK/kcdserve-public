@@ -14,7 +14,7 @@ function isWithinSchoolYear(dateStr: string): boolean {
 
 export const page1Schema = z.object({
   suborg: z.string().optional(),
-  hours: z.number().int().min(0).max(24),
+  hours: z.number().int().min(0).max(100),
   minutes: z.union([z.literal(0), z.literal(15), z.literal(30), z.literal(45)]),
   serviceDate: z
     .string()
