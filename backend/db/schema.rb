@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_211324) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_30_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -154,6 +154,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_211324) do
     t.bigint "reviewed_by_id"
     t.date "service_date", null: false
     t.integer "status", default: 0, null: false
+    t.integer "supervisor_status"
+    t.string "supervisor_token"
     t.string "title"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -164,6 +166,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_211324) do
     t.index ["reviewed_by_id"], name: "index_service_hours_on_reviewed_by_id"
     t.index ["service_date"], name: "index_service_hours_on_service_date"
     t.index ["status"], name: "index_service_hours_on_status"
+    t.index ["supervisor_token"], name: "index_service_hours_on_supervisor_token", unique: true
     t.index ["user_id"], name: "index_service_hours_on_user_id"
   end
 
@@ -185,6 +188,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_211324) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "first_name", null: false
+    t.boolean "hours_submission_notifications", default: false, null: false
     t.string "last_name", null: false
     t.string "login_pin"
     t.datetime "login_pin_sent_at"

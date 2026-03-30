@@ -1,0 +1,15 @@
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center px-4">
+  <div class="max-w-md w-full bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-8 text-center">
+    <div class="w-14 h-14 bg-red-100 dark:bg-red-950 rounded-full flex items-center justify-center mx-auto mb-4">
+      <span style="font-size: 28px;">&#10005;</span>
+    </div>
+    <h1 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">Hours Rejected</h1>
+    <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+      You have rejected <strong class="text-slate-700 dark:text-slate-300"><%= @service_hour.user.full_name %></strong>'s
+      <%= @service_hour.hours %> hours of service on
+      <%= @service_hour.service_date.strftime("%B %d, %Y") %>.
+      The submission has been automatically declined and the student has been notified.
+    </p>
+    <p class="text-slate-400 dark:text-slate-500 text-xs mt-4">You may close this window.</p>
+  </div>
+</div>

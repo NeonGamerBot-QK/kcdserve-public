@@ -24,6 +24,7 @@ class ServiceHoursController < ApplicationController
 
     if @service_hour.save
       ServiceHourMailer.submission_received(@service_hour).deliver_later
+      ServiceHourMailer.supervisor_review_request(@service_hour).deliver_later if @service_hour.contact_email.present?
       redirect_to @service_hour, notice: "Service hours submitted for approval."
     else
       redirect_with_errors(@service_hour, new_service_hour_path)

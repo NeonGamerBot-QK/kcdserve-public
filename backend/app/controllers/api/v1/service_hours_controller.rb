@@ -27,6 +27,8 @@ module Api
         hour.category = category
 
         if hour.save
+          ServiceHourMailer.submission_received(hour).deliver_later
+          ServiceHourMailer.supervisor_review_request(hour).deliver_later if hour.contact_email.present?
           render json: { service_hour: hour_json(hour) }, status: :created
         else
           render json: { errors: hour.errors.full_messages }, status: :unprocessable_entity

@@ -16,6 +16,10 @@ class ServiceHour < ApplicationRecord
   # Status enum: pending=0, approved=1, rejected=2
   enum :status, { pending: 0, approved: 1, rejected: 2 }
 
+  # Supervisor review enum — set when the contact email recipient clicks approve/reject.
+  # prefix: :supervisor avoids collision with the main status enum helpers.
+  enum :supervisor_status, { approved: 0, rejected: 1 }, prefix: :supervisor
+
   # Validations
   validates :hours, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 24 }
   validates :description, presence: true, length: { minimum: 10, maximum: 2000 }
@@ -36,7 +40,14 @@ class ServiceHour < ApplicationRecord
   # Excludes hours logged under community restitution categories from totals
   scope :non_restitution, -> { joins(:category).where(categories: { restitution: false }) }
 
+  before_create :generate_supervisor_token
+
   private
+
+  # Generates a cryptographically secure token used in supervisor approval/rejection links.
+  def generate_supervisor_token
+    self.supervisor_token = SecureRandom.urlsafe_base64(32)
+  end
 
   # Returns the start and end dates for the current academic school year.
   # School year runs September 1 – June 30 of the following calendar year.

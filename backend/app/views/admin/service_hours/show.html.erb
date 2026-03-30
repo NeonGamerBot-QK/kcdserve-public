@@ -34,6 +34,22 @@
               <%= @service_hour.status.humanize %>
             </span>
           </p>
+          <% if @service_hour.supervisor_status.present? %>
+            <p class="text-sm">
+              <span class="font-medium text-slate-500 dark:text-slate-400">Supervisor Verified:</span>
+              <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-medium <%= @service_hour.supervisor_approved? ? 'bg-green-50 dark:bg-green-950 text-status-approved' : 'bg-red-50 dark:bg-red-950 text-status-rejected' %>">
+                <%= @service_hour.supervisor_status.humanize %>
+              </span>
+              <% if @service_hour.contact_name.present? %>
+                <span class="text-slate-400 dark:text-slate-500 text-xs">(by <%= @service_hour.contact_name %>)</span>
+              <% end %>
+            </p>
+          <% elsif @service_hour.contact_email.present? %>
+            <p class="text-sm">
+              <span class="font-medium text-slate-500 dark:text-slate-400">Supervisor Verified:</span>
+              <span class="ml-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 dark:bg-amber-950 text-status-pending">Awaiting Response</span>
+            </p>
+          <% end %>
         </div>
       </div>
       <hr class="my-4 border-gray-200 dark:border-slate-700">

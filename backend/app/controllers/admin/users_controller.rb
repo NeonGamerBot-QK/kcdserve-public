@@ -70,7 +70,7 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :role, :bio, :phone, :birthday)
+      params.require(:user).permit(:first_name, :last_name, :email, :role, :bio, :phone, :birthday, :hours_submission_notifications)
     end
   end
 end
