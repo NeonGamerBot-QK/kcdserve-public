@@ -27,6 +27,7 @@ class ServiceHour < ApplicationRecord
   validates :contact_email, length: { maximum: 150 }
   validate :service_date_within_school_year
   validate :photos_are_valid_type
+  validate :photo_required_for_long_hours
 
   # Scopes
   scope :recent, -> { order(created_at: :desc) }
@@ -71,5 +72,12 @@ class ServiceHour < ApplicationRecord
 
       errors.add(:photos, "must be an image, video, or PDF (#{photo.filename} is #{photo.content_type})")
     end
+  end
+
+  # At least one photo is required when logging 10 or more hours.
+  def photo_required_for_long_hours
+    return unless hours.present? && hours >= 10
+
+    errors.add(:photos, "are required when logging 10 or more hours") if photos.none?
   end
 end

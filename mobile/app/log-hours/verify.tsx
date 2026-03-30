@@ -34,6 +34,10 @@ export default function LogHoursPage2() {
   );
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [photos, setPhotos] = useState<string[]>(store.page2.photos ?? []);
+  const [photosError, setPhotosError] = useState<string | null>(null);
+
+  // Photos are required when the logged hours total 10 or more.
+  const requiresPhoto = (store.page1.hours ?? 0) >= 10;
 
   const {
     control,
@@ -100,6 +104,7 @@ export default function LogHoursPage2() {
 
     if (!result.canceled && result.assets[0]) {
       setPhotos((prev) => [...prev, result.assets[0].uri]);
+      setPhotosError(null);
     }
   }
 
@@ -108,6 +113,11 @@ export default function LogHoursPage2() {
   }
 
   const onSubmit = handleSubmit(async (page2Data) => {
+    if (requiresPhoto && photos.length === 0) {
+      setPhotosError("A photo is required when logging 10 or more hours.");
+      return;
+    }
+
     const payload: ServiceHourFormValues = {
       ...(store.page1 as ServiceHourFormValues),
       ...page2Data,
@@ -336,11 +346,15 @@ export default function LogHoursPage2() {
             className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
           >
             Photos{" "}
-            <Text
-              className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
-            >
-              (optional)
-            </Text>
+            {requiresPhoto ? (
+              <Text className="font-inter text-red-500">(required)</Text>
+            ) : (
+              <Text
+                className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
+              >
+                (optional)
+              </Text>
+            )}
           </Text>
           <View className="flex-row gap-3 mb-3">
             <Pressable
@@ -362,6 +376,9 @@ export default function LogHoursPage2() {
               </Text>
             </Pressable>
           </View>
+          {photosError && (
+            <Text className="text-xs text-red-500 mb-2">{photosError}</Text>
+          )}
           {photos.length > 0 && (
             <View className="flex-row flex-wrap gap-2">
               {photos.map((uri, index) => (
