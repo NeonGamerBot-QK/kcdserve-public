@@ -488,7 +488,7 @@ export default function EventsScreen() {
               Show Results ({filteredEvents.length})
             </Text>
           </Pressable>
-          <View className="h-20"/>
+          <View className="h-20" />
         </View>
       </BottomSheet>
     </SafeAreaView>
