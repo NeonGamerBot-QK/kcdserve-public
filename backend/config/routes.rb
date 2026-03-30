@@ -32,8 +32,9 @@ Rails.application.routes.draw do
 
   # Tokenized supervisor approval/rejection links — no login required
   scope "supervisor_review", as: :supervisor_review do
-    get ":token/approve", to: "supervisor_reviews#approve", as: :approve
-    get ":token/reject",  to: "supervisor_reviews#reject",  as: :reject
+    get  ":token/approve", to: "supervisor_reviews#approve",     as: :approve
+    get  ":token/reject",  to: "supervisor_reviews#reject_form", as: :reject
+    post ":token/reject",  to: "supervisor_reviews#reject"
   end
 
   # Groups

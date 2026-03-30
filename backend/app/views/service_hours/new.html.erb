@@ -1,2 +1,210 @@
-<h1 class="text-2xl font-bold mb-4">Log Service Hours</h1>
-<%= render "form", service_hour: @service_hour %>
+<div class="max-w-2xl mx-auto" data-controller="multi-step-form">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold text-slate-900 dark:text-white">Log Service Hours</h1>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+      Step <span class="font-medium text-slate-700 dark:text-slate-300" data-step-counter>1</span> of 2 &mdash;
+      <span data-multi-step-form-target="stepTitle">Service Details</span>
+    </p>
+  </div>
+
+  <!-- Step progress indicator -->
+  <div class="flex items-start gap-0 mb-8">
+    <div class="flex flex-col items-center">
+      <div data-multi-step-form-target="indicator"
+           class="w-9 h-9 rounded-full border-2 flex items-center justify-center text-sm font-semibold transition-colors bg-primary-500 text-white border-primary-500">
+        1
+      </div>
+      <span class="text-xs mt-1.5 text-slate-500 dark:text-slate-400 font-medium">Details</span>
+    </div>
+
+    <div data-multi-step-form-target="connectorLine"
+         class="flex-1 h-0.5 mt-4 mx-2 transition-colors bg-slate-200 dark:bg-slate-700">
+    </div>
+
+    <div class="flex flex-col items-center">
+      <div data-multi-step-form-target="indicator"
+           class="w-9 h-9 rounded-full border-2 flex items-center justify-center text-sm font-semibold transition-colors bg-white dark:bg-slate-800 text-slate-400 border-slate-300 dark:border-slate-600">
+        2
+      </div>
+      <span class="text-xs mt-1.5 text-slate-500 dark:text-slate-400 font-medium">Supervisor</span>
+    </div>
+  </div>
+
+  <%= form_with(model: @service_hour, html: { novalidate: true, data: { action: "submit->multi-step-form#beforeSubmit" } }) do |f| %>
+
+    <!-- Error box (client-side) -->
+    <div data-multi-step-form-target="errorBox"
+         class="hidden mb-5 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 rounded-xl px-4 py-3 text-sm">
+      <p class="font-semibold mb-1">Please fix the following:</p>
+      <ul data-multi-step-form-target="errorList" class="list-disc list-inside space-y-0.5"></ul>
+    </div>
+
+    <!-- ─── Step 1: Service Details ─── -->
+    <div data-multi-step-form-target="step"
+         class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6 space-y-5">
+
+      <!-- Date + Hours -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :service_date, "Date of Service", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" %>
+          <%= f.date_field :service_date,
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :hours, "Hours", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" %>
+          <%= f.number_field :hours, step: 0.25, min: 0.25, max: 24, placeholder: "e.g. 2.5",
+                data: { "multi-step-form-target": "hoursInput", action: "input->multi-step-form#hoursChanged" },
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+      </div>
+
+      <!-- Category + Group -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :category_id, "Category", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" %>
+          <%= f.collection_select :category_id, Category.order(:name), :id, :name,
+                { prompt: "Select a category" },
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :group_id, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Group <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.collection_select :group_id, current_user.groups.order(:name), :id, :name,
+                { include_blank: "No group" },
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+      </div>
+
+      <!-- Opportunity + Title -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :opportunity_id, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Opportunity <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.collection_select :opportunity_id, Opportunity.published.order(:title), :id, :title,
+                { include_blank: "No specific opportunity" },
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :title, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Title <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.text_field :title, maxlength: 64, placeholder: "Short summary (5–64 chars)",
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+      </div>
+
+      <!-- Organization + Location -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :organization_name, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Organization <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.text_field :organization_name, maxlength: 150, placeholder: "Name of organization",
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :location, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Location <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.text_field :location, placeholder: "Where did you serve?",
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+      </div>
+
+      <!-- On Campus -->
+      <div class="flex items-center gap-2.5">
+        <%= f.check_box :on_campus, class: "h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-primary-500 focus:ring-primary-500" %>
+        <%= f.label :on_campus, "This service was performed on campus", class: "text-sm text-slate-700 dark:text-slate-300" %>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <%= f.label :description, "Description of Service", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" %>
+        <%= f.text_area :description, rows: 4, maxlength: 2000, minlength: 10,
+              placeholder: "Describe what you did (at least 10 characters)…",
+              class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none" %>
+      </div>
+    </div>
+
+    <!-- ─── Step 2: Supervisor & Proof ─── -->
+    <div data-multi-step-form-target="step"
+         class="hidden bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6 space-y-5">
+
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        If you have a supervisor or contact who can verify these hours, enter their details below.
+        They'll receive an email with a link to approve or reject your submission.
+      </p>
+
+      <!-- Supervisor Name + Email -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :contact_name, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Supervisor Name <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.text_field :contact_name, maxlength: 100, placeholder: "Full name",
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= f.label :contact_email, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5" do %>
+            Supervisor Email <span class="font-normal text-slate-400 dark:text-slate-500">(optional)</span>
+          <% end %>
+          <%= f.email_field :contact_email, maxlength: 150, placeholder: "supervisor@example.com",
+                class: "w-full px-3 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+        </div>
+      </div>
+
+      <hr class="border-gray-200 dark:border-slate-700">
+
+      <!-- Photos -->
+      <div>
+        <p class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+          Photo Proof
+          <span data-multi-step-form-target="photoRequiredLabel"
+                class="font-normal text-slate-400 dark:text-slate-500 ml-1">(optional)</span>
+        </p>
+        <p class="text-xs text-slate-400 dark:text-slate-500 mb-3">
+          Accepted: images, videos, or PDFs. Required when logging 10 or more hours.
+        </p>
+        <%= f.file_field :photos,
+              multiple: true,
+              accept: "image/*,video/*,application/pdf",
+              data: { "multi-step-form-target": "photosInput" },
+              class: "block w-full text-sm text-slate-500 dark:text-slate-400
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-xl file:border-0
+                      file:text-sm file:font-medium
+                      file:bg-primary-50 file:text-primary-700
+                      dark:file:bg-slate-700 dark:file:text-slate-300
+                      hover:file:bg-primary-100 dark:hover:file:bg-slate-600
+                      cursor-pointer" %>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex items-center gap-3 mt-5">
+      <button type="button"
+              data-multi-step-form-target="backBtn"
+              data-action="click->multi-step-form#back"
+              class="hidden border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700">
+        ← Back
+      </button>
+      <%= link_to "Cancel", service_hours_path,
+            class: "text-sm text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 px-3 py-2.5" %>
+      <div class="flex-1"></div>
+      <button type="button"
+              data-multi-step-form-target="nextBtn"
+              data-action="click->multi-step-form#next"
+              class="bg-primary-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-600">
+        Next &rarr;
+      </button>
+      <%= f.submit "Submit Hours",
+            data: { "multi-step-form-target": "submitBtn" },
+            class: "hidden bg-primary-500 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-600 cursor-pointer" %>
+    </div>
+
+  <% end %>
+</div>
