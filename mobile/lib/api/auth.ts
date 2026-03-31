@@ -56,6 +56,11 @@ export function logout() {
   return apiFetch<{ message: string }>("/logout", { method: "DELETE" });
 }
 
+/** Permanently delete the authenticated user's account and all associated data. */
+export function deleteAccount() {
+  return apiFetch<{ message: string }>("/me", { method: "DELETE" });
+}
+
 /** Fetch the currently authenticated user's profile. */
 export function fetchMe() {
   return apiFetch<MeResponse>("/me");

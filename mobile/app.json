@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "kcd-mobile",
+    "name": "KCDServe",
     "slug": "kcd-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,14 @@
     "scheme": "kcd-mobile",
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kcdserve.mobile",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "KCDServe uses your camera to photograph your volunteer work as proof of service.",
+        "NSPhotoLibraryUsageDescription": "KCDServe lets you attach photos from your library to document your volunteer activities.",
+        "NSLocationWhenInUseUsageDescription": "KCDServe records where you volunteered when you enable location tagging."
+      }
     },
     "android": {
       "adaptiveIcon": {
