@@ -14,15 +14,11 @@ import { useAuthStore } from "../../store/authStore";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 const BUILD_NUMBER =
-  Constants.nativeBuildVersion ?? Constants.expoConfig?.ios?.buildNumber ?? "dev";
+  Constants.nativeBuildVersion ??
+  Constants.expoConfig?.ios?.buildNumber ??
+  "dev";
 
-function SectionHeader({
-  label,
-  isDark,
-}: {
-  label: string;
-  isDark: boolean;
-}) {
+function SectionHeader({ label, isDark }: { label: string; isDark: boolean }) {
   return (
     <Text
       className={`font-inter-semibold text-xs uppercase tracking-widest mb-2 mt-6 px-1 ${
@@ -142,17 +138,13 @@ export default function MoreScreen() {
       Alert.alert("No token", "Not currently authenticated.");
       return;
     }
-    Alert.alert(
-      "Auth Token",
-      `${token.slice(0, 20)}…${token.slice(-10)}`,
-      [
-        { text: "Close", style: "cancel" },
-        {
-          text: "Share full token",
-          onPress: () => Share.share({ message: token }),
-        },
-      ],
-    );
+    Alert.alert("Auth Token", `${token.slice(0, 20)}…${token.slice(-10)}`, [
+      { text: "Close", style: "cancel" },
+      {
+        text: "Share full token",
+        onPress: () => Share.share({ message: token }),
+      },
+    ]);
   }
 
   function handleClearQueryCache() {
@@ -179,9 +171,7 @@ export default function MoreScreen() {
     );
   }
 
-  const tokenExpiry = expiresAt
-    ? new Date(expiresAt).toLocaleString()
-    : "N/A";
+  const tokenExpiry = expiresAt ? new Date(expiresAt).toLocaleString() : "N/A";
 
   const apiModeLabel = USE_API ? "Live API" : "Mock (no server)";
   const apiModeColor = USE_API
