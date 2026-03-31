@@ -10,6 +10,7 @@ import TopBar from "../../components/TopBar";
 import { useTheme } from "../../hooks/useTheme";
 import { logout } from "../../lib/api/auth";
 import { IS_DEV, SERVER_URL, USE_API } from "../../lib/config";
+import { trackLogout } from "../../lib/analytics";
 import { useAuthStore } from "../../store/authStore";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
@@ -126,6 +127,7 @@ export default function MoreScreen() {
           } catch {
             // Server-side cleanup is best-effort; clear local state regardless
           }
+          trackLogout();
           clearAuth();
           router.replace("/");
         },

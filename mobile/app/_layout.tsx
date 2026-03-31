@@ -7,12 +7,24 @@ import {
 } from "@expo-google-fonts/inter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 import { initTheme } from "../hooks/useTheme";
+import { initAnalytics, trackScreen } from "../lib/analytics";
+
+initAnalytics();
+
+/** Tracks every route change as a screen view in Umami. */
+function ScreenTracker() {
+  const pathname = usePathname();
+  useEffect(() => {
+    trackScreen(pathname);
+  }, [pathname]);
+  return null;
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -57,6 +69,7 @@ export default function RootLayout() {
       }
     >
       <QueryClientProvider client={queryClient}>
+        <ScreenTracker />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="(auth)" />

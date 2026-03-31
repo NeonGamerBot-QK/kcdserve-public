@@ -15,6 +15,11 @@ import * as Linking from "expo-linking";
 import TopBar from "../../components/TopBar";
 import Card from "../../components/Card";
 import { USE_API, SERVER_URL } from "../../lib/config";
+import {
+  trackLoginAttempt,
+  trackLoginSuccess,
+  trackLoginFailed,
+} from "../../lib/analytics";
 import { useRequestPin, useVerifyPin } from "../../hooks/useLogin";
 import { useAuthStore } from "../../store/authStore";
 import { useTheme } from "../../hooks/useTheme";
@@ -57,6 +62,7 @@ export default function LoginScreen() {
       return;
     }
 
+    trackLoginAttempt("email");
     requestPinMutation.mutate(
       { email: trimmed },
       { onSuccess: () => setStep("pin") },
@@ -72,7 +78,9 @@ export default function LoginScreen() {
     verifyPinMutation.mutate(
       { email: email.trim(), pin: submittedPin },
       {
+        onSuccess: () => trackLoginSuccess("email"),
         onError: () => {
+          trackLoginFailed("email");
           setPin("");
           pinInputRef.current?.focus();
         },
@@ -99,6 +107,8 @@ export default function LoginScreen() {
       return;
     }
 
+    trackLoginAttempt("google");
+
     const scheme = Linking.createURL("/").split("://")[0];
     const returnUrl = `${scheme}://auth`;
     const authUrl = `${SERVER_URL}/api/v1/login/google/redirect?scheme=${encodeURIComponent(scheme)}`;
@@ -112,8 +122,6 @@ export default function LoginScreen() {
     const token = url.searchParams.get("token");
     const expiresAt = url.searchParams.get("expires_at");
 
-    console.log("[GoogleOAuth] result URL:", result.url);
-
     if (token && expiresAt) {
       const user = {
         id: Number(url.searchParams.get("user_id")),
@@ -124,11 +132,13 @@ export default function LoginScreen() {
         total_approved_hours: 0,
       };
       setAuth(token, expiresAt, user);
+      trackLoginSuccess("google");
       router.replace("/(tabs)/dashboard");
     } else {
       const errorMsg = url.searchParams.get("message") || "unknown";
       const errorDetails = url.searchParams.get("details") || "";
-      console.log("[GoogleOAuth] error:", errorMsg, errorDetails);
+      if (__DEV__) console.log("[GoogleOAuth] error:", errorMsg, errorDetails);
+      trackLoginFailed("google", errorMsg);
       Alert.alert(
         "Sign-in failed",
         `Google sign-in error: ${errorMsg}${errorDetails ? `\n${errorDetails}` : ""}`,
