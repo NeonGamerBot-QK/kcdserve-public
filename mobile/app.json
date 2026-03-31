@@ -17,7 +17,8 @@
       "infoPlist": {
         "NSCameraUsageDescription": "KCDServe uses your camera to photograph your volunteer work as proof of service.",
         "NSPhotoLibraryUsageDescription": "KCDServe lets you attach photos from your library to document your volunteer activities.",
-        "NSLocationWhenInUseUsageDescription": "KCDServe records where you volunteered when you enable location tagging."
+        "NSLocationWhenInUseUsageDescription": "KCDServe records where you volunteered when you enable location tagging.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -25,7 +26,8 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kcdserve.mobile"
     },
     "web": {
       "bundler": "metro",
@@ -41,6 +43,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0272287a-0632-4585-bf39-3c406bb2f6e6"
+      }
     }
   }
 }
