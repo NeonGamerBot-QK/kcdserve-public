@@ -158,7 +158,8 @@ export default function LogHoursPage1() {
       router.push("/log-hours/verify" as any);
     },
     (errors) => {
-      if (__DEV__) console.log("[onNext] validation errors:", JSON.stringify(errors));
+      if (__DEV__)
+        console.log("[onNext] validation errors:", JSON.stringify(errors));
       Alert.alert("Validation Errors", JSON.stringify(errors, null, 2));
     },
   );
