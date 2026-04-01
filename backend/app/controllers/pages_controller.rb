@@ -18,4 +18,7 @@ class PagesController < ApplicationController
     @groups = current_user.groups
     @upcoming_signups = current_user.signed_up_opportunities.upcoming.limit(5)
   end
+
+  def feedback
+  end
 end

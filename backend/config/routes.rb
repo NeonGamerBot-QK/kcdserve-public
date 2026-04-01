@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   post "dev_login", to: "dev_login#create" if Rails.env.development?
   post "dev_promote", to: "dev_login#promote" if Rails.env.development?
   get "dashboard", to: "pages#dashboard"
+  get "feedback", to: "pages#feedback"
 
   # Volunteer opportunities (public index/show, authenticated actions)
   resources :opportunities, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do

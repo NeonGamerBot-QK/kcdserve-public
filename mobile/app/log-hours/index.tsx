@@ -26,6 +26,7 @@ import FilterChip from "../../components/FilterChip";
 import { COMMON_ORGS } from "../../lib/constants";
 import { useTheme } from "../../hooks/useTheme";
 import { useCategories } from "../../hooks/useCategories";
+import { trackLogHoursStep1Completed } from "../../lib/analytics";
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString("en-US", {
@@ -151,13 +152,14 @@ export default function LogHoursPage1() {
 
   const onNext = handleSubmit(
     (data) => {
-      console.log("[onNext] valid data:", JSON.stringify(data));
       store.setPage1(data);
+      trackLogHoursStep1Completed(data.hours, !!data.location);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       router.push("/log-hours/verify" as any);
     },
     (errors) => {
-      console.log("[onNext] validation errors:", JSON.stringify(errors));
+      if (__DEV__)
+        console.log("[onNext] validation errors:", JSON.stringify(errors));
       Alert.alert("Validation Errors", JSON.stringify(errors, null, 2));
     },
   );

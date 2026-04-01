@@ -22,6 +22,14 @@ import { page2Schema, Page2Values } from "../../lib/schemas/serviceHour";
 import { useLogHoursFormStore } from "../../store/logHoursForm";
 import { useSubmitServiceHour } from "../../hooks/useSubmitServiceHour";
 import { useTheme } from "../../hooks/useTheme";
+import {
+  trackPhotoAdded,
+  trackPhotoRemoved,
+  trackSignatureCaptured,
+  trackHoursSubmitAttempt,
+  trackHoursSubmitSuccess,
+  trackHoursSubmitFailed,
+} from "../../lib/analytics";
 import type { ServiceHourFormValues } from "../../lib/schemas/serviceHour";
 
 export default function LogHoursPage2() {
@@ -105,11 +113,13 @@ export default function LogHoursPage2() {
     if (!result.canceled && result.assets[0]) {
       setPhotos((prev) => [...prev, result.assets[0].uri]);
       setPhotosError(null);
+      trackPhotoAdded(source);
     }
   }
 
   function removePhoto(index: number) {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
+    trackPhotoRemoved();
   }
 
   const onSubmit = handleSubmit(async (page2Data) => {
@@ -125,13 +135,17 @@ export default function LogHoursPage2() {
       photos,
     };
 
+    trackHoursSubmitAttempt();
+
     try {
       await submitMutation.mutateAsync(payload);
+      trackHoursSubmitSuccess(store.page1.hours ?? 0);
       store.reset();
       router.replace("/(tabs)/dashboard");
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Submission failed. Try again.";
+      trackHoursSubmitFailed(message);
       Alert.alert("Submission Error", message);
     }
   });
@@ -319,6 +333,7 @@ export default function LogHoursPage2() {
                   onOK={(sig) => {
                     setSignatureData(sig);
                     setShowSignatureModal(false);
+                    trackSignatureCaptured();
                   }}
                   onEmpty={() =>
                     Alert.alert(
