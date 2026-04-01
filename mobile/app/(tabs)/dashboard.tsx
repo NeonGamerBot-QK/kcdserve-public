@@ -8,6 +8,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
 import OrgCard from "../../components/OrgCard";
+import NationalHonorCard from "../../components/NationalHonorCard";
 import { USE_API } from "../../lib/config";
 import { useDashboard } from "../../hooks/useDashboard";
 import { useTheme } from "../../hooks/useTheme";
@@ -122,6 +123,12 @@ export default function DashboardScreen() {
                 ))}
               </View>
             )}
+
+            {/* National Service Honor */}
+            <NationalHonorCard
+              hoursLogged={dashboard.approved_hours}
+              ageGroup="youngAdults"
+            />
           </>
         )}
       </ScrollView>
