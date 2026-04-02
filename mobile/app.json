@@ -10,7 +10,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kcdserve.mobile",
+      "bundleIdentifier": "com.kcdserve.mobile-staging",
       "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "KCDServe uses your camera to photograph your volunteer work as proof of service.",
@@ -25,7 +25,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kcdserve.mobile"
+      "package": "com.kcdserve.mobile-staging"
     },
     "web": {
       "bundler": "metro",
