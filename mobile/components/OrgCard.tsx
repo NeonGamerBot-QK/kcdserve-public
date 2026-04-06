@@ -9,11 +9,7 @@ type OrgCardProps = {
   total: number | null;
 };
 
-export default function OrgCard({
-  name,
-  current,
-  total,
-}: OrgCardProps) {
+export default function OrgCard({ name, current, total }: OrgCardProps) {
   const { isDark } = useTheme();
   const hasGoal = total !== null && total > 0;
 
