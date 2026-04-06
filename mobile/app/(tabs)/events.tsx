@@ -5,8 +5,10 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Modal,
   Platform,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -15,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EventCard from "../../components/EventCard";
 import PillChip from "../../components/PillChip";
 import TopBar from "../../components/TopBar";
-import { useEvents, useToggleSignup } from "../../hooks/useEvents";
+import { useEvents, useToggleSignup, type Event } from "../../hooks/useEvents";
 import { useTheme } from "../../hooks/useTheme";
 import {
   useEventsFilterStore,
@@ -70,7 +72,10 @@ function isInDateRange(
     );
   }
   if (filter === "custom" && start && end) {
-    return d >= new Date(start) && d <= new Date(end);
+    // Set end to 23:59:59 so events on the end date itself are included.
+    const endDate = new Date(end);
+    endDate.setHours(23, 59, 59, 999);
+    return d >= new Date(start) && d <= endDate;
   }
   return true;
 }
@@ -93,6 +98,7 @@ export default function EventsScreen() {
     [allEvents],
   );
 
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"upcoming" | "my_events">(
     "upcoming",
@@ -143,6 +149,10 @@ export default function EventsScreen() {
       isInDateRange(e.date, dateFilter, customDateStart, customDateEnd),
     );
 
+    // TODO: apply distance filter once the API returns event coordinates.
+    // Currently `distance` is stored but events only have a string address,
+    // so radius filtering requires geocoding.
+
     return result;
   }, [
     allEvents,
@@ -152,6 +162,7 @@ export default function EventsScreen() {
     dateFilter,
     customDateStart,
     customDateEnd,
+    distance,
   ]);
 
   const handleToggleSignUp = useCallback(
@@ -285,7 +296,11 @@ export default function EventsScreen() {
         keyExtractor={(item) => String(item.id)}
         ListHeaderComponent={ListHeader}
         renderItem={({ item }) => (
-          <EventCard event={item} onToggleSignUp={handleToggleSignUp} />
+          <EventCard
+            event={item}
+            onToggleSignUp={handleToggleSignUp}
+            onPress={() => setSelectedEvent(item)}
+          />
         )}
         ListEmptyComponent={
           isLoading ? (
@@ -504,6 +519,175 @@ export default function EventsScreen() {
           <View className="h-20" />
         </View>
       </BottomSheet>
+
+      {/* Event Detail Modal */}
+      <Modal
+        visible={selectedEvent !== null}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setSelectedEvent(null)}
+      >
+        <Pressable
+          className="flex-1 justify-end"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setSelectedEvent(null)}
+        >
+          <Pressable
+            className={`rounded-t-3xl px-6 pt-5 pb-10 ${isDark ? "bg-slate-900" : "bg-white"}`}
+            onPress={() => {}}
+          >
+            {/* Handle bar */}
+            <View className="self-center w-10 h-1 rounded-full bg-slate-400 mb-5" />
+
+            {selectedEvent && (
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Category + date */}
+                <View className="flex-row items-center justify-between mb-3">
+                  <View className="bg-accent-500 rounded-full px-3 py-1">
+                    <Text className="text-white font-inter-medium text-xs">
+                      {selectedEvent.category}
+                    </Text>
+                  </View>
+                  <Text
+                    className={`font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                  >
+                    {new Date(selectedEvent.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </Text>
+                </View>
+
+                {/* Title */}
+                <Text
+                  className={`font-inter-semibold text-xl mb-1 ${isDark ? "text-white" : "text-slate-900"}`}
+                >
+                  {selectedEvent.title}
+                </Text>
+
+                {/* Org */}
+                <Text
+                  className={`font-inter text-sm mb-4 ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                >
+                  {selectedEvent.organization}
+                </Text>
+
+                {/* Detail rows */}
+                <View className="gap-3">
+                  <EventDetailRow
+                    icon="location-outline"
+                    label="Location"
+                    value={selectedEvent.location || "Not specified"}
+                    isDark={isDark}
+                  />
+                  {(selectedEvent.startTime || selectedEvent.endTime) && (
+                    <EventDetailRow
+                      icon="time-outline"
+                      label="Time"
+                      value={
+                        [selectedEvent.startTime, selectedEvent.endTime]
+                          .filter(Boolean)
+                          .join(" – ") || "Not specified"
+                      }
+                      isDark={isDark}
+                    />
+                  )}
+                  {selectedEvent.maxVolunteers !== null && (
+                    <EventDetailRow
+                      icon="people-outline"
+                      label="Volunteers"
+                      value={
+                        selectedEvent.spotsRemaining !== null
+                          ? `${selectedEvent.spotsRemaining} spots remaining (max ${selectedEvent.maxVolunteers})`
+                          : `Max ${selectedEvent.maxVolunteers}`
+                      }
+                      isDark={isDark}
+                    />
+                  )}
+                  {selectedEvent.description && (
+                    <EventDetailRow
+                      icon="document-text-outline"
+                      label="Description"
+                      value={selectedEvent.description}
+                      isDark={isDark}
+                    />
+                  )}
+                </View>
+
+                {/* Sign Up / Signed Up button */}
+                <Pressable
+                  onPress={() => {
+                    handleToggleSignUp(selectedEvent.id);
+                    setSelectedEvent(null);
+                  }}
+                  className={`mt-6 rounded-xl py-3.5 items-center ${
+                    selectedEvent.isSignedUp
+                      ? "border border-accent-500 bg-transparent"
+                      : "bg-accent-500"
+                  }`}
+                >
+                  <Text
+                    className={`font-inter-semibold text-base ${
+                      selectedEvent.isSignedUp ? "text-accent-500" : "text-white"
+                    }`}
+                  >
+                    {selectedEvent.isSignedUp ? "Withdraw" : "Sign Up"}
+                  </Text>
+                </Pressable>
+
+                {/* Close */}
+                <Pressable
+                  onPress={() => setSelectedEvent(null)}
+                  className={`mt-3 rounded-xl py-3.5 items-center ${isDark ? "bg-slate-800" : "bg-slate-100"}`}
+                >
+                  <Text
+                    className={`font-inter-semibold text-base ${isDark ? "text-white" : "text-slate-900"}`}
+                  >
+                    Close
+                  </Text>
+                </Pressable>
+              </ScrollView>
+            )}
+          </Pressable>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
+  );
+}
+
+/** A single row in the event detail modal. */
+function EventDetailRow({
+  icon,
+  label,
+  value,
+  isDark,
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  isDark: boolean;
+}) {
+  return (
+    <View className="flex-row items-start">
+      <Ionicons
+        name={icon as any}
+        size={18}
+        color={isDark ? "#94a3b8" : "#64748b"}
+        style={{ marginTop: 2, marginRight: 10, width: 20 }}
+      />
+      <View className="flex-1">
+        <Text
+          className={`font-inter text-xs ${isDark ? "text-slate-500" : "text-slate-400"}`}
+        >
+          {label}
+        </Text>
+        <Text
+          className={`font-inter-medium text-sm mt-0.5 ${isDark ? "text-white" : "text-slate-900"}`}
+        >
+          {value}
+        </Text>
+      </View>
+    </View>
   );
 }

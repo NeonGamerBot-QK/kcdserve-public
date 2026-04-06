@@ -19,19 +19,9 @@ const MOCK = {
   approved_hours: 42.5,
   pending_hours: 8.0,
   groups: [
-    {
-      id: 1,
-      name: "National Honor Society",
-      current_hours: 18,
-      total_approved_hours: 25,
-    },
-    { id: 2, name: "Key Club", current_hours: 12.5, total_approved_hours: 20 },
-    {
-      id: 3,
-      name: "Student Council",
-      current_hours: 12,
-      total_approved_hours: 15,
-    },
+    { id: 1, name: "National Honor Society", current_hours: 18, required_hours: 30 },
+    { id: 2, name: "Key Club", current_hours: 12.5, required_hours: 20 },
+    { id: 3, name: "Student Council", current_hours: 12, required_hours: null },
   ],
 };
 
@@ -105,26 +95,18 @@ export default function DashboardScreen() {
             {/* Groups */}
             {dashboard.groups.length > 0 && (
               <View className="px-5">
-                <View className="flex-row justify-between items-center mb-3">
-                  <Text
-                    className={`font-inter-semibold text-sm uppercase tracking-wider ${textMuted}`}
-                  >
-                    GROUPS
-                  </Text>
-                  <Pressable>
-                    <Text className="font-inter-medium text-sm text-primary-500">
-                      View all
-                    </Text>
-                  </Pressable>
-                </View>
+                <Text
+                  className={`font-inter-semibold text-sm uppercase tracking-wider ${textMuted} mb-3`}
+                >
+                  GROUPS
+                </Text>
 
                 {dashboard.groups.map((group) => (
                   <OrgCard
                     key={group.id}
                     name={group.name}
-                    deadline=""
                     current={group.current_hours}
-                    total={group.total_approved_hours}
+                    total={group.required_hours ?? null}
                   />
                 ))}
               </View>

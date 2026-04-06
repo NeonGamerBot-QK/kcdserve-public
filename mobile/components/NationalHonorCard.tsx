@@ -71,17 +71,7 @@ export default function NationalHonorCard({
     : 0;
 
   return (
-    // Outer View carries the shadow; bg must match Card's bg for shadow to render on iOS
-    <View
-      className="mx-5 mt-5 rounded-2xl"
-      style={{
-        backgroundColor: isDark ? "#0f172a" : "#ffffff",
-        shadowColor: "#000",
-        shadowOpacity: 0.06,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 2 },
-      }}
-    >
+    <Card className="mx-5 mt-5 p-0 overflow-hidden">
       {/* Header */}
       <View className="flex-row items-start justify-between px-5 pt-5 pb-3">
         <View className="flex-1 mr-3">
@@ -281,6 +271,6 @@ export default function NationalHonorCard({
           </Text>
         </View>
       )}
-    </View>
+    </Card>
   );
 }

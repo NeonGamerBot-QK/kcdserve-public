@@ -9,6 +9,7 @@ import {
   Modal,
   Image,
   Alert,
+  Keyboard,
 } from "react-native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -52,6 +53,7 @@ export default function LogHoursPage2() {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<Page2Values>({
     resolver: zodResolver(page2Schema),
@@ -133,14 +135,18 @@ export default function LogHoursPage2() {
     }
 
     if (!result.canceled && result.assets[0]) {
-      setPhotos((prev) => [...prev, result.assets[0].uri]);
+      const updated = [...photos, result.assets[0].uri];
+      setPhotos(updated);
+      setValue("photos", updated);
       setPhotosError(null);
       trackPhotoAdded(source);
     }
   }
 
   function removePhoto(index: number) {
-    setPhotos((prev) => prev.filter((_, i) => i !== index));
+    const updated = photos.filter((_, i) => i !== index);
+    setPhotos(updated);
+    setValue("photos", updated);
     trackPhotoRemoved();
   }
 
@@ -163,6 +169,7 @@ export default function LogHoursPage2() {
       await submitMutation.mutateAsync(payload);
       trackHoursSubmitSuccess(store.page1.hours ?? 0);
       store.reset();
+      Keyboard.dismiss();
       setShowSuccess(true);
     } catch (err: unknown) {
       const message =
@@ -311,7 +318,10 @@ export default function LogHoursPage2() {
           </Pressable>
           {signatureData && (
             <Pressable
-              onPress={() => setSignatureData(null)}
+              onPress={() => {
+                setSignatureData(null);
+                setValue("signature", undefined);
+              }}
               className="mt-1 self-end"
             >
               <Text className="font-inter text-xs text-red-400">Clear</Text>
@@ -358,6 +368,7 @@ export default function LogHoursPage2() {
                 <SignatureScreen
                   onOK={(sig) => {
                     setSignatureData(sig);
+                    setValue("signature", sig);
                     setShowSignatureModal(false);
                     trackSignatureCaptured();
                   }}

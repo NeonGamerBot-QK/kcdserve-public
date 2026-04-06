@@ -10,13 +10,15 @@ function formatDate(iso: string) {
 type EventCardProps = {
   event: Event;
   onToggleSignUp: (id: number) => void;
+  onPress?: () => void;
 };
 
-export default function EventCard({ event, onToggleSignUp }: EventCardProps) {
+export default function EventCard({ event, onToggleSignUp, onPress }: EventCardProps) {
   const { isDark } = useTheme();
 
   return (
-    <View
+    <Pressable
+      onPress={onPress}
       className={`mx-5 mb-3 rounded-xl border p-4 ${
         isDark ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"
       }`}
@@ -46,7 +48,7 @@ export default function EventCard({ event, onToggleSignUp }: EventCardProps) {
       <Text
         className={`font-inter text-sm mb-3 ${isDark ? "text-slate-400" : "text-slate-500"}`}
       >
-        {event.organization} · {event.location}
+        {event.organization}{event.location ? ` · ${event.location}` : ""}
       </Text>
 
       {/* Sign Up button */}
@@ -68,6 +70,6 @@ export default function EventCard({ event, onToggleSignUp }: EventCardProps) {
           </Text>
         </Pressable>
       </View>
-    </View>
+    </Pressable>
   );
 }

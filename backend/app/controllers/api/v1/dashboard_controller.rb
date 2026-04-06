@@ -17,8 +17,7 @@ module Api
           {
             id: group.id,
             name: group.name,
-            current_hours: user_hours_in_group,
-            total_approved_hours: group.total_approved_hours.to_f
+            current_hours: user_hours_in_group
           }
         end
 

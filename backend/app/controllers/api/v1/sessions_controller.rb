@@ -21,10 +21,29 @@ module Api
       # POST /api/v1/login/verify
       # Accepts email + pin, creates a new session (30-day token).
       def verify
-        user = User.find_by(email: params[:email]&.downcase&.strip)
+        # Allow Apple's review team to sign in with a fixed PIN.
+        # Only active when APP_REVIEW_ENABLED=true is explicitly set.
+        submitted_email = params[:email]&.downcase&.strip
+        user = User.find_by(email: submitted_email)
+        is_review_account = ENV["APP_REVIEW_ENABLED"] == "true" &&
+                            ENV["APP_REVIEW_EMAIL"].present? &&
+                            ENV["APP_REVIEW_PIN"].present? &&
+                            submitted_email == ENV["APP_REVIEW_EMAIL"].downcase.strip &&
+                            params[:pin] == ENV["APP_REVIEW_PIN"]
 
-        if user&.verify_login_pin(params[:pin])
-          user.clear_login_pin!
+        if is_review_account
+          Rails.logger.info("[AppReview] Review account login from #{request.remote_ip}")
+          # Ensure the review account exists — create it if it was never seeded.
+          user ||= User.find_or_create_by!(email: submitted_email) do |u|
+            u.first_name = "Apple"
+            u.last_name  = "Reviewer"
+            u.password   = SecureRandom.hex(24)
+            u.role       = "volunteer"
+          end
+        end
+
+        if is_review_account || user&.verify_login_pin(params[:pin])
+          user&.clear_login_pin! unless is_review_account
 
           session = user.sessions.create!(
             token: SecureRandom.urlsafe_base64(48),
