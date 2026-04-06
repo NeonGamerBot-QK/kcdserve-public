@@ -629,7 +629,9 @@ export default function EventsScreen() {
                 >
                   <Text
                     className={`font-inter-semibold text-base ${
-                      selectedEvent.isSignedUp ? "text-accent-500" : "text-white"
+                      selectedEvent.isSignedUp
+                        ? "text-accent-500"
+                        : "text-white"
                     }`}
                   >
                     {selectedEvent.isSignedUp ? "Withdraw" : "Sign Up"}
