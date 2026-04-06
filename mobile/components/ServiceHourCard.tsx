@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import StatusBadge from "./StatusBadge";
 import Card from "./Card";
@@ -11,6 +11,7 @@ type ServiceHourCardProps = {
   hours: number;
   status: "pending" | "approved" | "rejected";
   icon?: string;
+  onPress?: () => void;
 };
 
 export default function ServiceHourCard({
@@ -20,10 +21,12 @@ export default function ServiceHourCard({
   hours,
   status,
   icon = "time-outline",
+  onPress,
 }: ServiceHourCardProps) {
   const { isDark } = useTheme();
 
   return (
+    <Pressable onPress={onPress}>
     <Card className="flex-row items-center py-5 px-5 mx-5 my-1">
       <View
         className={`w-10 h-10 rounded-full ${isDark ? "bg-primary-950" : "bg-primary-50"} items-center justify-center mr-3`}
@@ -53,5 +56,6 @@ export default function ServiceHourCard({
         </View>
       </View>
     </Card>
+    </Pressable>
   );
 }

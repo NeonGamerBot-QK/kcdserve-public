@@ -3,6 +3,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
@@ -14,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EventCard from "../../components/EventCard";
 import PillChip from "../../components/PillChip";
 import TopBar from "../../components/TopBar";
-import { useEvents, useToggleSignup, MOCK_EVENTS } from "../../hooks/useEvents";
+import { useEvents, useToggleSignup } from "../../hooks/useEvents";
 import { useTheme } from "../../hooks/useTheme";
 import {
   useEventsFilterStore,
@@ -22,9 +23,7 @@ import {
   type DistanceFilter,
 } from "../../store/eventsFilter";
 
-// ─── Derived chip data from mock events ──────────────────────────────────────
-
-const ALL_CATEGORIES = [...new Set(MOCK_EVENTS.map((e) => e.category))];
+// ─── Filter option constants ─────────────────────────────────────────────────
 
 const DATE_OPTIONS: { label: string; value: DateFilter }[] = [
   { label: "Any", value: "any" },
@@ -84,9 +83,15 @@ function toggleMulti(arr: string[], val: string): string[] {
 
 export default function EventsScreen() {
   const { isDark } = useTheme();
-  const { data } = useEvents();
-  const allEvents = data ?? MOCK_EVENTS;
+  const { data, isLoading, refetch, isRefetching } = useEvents();
+  const allEvents = data ?? [];
   const toggleSignup = useToggleSignup();
+
+  // Derive categories dynamically from actual event data
+  const allCategories = useMemo(
+    () => [...new Set(allEvents.map((e) => e.category))],
+    [allEvents],
+  );
 
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"upcoming" | "my_events">(
@@ -283,14 +288,22 @@ export default function EventsScreen() {
           <EventCard event={item} onToggleSignUp={handleToggleSignUp} />
         )}
         ListEmptyComponent={
-          <View className="items-center mt-10 px-5">
-            <Text className="font-inter text-base text-slate-400 text-center">
-              No events match your filters.
-            </Text>
-          </View>
+          isLoading ? (
+            <View className="items-center mt-10">
+              <ActivityIndicator size="large" color="#6366f1" />
+            </View>
+          ) : (
+            <View className="items-center mt-10 px-5">
+              <Text className="font-inter text-base text-slate-400 text-center">
+                No events match your filters.
+              </Text>
+            </View>
+          )
         }
         contentContainerStyle={{ paddingBottom: 32 }}
         showsVerticalScrollIndicator={false}
+        refreshing={isRefetching}
+        onRefresh={refetch}
       />
 
       {/* Filter Bottom Sheet */}
@@ -328,7 +341,7 @@ export default function EventsScreen() {
               Category
             </Text>
             <View className="flex-row flex-wrap">
-              {ALL_CATEGORIES.map((cat) => (
+              {allCategories.map((cat) => (
                 <PillChip
                   key={cat}
                   label={cat}

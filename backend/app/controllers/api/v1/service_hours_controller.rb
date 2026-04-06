@@ -56,6 +56,7 @@ module Api
           service_date: hour.service_date.iso8601,
           category: hour.category&.name,
           group: hour.group&.name,
+          admin_comment: hour.admin_comment,
           created_at: hour.created_at.iso8601
         }
       end

@@ -76,7 +76,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ gestureEnabled: false }} />
           <Stack.Screen
             name="log-hours"
-            options={{ presentation: "modal", headerShown: false }}
+            options={{ presentation: "fullScreenModal", headerShown: false }}
           />
         </Stack>
         <StatusBar style="auto" />

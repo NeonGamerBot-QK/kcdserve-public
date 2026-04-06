@@ -11,6 +11,7 @@ export type ServiceHourEntry = {
   service_date: string;
   category: string | null;
   group: string | null;
+  admin_comment: string | null;
   created_at: string;
 };
 

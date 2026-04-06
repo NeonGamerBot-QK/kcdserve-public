@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
 import SignatureScreen from "react-native-signature-canvas";
+import SuccessOverlay from "../../components/SuccessOverlay";
 import * as ImagePicker from "expo-image-picker";
 import { page2Schema, Page2Values } from "../../lib/schemas/serviceHour";
 import { useLogHoursFormStore } from "../../store/logHoursForm";
@@ -43,6 +44,7 @@ export default function LogHoursPage2() {
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [photos, setPhotos] = useState<string[]>(store.page2.photos ?? []);
   const [photosError, setPhotosError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   // Photos are required when the logged hours total 10 or more.
   const requiresPhoto = (store.page1.hours ?? 0) >= 10;
@@ -62,6 +64,26 @@ export default function LogHoursPage2() {
   });
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
+
+  /**
+   * Prompts the user with a confirmation dialog before navigating away.
+   * Swipe-back gesture is disabled via the Stack.Screen config in _layout.tsx,
+   * so all "go back" actions route through this handler.
+   */
+  function confirmExit() {
+    Alert.alert(
+      "Discard Changes?",
+      "You have unsaved changes. Are you sure you want to leave this page?",
+      [
+        { text: "Stay", style: "cancel" },
+        {
+          text: "Discard",
+          style: "destructive",
+          onPress: () => router.back(),
+        },
+      ],
+    );
+  }
 
   const bgPage = isDark ? "bg-slate-900" : "bg-white";
   const bgInput = isDark ? "bg-slate-800" : "bg-slate-50";
@@ -141,7 +163,7 @@ export default function LogHoursPage2() {
       await submitMutation.mutateAsync(payload);
       trackHoursSubmitSuccess(store.page1.hours ?? 0);
       store.reset();
-      router.replace("/(tabs)/dashboard");
+      setShowSuccess(true);
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Submission failed. Try again.";
@@ -157,7 +179,7 @@ export default function LogHoursPage2() {
         className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}
       >
         <Pressable
-          onPress={() => router.back()}
+          onPress={confirmExit}
           className="w-9 h-9 items-center justify-center"
         >
           <Ionicons
@@ -305,10 +327,13 @@ export default function LogHoursPage2() {
             <SafeAreaView className={`flex-1 ${bgPage}`}>
               <View
                 className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}
+                style={{ zIndex: 20, elevation: 20, position: "relative" }}
               >
                 <Pressable
                   onPress={() => setShowSignatureModal(false)}
                   className="w-9 h-9 items-center justify-center"
+                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                  style={{ zIndex: 21, elevation: 21 }}
                 >
                   <Ionicons
                     name="close"
@@ -325,10 +350,11 @@ export default function LogHoursPage2() {
               </View>
               <Text
                 className={`text-center font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"} px-5 mt-3`}
+                style={{ zIndex: 20, elevation: 20, position: "relative" }}
               >
                 Ask your supervisor to sign below
               </Text>
-              <View className="flex-1 mt-2">
+              <View className="flex-1 mt-2" style={{ overflow: "hidden" }}>
                 <SignatureScreen
                   onOK={(sig) => {
                     setSignatureData(sig);
@@ -345,9 +371,10 @@ export default function LogHoursPage2() {
                   clearText="Clear"
                   confirmText="Confirm"
                   webStyle={`
-                    .m-signature-pad { box-shadow: none; border: none; }
-                    .m-signature-pad--body { border: none; }
-                    .m-signature-pad--footer { background-color: ${isDark ? "#1e293b" : "white"}; padding: 8px 16px; }
+                    .m-signature-pad { box-shadow: none; border: none; display: flex; flex-direction: column; }
+                    .m-signature-pad--body { border: none; flex: 1; height: auto; }
+                    .m-signature-pad--footer { background-color: ${isDark ? "#1e293b" : "white"}; padding: 12px 16px; height: auto; }
+                    .button { font-size: 16px; padding: 8px 24px; height: auto; line-height: 1.4; }
                     .button.clear { background-color: ${isDark ? "#334155" : "#f1f5f9"}; color: ${isDark ? "#f1f5f9" : "#0f172a"}; border-radius: 8px; }
                     .button.save { background-color: #22c55e; color: white; border-radius: 8px; }
                   `}
@@ -437,6 +464,13 @@ export default function LogHoursPage2() {
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {showSuccess && (
+        <SuccessOverlay
+          message="Hours Submitted!"
+          onFinish={() => router.replace("/(tabs)/dashboard")}
+        />
+      )}
     </SafeAreaView>
   );
 }

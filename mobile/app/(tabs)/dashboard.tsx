@@ -4,6 +4,7 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../../components/TopBar";
@@ -35,7 +36,7 @@ const MOCK = {
 };
 
 export default function DashboardScreen() {
-  const { data, isLoading, isError } = useDashboard();
+  const { data, isLoading, isError, refetch, isRefetching } = useDashboard();
   const { isDark } = useTheme();
 
   const dashboard = USE_API ? data : MOCK;
@@ -48,7 +49,12 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView className={`flex-1 ${bgPage}`}>
-      <ScrollView className="flex-1">
+      <ScrollView
+        className="flex-1"
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
+      >
         <TopBar />
 
         {USE_API && isLoading && (

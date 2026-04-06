@@ -4,12 +4,17 @@ import {
   ScrollView,
   SectionList,
   ActivityIndicator,
+  RefreshControl,
+  Modal,
+  Pressable,
 } from "react-native";
 import { useMemo, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 import TopBar from "../../components/TopBar";
 import FilterChip from "../../components/FilterChip";
 import ServiceHourCard from "../../components/ServiceHourCard";
+import StatusBadge from "../../components/StatusBadge";
 import { USE_API } from "../../lib/config";
 import { useServiceHours } from "../../hooks/useServiceHours";
 import { useTheme } from "../../hooks/useTheme";
@@ -27,6 +32,7 @@ const MOCK_HOURS: ServiceHourEntry[] = [
     service_date: "2023-10-15",
     category: null,
     group: "NHS",
+    admin_comment: null,
     created_at: "2023-10-15T00:00:00Z",
   },
   {
@@ -39,6 +45,7 @@ const MOCK_HOURS: ServiceHourEntry[] = [
     service_date: "2023-10-12",
     category: null,
     group: "Key Club",
+    admin_comment: null,
     created_at: "2023-10-12T00:00:00Z",
   },
   {
@@ -51,6 +58,7 @@ const MOCK_HOURS: ServiceHourEntry[] = [
     service_date: "2023-10-08",
     category: null,
     group: "NHS",
+    admin_comment: null,
     created_at: "2023-10-08T00:00:00Z",
   },
   {
@@ -63,6 +71,7 @@ const MOCK_HOURS: ServiceHourEntry[] = [
     service_date: "2023-09-28",
     category: null,
     group: "Student Council",
+    admin_comment: null,
     created_at: "2023-09-28T00:00:00Z",
   },
   {
@@ -75,6 +84,7 @@ const MOCK_HOURS: ServiceHourEntry[] = [
     service_date: "2023-09-15",
     category: null,
     group: "NHS",
+    admin_comment: "Missing supervisor verification. Please resubmit with a valid signature.",
     created_at: "2023-09-15T00:00:00Z",
   },
 ];
@@ -103,7 +113,7 @@ function formatDate(iso: string) {
 
 export default function ActivityScreen() {
   const [activeFilter, setActiveFilter] = useState(0);
-  const { data, isLoading, isError } = useServiceHours();
+  const { data, isLoading, isError, refetch, isRefetching } = useServiceHours();
   const { isDark } = useTheme();
 
   const hours = USE_API ? (data?.service_hours ?? []) : MOCK_HOURS;
@@ -115,6 +125,10 @@ export default function ActivityScreen() {
   }, [hours, activeFilter]);
 
   const sections = useMemo(() => groupByMonth(filtered), [filtered]);
+
+  const [selectedEntry, setSelectedEntry] = useState<ServiceHourEntry | null>(
+    null,
+  );
 
   const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
   const textPrimary = isDark ? "text-white" : "text-slate-900";
@@ -172,6 +186,8 @@ export default function ActivityScreen() {
         className="flex-1"
         sections={sections}
         keyExtractor={(item) => String(item.id)}
+        refreshing={isRefetching}
+        onRefresh={refetch}
         renderSectionHeader={({ section: { title } }) => (
           <View className={`px-5 pt-4 pb-1 ${bgPage}`}>
             <Text className="font-inter-semibold text-xs uppercase tracking-wider text-accent-600">
@@ -190,9 +206,177 @@ export default function ActivityScreen() {
             date={formatDate(item.service_date)}
             hours={item.hours}
             status={item.status}
+            onPress={() => setSelectedEntry(item)}
           />
         )}
       />
+
+      {/* Detail Modal */}
+      <Modal
+        visible={selectedEntry !== null}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setSelectedEntry(null)}
+      >
+        <Pressable
+          className="flex-1 justify-end"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          onPress={() => setSelectedEntry(null)}
+        >
+          <Pressable
+            className={`rounded-t-3xl px-6 pt-5 pb-10 ${isDark ? "bg-slate-900" : "bg-white"}`}
+            onPress={() => {}}
+          >
+            {/* Handle bar */}
+            <View className="self-center w-10 h-1 rounded-full bg-slate-400 mb-5" />
+
+            {/* Header row */}
+            <View className="flex-row items-start justify-between mb-4">
+              <View className="flex-1 mr-3">
+                <Text
+                  className={`font-inter-semibold text-xl ${textPrimary}`}
+                >
+                  {selectedEntry?.organization_name ||
+                    selectedEntry?.title ||
+                    "Service Hours"}
+                </Text>
+                {selectedEntry?.group && (
+                  <Text
+                    className={`font-inter text-sm mt-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                  >
+                    {selectedEntry.group}
+                  </Text>
+                )}
+              </View>
+              {selectedEntry && <StatusBadge status={selectedEntry.status} />}
+            </View>
+
+            {/* Detail rows */}
+            <View className="gap-3">
+              <DetailRow
+                icon="calendar-outline"
+                label="Date"
+                value={
+                  selectedEntry
+                    ? new Date(selectedEntry.service_date).toLocaleDateString(
+                        "en-US",
+                        { weekday: "long", month: "long", day: "numeric", year: "numeric" },
+                      )
+                    : ""
+                }
+                isDark={isDark}
+              />
+              <DetailRow
+                icon="time-outline"
+                label="Hours"
+                value={selectedEntry ? `${selectedEntry.hours}h` : ""}
+                isDark={isDark}
+              />
+              {selectedEntry?.category && (
+                <DetailRow
+                  icon="pricetag-outline"
+                  label="Category"
+                  value={selectedEntry.category}
+                  isDark={isDark}
+                />
+              )}
+              {selectedEntry?.description ? (
+                <DetailRow
+                  icon="document-text-outline"
+                  label="Description"
+                  value={selectedEntry.description}
+                  isDark={isDark}
+                />
+              ) : null}
+              {selectedEntry?.admin_comment ? (
+                <View
+                  className={`rounded-xl p-3 ${
+                    selectedEntry.status === "rejected"
+                      ? isDark ? "bg-red-950" : "bg-red-50"
+                      : isDark ? "bg-slate-800" : "bg-slate-100"
+                  }`}
+                >
+                  <DetailRow
+                    icon={
+                      selectedEntry.status === "rejected"
+                        ? "close-circle-outline"
+                        : "chatbubble-outline"
+                    }
+                    label={
+                      selectedEntry.status === "rejected"
+                        ? "Rejection Reason"
+                        : "Admin Comment"
+                    }
+                    value={selectedEntry.admin_comment}
+                    isDark={isDark}
+                  />
+                </View>
+              ) : null}
+              <DetailRow
+                icon="add-circle-outline"
+                label="Submitted"
+                value={
+                  selectedEntry
+                    ? new Date(selectedEntry.created_at).toLocaleDateString(
+                        "en-US",
+                        { month: "long", day: "numeric", year: "numeric" },
+                      )
+                    : ""
+                }
+                isDark={isDark}
+              />
+            </View>
+
+            {/* Close button */}
+            <Pressable
+              onPress={() => setSelectedEntry(null)}
+              className={`mt-6 rounded-xl py-3.5 items-center ${isDark ? "bg-slate-800" : "bg-slate-100"}`}
+            >
+              <Text
+                className={`font-inter-semibold text-base ${isDark ? "text-white" : "text-slate-900"}`}
+              >
+                Close
+              </Text>
+            </Pressable>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
+  );
+}
+
+/** A single row in the detail modal showing an icon, label, and value. */
+function DetailRow({
+  icon,
+  label,
+  value,
+  isDark,
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  isDark: boolean;
+}) {
+  return (
+    <View className="flex-row items-start">
+      <Ionicons
+        name={icon as any}
+        size={18}
+        color={isDark ? "#94a3b8" : "#64748b"}
+        style={{ marginTop: 2, marginRight: 10, width: 20 }}
+      />
+      <View className="flex-1">
+        <Text
+          className={`font-inter text-xs ${isDark ? "text-slate-500" : "text-slate-400"}`}
+        >
+          {label}
+        </Text>
+        <Text
+          className={`font-inter-medium text-sm mt-0.5 ${isDark ? "text-white" : "text-slate-900"}`}
+        >
+          {value}
+        </Text>
+      </View>
+    </View>
   );
 }
