@@ -13,7 +13,11 @@ type EventCardProps = {
   onPress?: () => void;
 };
 
-export default function EventCard({ event, onToggleSignUp, onPress }: EventCardProps) {
+export default function EventCard({
+  event,
+  onToggleSignUp,
+  onPress,
+}: EventCardProps) {
   const { isDark } = useTheme();
 
   return (
@@ -48,7 +52,8 @@ export default function EventCard({ event, onToggleSignUp, onPress }: EventCardP
       <Text
         className={`font-inter text-sm mb-3 ${isDark ? "text-slate-400" : "text-slate-500"}`}
       >
-        {event.organization}{event.location ? ` · ${event.location}` : ""}
+        {event.organization}
+        {event.location ? ` · ${event.location}` : ""}
       </Text>
 
       {/* Sign Up button */}
