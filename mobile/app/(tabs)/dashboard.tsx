@@ -19,7 +19,12 @@ const MOCK = {
   approved_hours: 42.5,
   pending_hours: 8.0,
   groups: [
-    { id: 1, name: "National Honor Society", current_hours: 18, required_hours: 30 },
+    {
+      id: 1,
+      name: "National Honor Society",
+      current_hours: 18,
+      required_hours: 30,
+    },
     { id: 2, name: "Key Club", current_hours: 12.5, required_hours: 20 },
     { id: 3, name: "Student Council", current_hours: 12, required_hours: null },
   ],
