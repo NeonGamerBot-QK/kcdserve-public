@@ -4,8 +4,6 @@ import {
   TextInput,
   Pressable,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
   Modal,
   Image,
   Alert,
@@ -203,13 +201,10 @@ export default function LogHoursPage2() {
         <View className="w-9" />
       </View>
 
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
         <ScrollView
           className="flex-1 px-5"
           keyboardShouldPersistTaps="handled"
+          automaticallyAdjustKeyboardInsets
           contentContainerStyle={{ paddingTop: 24, paddingBottom: 40 }}
         >
           {/* Supervisor Name */}
@@ -328,72 +323,6 @@ export default function LogHoursPage2() {
             </Pressable>
           )}
 
-          {/* Signature Modal */}
-          <Modal
-            visible={showSignatureModal}
-            animationType="slide"
-            onRequestClose={() => setShowSignatureModal(false)}
-          >
-            <SafeAreaView className={`flex-1 ${bgPage}`}>
-              <View
-                className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}
-                style={{ zIndex: 20, elevation: 20, position: "relative" }}
-              >
-                <Pressable
-                  onPress={() => setShowSignatureModal(false)}
-                  className="w-9 h-9 items-center justify-center"
-                  hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                  style={{ zIndex: 21, elevation: 21 }}
-                >
-                  <Ionicons
-                    name="close"
-                    size={24}
-                    color={isDark ? "#f1f5f9" : "#0f172a"}
-                  />
-                </Pressable>
-                <Text
-                  className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}
-                >
-                  Supervisor Signature
-                </Text>
-                <View className="w-9" />
-              </View>
-              <Text
-                className={`text-center font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"} px-5 mt-3`}
-                style={{ zIndex: 20, elevation: 20, position: "relative" }}
-              >
-                Ask your supervisor to sign below
-              </Text>
-              <View className="flex-1 mt-2" style={{ overflow: "hidden" }}>
-                <SignatureScreen
-                  onOK={(sig) => {
-                    setSignatureData(sig);
-                    setValue("signature", sig);
-                    setShowSignatureModal(false);
-                    trackSignatureCaptured();
-                  }}
-                  onEmpty={() =>
-                    Alert.alert(
-                      "No Signature",
-                      "Please draw a signature before confirming.",
-                    )
-                  }
-                  descriptionText=""
-                  clearText="Clear"
-                  confirmText="Confirm"
-                  webStyle={`
-                    .m-signature-pad { box-shadow: none; border: none; display: flex; flex-direction: column; }
-                    .m-signature-pad--body { border: none; flex: 1; height: auto; }
-                    .m-signature-pad--footer { background-color: ${isDark ? "#1e293b" : "white"}; padding: 12px 16px; height: auto; }
-                    .button { font-size: 16px; padding: 8px 24px; height: auto; line-height: 1.4; }
-                    .button.clear { background-color: ${isDark ? "#334155" : "#f1f5f9"}; color: ${isDark ? "#f1f5f9" : "#0f172a"}; border-radius: 8px; }
-                    .button.save { background-color: #22c55e; color: white; border-radius: 8px; }
-                  `}
-                />
-              </View>
-            </SafeAreaView>
-          </Modal>
-
           {/* Photos */}
           <Text
             className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
@@ -474,7 +403,69 @@ export default function LogHoursPage2() {
             </Text>
           </Pressable>
         </ScrollView>
-      </KeyboardAvoidingView>
+
+      {/* Signature Modal */}
+      <Modal
+        visible={showSignatureModal}
+        animationType="slide"
+        onRequestClose={() => setShowSignatureModal(false)}
+      >
+        <SafeAreaView className={`flex-1 ${bgPage}`}>
+          <View
+            className={`flex-row items-center px-4 py-3 border-b ${borderHeader}`}
+          >
+            <Pressable
+              onPress={() => setShowSignatureModal(false)}
+              className="w-11 h-11 items-center justify-center"
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Ionicons
+                name="close"
+                size={24}
+                color={isDark ? "#f1f5f9" : "#0f172a"}
+              />
+            </Pressable>
+            <Text
+              className={`flex-1 text-center font-inter-semibold text-lg ${textPrimary}`}
+            >
+              Supervisor Signature
+            </Text>
+            <View className="w-11" />
+          </View>
+          <Text
+            className={`text-center font-inter text-sm ${isDark ? "text-slate-400" : "text-slate-500"} px-5 mt-3`}
+          >
+            Ask your supervisor to sign below
+          </Text>
+          <View className="flex-1 mt-2" style={{ overflow: "hidden" }}>
+            <SignatureScreen
+              onOK={(sig) => {
+                setSignatureData(sig);
+                setValue("signature", sig);
+                setShowSignatureModal(false);
+                trackSignatureCaptured();
+              }}
+              onEmpty={() =>
+                Alert.alert(
+                  "No Signature",
+                  "Please draw a signature before confirming.",
+                )
+              }
+              descriptionText=""
+              clearText="Clear"
+              confirmText="Confirm"
+              webStyle={`
+                .m-signature-pad { box-shadow: none; border: none; display: flex; flex-direction: column; }
+                .m-signature-pad--body { border: none; flex: 1; height: auto; }
+                .m-signature-pad--footer { background-color: ${isDark ? "#1e293b" : "white"}; padding: 12px 16px; height: auto; }
+                .button { font-size: 16px; padding: 8px 24px; height: auto; line-height: 1.4; }
+                .button.clear { background-color: ${isDark ? "#334155" : "#f1f5f9"}; color: ${isDark ? "#f1f5f9" : "#0f172a"}; border-radius: 8px; }
+                .button.save { background-color: #22c55e; color: white; border-radius: 8px; }
+              `}
+            />
+          </View>
+        </SafeAreaView>
+      </Modal>
 
       {showSuccess && (
         <SuccessOverlay

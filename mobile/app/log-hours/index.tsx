@@ -184,7 +184,8 @@ export default function LogHoursPage1() {
       >
         <Pressable
           onPress={() => router.back()}
-          className="w-9 h-9 items-center justify-center"
+          className="w-11 h-11 items-center justify-center"
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         >
           <Ionicons
             name="close"
@@ -197,7 +198,7 @@ export default function LogHoursPage1() {
         >
           Log Hours
         </Text>
-        <View className="w-9" />
+        <View className="w-11" />
       </View>
 
       <KeyboardAvoidingView

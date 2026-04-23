@@ -72,7 +72,7 @@ class ServiceHour < ApplicationRecord
   end
 
   ALLOWED_PHOTO_CONTENT_TYPES = %w[
-    image/jpeg image/png image/gif image/webp image/jpg
+    image/jpeg image/png image/gif image/webp image/jpg image/heic image/heif
     video/mp4 video/mpeg video/quicktime video/webm
     application/pdf
   ].freeze

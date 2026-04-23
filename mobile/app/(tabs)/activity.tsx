@@ -5,12 +5,12 @@ import {
   SectionList,
   ActivityIndicator,
   RefreshControl,
-  Modal,
   Pressable,
 } from "react-native";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import BottomSheet, { BottomSheetScrollView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import TopBar from "../../components/TopBar";
 import FilterChip from "../../components/FilterChip";
 import ServiceHourCard from "../../components/ServiceHourCard";
@@ -129,9 +129,37 @@ export default function ActivityScreen() {
   const [selectedEntry, setSelectedEntry] = useState<ServiceHourEntry | null>(
     null,
   );
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const openDetail = useCallback((entry: ServiceHourEntry) => {
+    setSelectedEntry(entry);
+    bottomSheetRef.current?.expand();
+  }, []);
+
+  const closeDetail = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
+  const handleSheetChange = useCallback((index: number) => {
+    if (index === -1) setSelectedEntry(null);
+  }, []);
+
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        pressBehavior="close"
+      />
+    ),
+    [],
+  );
 
   const bgPage = isDark ? "bg-slate-950" : "bg-slate-50";
   const textPrimary = isDark ? "text-white" : "text-slate-900";
+  const bgSheet = isDark ? "#1e293b" : "#ffffff";
+  const handleColor = isDark ? "#334155" : "#cbd5e1";
 
   return (
     <SafeAreaView className={`flex-1 ${bgPage}`}>
@@ -206,141 +234,123 @@ export default function ActivityScreen() {
             date={formatDate(item.service_date)}
             hours={item.hours}
             status={item.status}
-            onPress={() => setSelectedEntry(item)}
+            onPress={() => openDetail(item)}
           />
         )}
       />
 
-      {/* Detail Modal */}
-      <Modal
-        visible={selectedEntry !== null}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setSelectedEntry(null)}
+      {/* Detail Bottom Sheet */}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        enablePanDownToClose
+        enableDynamicSizing
+        onChange={handleSheetChange}
+        backdropComponent={renderBackdrop}
+        backgroundStyle={{ backgroundColor: bgSheet, borderRadius: 24 }}
+        handleIndicatorStyle={{ backgroundColor: handleColor, width: 40 }}
       >
-        <Pressable
-          className="flex-1 justify-end"
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-          onPress={() => setSelectedEntry(null)}
+        <BottomSheetScrollView
+          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 24 }}
         >
-          <Pressable
-            className={`rounded-t-3xl px-6 pt-5 pb-10 ${isDark ? "bg-slate-900" : "bg-white"}`}
-            onPress={() => {}}
-          >
-            {/* Handle bar */}
-            <View className="self-center w-10 h-1 rounded-full bg-slate-400 mb-5" />
-
-            {/* Header row */}
-            <View className="flex-row items-start justify-between mb-4">
-              <View className="flex-1 mr-3">
-                <Text
-                  className={`font-inter-semibold text-xl ${textPrimary}`}
-                >
-                  {selectedEntry?.organization_name ||
-                    selectedEntry?.title ||
-                    "Service Hours"}
-                </Text>
-                {selectedEntry?.group && (
+          {selectedEntry && (
+            <>
+              {/* Header row */}
+              <View className="flex-row items-start justify-between mb-4">
+                <View className="flex-1 mr-3">
                   <Text
-                    className={`font-inter text-sm mt-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                    className={`font-inter-semibold text-xl ${textPrimary}`}
                   >
-                    {selectedEntry.group}
+                    {selectedEntry.organization_name ||
+                      selectedEntry.title ||
+                      "Service Hours"}
                   </Text>
-                )}
+                  {selectedEntry.group && (
+                    <Text
+                      className={`font-inter text-sm mt-1 ${isDark ? "text-slate-400" : "text-slate-500"}`}
+                    >
+                      {selectedEntry.group}
+                    </Text>
+                  )}
+                </View>
+                <StatusBadge status={selectedEntry.status} />
               </View>
-              {selectedEntry && <StatusBadge status={selectedEntry.status} />}
-            </View>
 
-            {/* Detail rows */}
-            <View className="gap-3">
-              <DetailRow
-                icon="calendar-outline"
-                label="Date"
-                value={
-                  selectedEntry
-                    ? new Date(selectedEntry.service_date).toLocaleDateString(
-                        "en-US",
-                        { weekday: "long", month: "long", day: "numeric", year: "numeric" },
-                      )
-                    : ""
-                }
-                isDark={isDark}
-              />
-              <DetailRow
-                icon="time-outline"
-                label="Hours"
-                value={selectedEntry ? `${selectedEntry.hours}h` : ""}
-                isDark={isDark}
-              />
-              {selectedEntry?.category && (
+              {/* Detail rows */}
+              <View className="gap-3">
                 <DetailRow
-                  icon="pricetag-outline"
-                  label="Category"
-                  value={selectedEntry.category}
+                  icon="calendar-outline"
+                  label="Date"
+                  value={
+                    new Date(selectedEntry.service_date).toLocaleDateString(
+                      "en-US",
+                      { weekday: "long", month: "long", day: "numeric", year: "numeric" },
+                    )
+                  }
                   isDark={isDark}
                 />
-              )}
-              {selectedEntry?.description ? (
                 <DetailRow
-                  icon="document-text-outline"
-                  label="Description"
-                  value={selectedEntry.description}
+                  icon="time-outline"
+                  label="Hours"
+                  value={`${selectedEntry.hours}h`}
                   isDark={isDark}
                 />
-              ) : null}
-              {selectedEntry?.admin_comment ? (
-                <View
-                  className={`rounded-xl p-3 ${
-                    selectedEntry.status === "rejected"
-                      ? isDark ? "bg-red-950" : "bg-red-50"
-                      : isDark ? "bg-slate-800" : "bg-slate-100"
-                  }`}
-                >
+                {selectedEntry.category && (
                   <DetailRow
-                    icon={
-                      selectedEntry.status === "rejected"
-                        ? "close-circle-outline"
-                        : "chatbubble-outline"
-                    }
-                    label={
-                      selectedEntry.status === "rejected"
-                        ? "Rejection Reason"
-                        : "Admin Comment"
-                    }
-                    value={selectedEntry.admin_comment}
+                    icon="pricetag-outline"
+                    label="Category"
+                    value={selectedEntry.category}
                     isDark={isDark}
                   />
-                </View>
-              ) : null}
-              <DetailRow
-                icon="add-circle-outline"
-                label="Submitted"
-                value={
-                  selectedEntry
-                    ? new Date(selectedEntry.created_at).toLocaleDateString(
-                        "en-US",
-                        { month: "long", day: "numeric", year: "numeric" },
-                      )
-                    : ""
-                }
-                isDark={isDark}
-              />
-            </View>
-
-            {/* Close button */}
-            <Pressable
-              onPress={() => setSelectedEntry(null)}
-              className={`mt-6 rounded-xl py-3.5 items-center ${isDark ? "bg-slate-800" : "bg-slate-100"}`}
-            >
-              <Text
-                className={`font-inter-semibold text-base ${isDark ? "text-white" : "text-slate-900"}`}
-              >
-                Close
-              </Text>
-            </Pressable>
-          </Pressable>
-        </Pressable>
-      </Modal>
+                )}
+                {selectedEntry.description ? (
+                  <DetailRow
+                    icon="document-text-outline"
+                    label="Description"
+                    value={selectedEntry.description}
+                    isDark={isDark}
+                  />
+                ) : null}
+                {selectedEntry.admin_comment ? (
+                  <View
+                    className={`rounded-xl p-3 ${
+                      selectedEntry.status === "rejected"
+                        ? isDark ? "bg-red-950" : "bg-red-50"
+                        : isDark ? "bg-slate-800" : "bg-slate-100"
+                    }`}
+                  >
+                    <DetailRow
+                      icon={
+                        selectedEntry.status === "rejected"
+                          ? "close-circle-outline"
+                          : "chatbubble-outline"
+                      }
+                      label={
+                        selectedEntry.status === "rejected"
+                          ? "Rejection Reason"
+                          : "Admin Comment"
+                      }
+                      value={selectedEntry.admin_comment}
+                      isDark={isDark}
+                    />
+                  </View>
+                ) : null}
+                <DetailRow
+                  icon="add-circle-outline"
+                  label="Submitted"
+                  value={
+                    new Date(selectedEntry.created_at).toLocaleDateString(
+                      "en-US",
+                      { month: "long", day: "numeric", year: "numeric" },
+                    )
+                  }
+                  isDark={isDark}
+                />
+              </View>
+            </>
+          )}
+        </BottomSheetScrollView>
+      </BottomSheet>
     </SafeAreaView>
   );
 }
