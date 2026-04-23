@@ -25,6 +25,11 @@
       </li>
     <% end %>
     <li>
+      <%= link_to admin_groups_path, class: "block px-3 py-2 rounded #{controller_name == 'groups' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
+        <span class="mr-2">&#128101;</span> Groups
+      <% end %>
+    </li>
+    <li>
       <%= link_to admin_reports_path, class: "block px-3 py-2 rounded #{controller_name == 'reports' ? 'bg-blue-600' : 'text-white hover:bg-gray-800'}" do %>
         <span class="mr-2">&#128200;</span> Reports
       <% end %>

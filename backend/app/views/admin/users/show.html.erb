@@ -14,6 +14,7 @@
     <% if @user.birthday.present? %>
       <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Birthday:</span> <span class="text-slate-900 dark:text-white"><%= @user.birthday.strftime("%B %d, %Y") %> (age <%= @user.age %>)</span></p>
     <% end %>
+    <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Grade:</span> <span class="text-slate-900 dark:text-white"><%= @user.grade.present? ? "Grade #{@user.grade}" : "Not set" %></span></p>
     <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Total Hours:</span> <span class="text-slate-900 dark:text-white font-semibold"><%= @user.total_approved_hours %></span></p>
     <p class="mb-2 text-sm"><span class="font-medium text-slate-500 dark:text-slate-400">Joined:</span> <span class="text-slate-900 dark:text-white"><%= @user.created_at.strftime("%B %d, %Y") %></span></p>
     <% if @user.deleted? %>
@@ -35,6 +36,39 @@
       <% end %>
     <% end %>
   </div>
+</div>
+
+<h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">Groups</h4>
+<div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-5 mb-6">
+  <% if @user_groups.any? %>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <% @user_groups.each do |group| %>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-sm text-slate-700 dark:text-slate-300">
+          <%= link_to group.name, admin_group_path(group), class: "font-medium hover:text-primary-500" %>
+          <% if current_user.admin_or_above? %>
+            <%= button_to remove_from_group_admin_user_path(@user, group_id: group.id), method: :delete, class: "inline-flex", data: { turbo_confirm: "Remove #{@user.full_name} from #{group.name}?" } do %>
+              <span class="text-slate-400 hover:text-red-500 text-xs">✕</span>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Not a member of any groups.</p>
+  <% end %>
+
+  <% if current_user.admin_or_above? && @available_groups.any? %>
+    <%= form_tag add_to_group_admin_user_path(@user), method: :post, class: "flex items-end gap-3" do %>
+      <div class="flex-1">
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Add to Group</label>
+        <%= select_tag :group_id,
+          options_from_collection_for_select(@available_groups, :id, :name),
+          prompt: "Choose a group…",
+          class: "w-full rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-4 py-2 text-sm" %>
+      </div>
+      <%= submit_tag "Add", class: "bg-primary-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary-600 cursor-pointer" %>
+    <% end %>
+  <% end %>
 </div>
 
 <h4 class="text-lg font-semibold text-slate-900 dark:text-white mb-3">Service Hours</h4>

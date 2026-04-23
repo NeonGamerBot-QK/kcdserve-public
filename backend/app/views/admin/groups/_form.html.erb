@@ -1,0 +1,45 @@
+<%= form_with(model: [:admin, group], html: { novalidate: true }) do |f| %>
+  <% if group.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 rounded-xl p-4 mb-6">
+      <ul class="list-disc list-inside text-sm">
+        <% group.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <%= f.label :name, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_field :name, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", required: true %>
+      </div>
+      <div>
+        <%= f.label :leader_id, "Group Leader", class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.collection_select :leader_id, User.order(:last_name, :first_name), :id, :full_name, { include_blank: "No leader" }, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent" %>
+      </div>
+      <div class="md:col-span-2">
+        <%= f.label :description, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.text_area :description, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent", rows: 3 %>
+      </div>
+      <div>
+        <%= f.label :logo, class: "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1" %>
+        <%= f.file_field :logo, class: "w-full px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-slate-50 dark:bg-slate-700 text-sm text-slate-900 dark:text-white", accept: "image/*" %>
+      </div>
+      <div>
+        <div class="h-full flex items-end">
+          <div class="flex items-center">
+            <%= f.check_box :invite_only, class: "mr-2 h-4 w-4 rounded border-slate-300 dark:border-slate-600 text-primary-500 focus:ring-primary-500" %>
+            <%= f.label :invite_only, "Invite Only (private group)", class: "text-sm text-slate-700 dark:text-slate-300" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 flex items-center space-x-3">
+    <%= f.submit class: "bg-primary-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-primary-600 cursor-pointer" %>
+    <%= link_to "Cancel", admin_groups_path, class: "border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-5 py-2 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700" %>
+  </div>
+<% end %>

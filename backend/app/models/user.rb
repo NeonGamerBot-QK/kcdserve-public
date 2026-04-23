@@ -45,6 +45,7 @@ class User < ApplicationRecord
   # Validations
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validates :grade, numericality: { only_integer: true, in: 9..12 }, allow_nil: true
 
   # Returns the user's full display name
   def full_name

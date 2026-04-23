@@ -28,7 +28,7 @@ class GroupsController < ApplicationController
     if @group.save
       redirect_to @group, notice: "Group was successfully created."
     else
-      redirect_with_errors(@group, new_group_path)
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -41,7 +41,7 @@ class GroupsController < ApplicationController
     if @group.update(group_params)
       redirect_to @group, notice: "Group was successfully updated."
     else
-      redirect_with_errors(@group, edit_group_path(@group))
+      render :edit, status: :unprocessable_entity
     end
   end
 

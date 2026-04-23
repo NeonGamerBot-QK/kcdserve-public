@@ -61,9 +61,13 @@ Rails.application.routes.draw do
     resources :users, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
       member do
         patch :restore
+        post :add_to_group
+        delete :remove_from_group
+        patch :inline_update
       end
       collection do
         get :archived
+        get :spreadsheet
       end
     end
     resources :categories, except: [ :show ]
@@ -75,6 +79,12 @@ Rails.application.routes.draw do
     resources :reports, only: [ :index ] do
       collection do
         get :export_csv
+      end
+    end
+    resources :groups do
+      member do
+        post :add_member
+        delete :remove_member
       end
     end
     resources :volunteers, only: [ :index ]

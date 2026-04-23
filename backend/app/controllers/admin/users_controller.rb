@@ -3,8 +3,8 @@
 module Admin
   # Admin management of user accounts, role assignments, and soft deletion
   class UsersController < BaseController
-    before_action :set_user, only: [ :show, :edit, :update, :destroy, :restore ]
-    before_action :require_admin!, only: [ :new, :create, :edit, :update, :destroy, :restore ]
+    before_action :set_user, only: [ :show, :edit, :update, :destroy, :restore, :add_to_group, :remove_from_group, :inline_update ]
+    before_action :require_admin!, only: [ :new, :create, :edit, :update, :destroy, :restore, :add_to_group, :remove_from_group, :spreadsheet, :inline_update ]
 
     def index
       @pagy, @users = pagy(User.order(:last_name, :first_name))
@@ -19,6 +19,8 @@ module Admin
 
     def show
       @service_hours = @user.service_hours.recent.includes(:category)
+      @user_groups = @user.groups.order(:name)
+      @available_groups = Group.where.not(id: @user.group_ids).order(:name)
     end
 
     def new
@@ -56,10 +58,38 @@ module Admin
       end
     end
 
+    # Airtable-style spreadsheet view for bulk inline editing
+    def spreadsheet
+      @users = User.includes(:groups).order(:last_name, :first_name)
+      @all_groups = Group.order(:name)
+    end
+
     # Restores a previously soft-deleted user
     def restore
       @user.restore!
       redirect_to admin_user_path(@user), notice: "User has been restored."
+    end
+
+    # Adds the user to a group by group ID
+    def add_to_group
+      group = Group.find(params[:group_id])
+      @user.group_memberships.find_or_create_by!(group: group)
+      redirect_to admin_user_path(@user), notice: "#{@user.full_name} added to #{group.name}."
+    end
+
+    # Removes the user from a group by group ID
+    def remove_from_group
+      @user.group_memberships.find_by(group_id: params[:group_id])&.destroy
+      redirect_to admin_user_path(@user), notice: "Removed from group."
+    end
+
+    # Inline update for spreadsheet view (JSON endpoint)
+    def inline_update
+      if @user.update(inline_update_params)
+        render json: { success: true }
+      else
+        render json: { success: false, errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
     end
 
     private
@@ -70,7 +100,11 @@ module Admin
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :role, :bio, :phone, :birthday, :hours_submission_notifications)
+      params.require(:user).permit(:first_name, :last_name, :email, :role, :bio, :phone, :birthday, :grade, :hours_submission_notifications)
+    end
+
+    def inline_update_params
+      params.require(:user).permit(:first_name, :last_name, :email, :role, :phone, :grade)
     end
   end
 end

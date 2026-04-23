@@ -20,6 +20,7 @@
          { id: 'col-hours', label: 'Total Hours' },
          { id: 'col-birthday', label: 'Birthday' },
          { id: 'col-age', label: 'Age' },
+         { id: 'col-grade', label: 'Grade' },
          { id: 'col-groups', label: 'Groups' },
          { id: 'col-joined', label: 'Joined' },
          { id: 'col-status', label: 'Status' } ].each do |col| %>
@@ -47,6 +48,7 @@
         <th class="text-right px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-hours">Total Hours</th>
         <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-birthday">Birthday</th>
         <th class="text-center px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-age">Age</th>
+        <th class="text-center px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-grade">Grade</th>
         <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-groups">Groups</th>
         <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-joined">Joined</th>
         <th class="text-left px-4 py-3 text-slate-500 dark:text-slate-400 font-medium whitespace-nowrap col-status">Status</th>
@@ -63,6 +65,7 @@
           <td class="px-4 py-3 text-right text-slate-600 dark:text-slate-300 col-hours"><%= user.total_approved_hours.to_i %></td>
           <td class="px-4 py-3 text-slate-600 dark:text-slate-300 col-birthday"><%= user.birthday&.strftime("%m/%d/%Y") || "—" %></td>
           <td class="px-4 py-3 text-center text-slate-600 dark:text-slate-300 col-age"><%= user.age || "—" %></td>
+          <td class="px-4 py-3 text-center text-slate-600 dark:text-slate-300 col-grade"><%= user.grade.present? ? user.grade : "—" %></td>
           <td class="px-4 py-3 text-slate-600 dark:text-slate-300 col-groups"><%= user.groups.pluck(:name).join(", ") || "—" %></td>
           <td class="px-4 py-3 text-slate-600 dark:text-slate-300 col-joined"><%= user.created_at.strftime("%m/%d/%Y") %></td>
           <td class="px-4 py-3 col-status">
@@ -106,7 +109,7 @@ function applyColumns() {
 }
 
 function updateColumnVisibility(selected) {
-  const allCols = ['col-name', 'col-email', 'col-phone', 'col-role', 'col-hours', 'col-birthday', 'col-age', 'col-groups', 'col-joined', 'col-status'];
+  const allCols = ['col-name', 'col-email', 'col-phone', 'col-role', 'col-hours', 'col-birthday', 'col-age', 'col-grade', 'col-groups', 'col-joined', 'col-status'];
   allCols.forEach(col => {
     const cells = document.querySelectorAll('.' + col + ', th.' + col + ', td.' + col);
     const isSelected = selected.includes(col);
