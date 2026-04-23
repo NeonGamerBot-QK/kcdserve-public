@@ -10,7 +10,10 @@ import {
 import { useCallback, useMemo, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetScrollView, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetScrollView,
+  BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
 import TopBar from "../../components/TopBar";
 import FilterChip from "../../components/FilterChip";
 import ServiceHourCard from "../../components/ServiceHourCard";
@@ -84,7 +87,8 @@ const MOCK_HOURS: ServiceHourEntry[] = [
     service_date: "2023-09-15",
     category: null,
     group: "NHS",
-    admin_comment: "Missing supervisor verification. Please resubmit with a valid signature.",
+    admin_comment:
+      "Missing supervisor verification. Please resubmit with a valid signature.",
     created_at: "2023-09-15T00:00:00Z",
   },
 ];
@@ -281,12 +285,14 @@ export default function ActivityScreen() {
                 <DetailRow
                   icon="calendar-outline"
                   label="Date"
-                  value={
-                    new Date(selectedEntry.service_date).toLocaleDateString(
-                      "en-US",
-                      { weekday: "long", month: "long", day: "numeric", year: "numeric" },
-                    )
-                  }
+                  value={new Date(
+                    selectedEntry.service_date,
+                  ).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                   isDark={isDark}
                 />
                 <DetailRow
@@ -315,8 +321,12 @@ export default function ActivityScreen() {
                   <View
                     className={`rounded-xl p-3 ${
                       selectedEntry.status === "rejected"
-                        ? isDark ? "bg-red-950" : "bg-red-50"
-                        : isDark ? "bg-slate-800" : "bg-slate-100"
+                        ? isDark
+                          ? "bg-red-950"
+                          : "bg-red-50"
+                        : isDark
+                          ? "bg-slate-800"
+                          : "bg-slate-100"
                     }`}
                   >
                     <DetailRow
@@ -338,12 +348,10 @@ export default function ActivityScreen() {
                 <DetailRow
                   icon="add-circle-outline"
                   label="Submitted"
-                  value={
-                    new Date(selectedEntry.created_at).toLocaleDateString(
-                      "en-US",
-                      { month: "long", day: "numeric", year: "numeric" },
-                    )
-                  }
+                  value={new Date(selectedEntry.created_at).toLocaleDateString(
+                    "en-US",
+                    { month: "long", day: "numeric", year: "numeric" },
+                  )}
                   isDark={isDark}
                 />
               </View>
