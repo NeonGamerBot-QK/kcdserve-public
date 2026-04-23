@@ -201,208 +201,200 @@ export default function LogHoursPage2() {
         <View className="w-9" />
       </View>
 
-        <ScrollView
-          className="flex-1 px-5"
-          keyboardShouldPersistTaps="handled"
-          automaticallyAdjustKeyboardInsets
-          contentContainerStyle={{ paddingTop: 24, paddingBottom: 40 }}
+      <ScrollView
+        className="flex-1 px-5"
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+        contentContainerStyle={{ paddingTop: 24, paddingBottom: 40 }}
+      >
+        {/* Supervisor Name */}
+        <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5`}>
+          Supervisor Name
+        </Text>
+        <Controller
+          control={control}
+          name="supervisorName"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              className={focusedFieldClass(focusedField === "supervisorName")}
+              placeholder="Full name"
+              placeholderTextColor="#94a3b8"
+              value={value}
+              onChangeText={onChange}
+              onFocus={() => setFocusedField("supervisorName")}
+              onBlur={() => {
+                onBlur();
+                setFocusedField(null);
+              }}
+            />
+          )}
+        />
+        {errors.supervisorName && (
+          <Text className="text-xs text-red-500 mt-1">
+            {errors.supervisorName.message}
+          </Text>
+        )}
+
+        {/* Supervisor Email */}
+        <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          Supervisor Email
+        </Text>
+        <Controller
+          control={control}
+          name="supervisorEmail"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              className={focusedFieldClass(focusedField === "supervisorEmail")}
+              placeholder="supervisor@example.com"
+              placeholderTextColor="#94a3b8"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={value}
+              onChangeText={onChange}
+              onFocus={() => setFocusedField("supervisorEmail")}
+              onBlur={() => {
+                onBlur();
+                setFocusedField(null);
+              }}
+            />
+          )}
+        />
+        {errors.supervisorEmail && (
+          <Text className="text-xs text-red-500 mt-1">
+            {errors.supervisorEmail.message}
+          </Text>
+        )}
+
+        {/* Signature */}
+        <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          Supervisor Signature{" "}
+          <Text
+            className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
+          >
+            (optional)
+          </Text>
+        </Text>
+        <Pressable
+          onPress={() => setShowSignatureModal(true)}
+          className={`border ${borderInput} rounded-xl ${bgInput} items-center justify-center overflow-hidden`}
+          style={{ height: 80 }}
         >
-          {/* Supervisor Name */}
-          <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5`}>
-            Supervisor Name
-          </Text>
-          <Controller
-            control={control}
-            name="supervisorName"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                className={focusedFieldClass(focusedField === "supervisorName")}
-                placeholder="Full name"
-                placeholderTextColor="#94a3b8"
-                value={value}
-                onChangeText={onChange}
-                onFocus={() => setFocusedField("supervisorName")}
-                onBlur={() => {
-                  onBlur();
-                  setFocusedField(null);
-                }}
+          {signatureData ? (
+            <View className="w-full h-full">
+              <Image
+                source={{ uri: signatureData }}
+                style={{ width: "100%", height: 60 }}
+                resizeMode="contain"
               />
-            )}
-          />
-          {errors.supervisorName && (
-            <Text className="text-xs text-red-500 mt-1">
-              {errors.supervisorName.message}
-            </Text>
-          )}
-
-          {/* Supervisor Email */}
-          <Text
-            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
-          >
-            Supervisor Email
-          </Text>
-          <Controller
-            control={control}
-            name="supervisorEmail"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                className={focusedFieldClass(
-                  focusedField === "supervisorEmail",
-                )}
-                placeholder="supervisor@example.com"
-                placeholderTextColor="#94a3b8"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={value}
-                onChangeText={onChange}
-                onFocus={() => setFocusedField("supervisorEmail")}
-                onBlur={() => {
-                  onBlur();
-                  setFocusedField(null);
+              <View
+                style={{
+                  position: "absolute",
+                  top: 6,
+                  right: 8,
                 }}
-              />
-            )}
-          />
-          {errors.supervisorEmail && (
-            <Text className="text-xs text-red-500 mt-1">
-              {errors.supervisorEmail.message}
-            </Text>
+              >
+                <Ionicons name="checkmark-circle" size={20} color="#22c55e" />
+              </View>
+            </View>
+          ) : (
+            <View className="items-center gap-1">
+              <Ionicons name="pencil-outline" size={22} color="#94a3b8" />
+              <Text className="font-inter text-sm text-slate-400">
+                Tap to sign
+              </Text>
+            </View>
           )}
-
-          {/* Signature */}
-          <Text
-            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
+        </Pressable>
+        {signatureData && (
+          <Pressable
+            onPress={() => {
+              setSignatureData(null);
+              setValue("signature", undefined);
+            }}
+            className="mt-1 self-end"
           >
-            Supervisor Signature{" "}
+            <Text className="font-inter text-xs text-red-400">Clear</Text>
+          </Pressable>
+        )}
+
+        {/* Photos */}
+        <Text className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}>
+          Photos{" "}
+          {requiresPhoto ? (
+            <Text className="font-inter text-red-500">(required)</Text>
+          ) : (
             <Text
               className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
             >
               (optional)
             </Text>
-          </Text>
+          )}
+        </Text>
+        <View className="flex-row gap-3 mb-3">
           <Pressable
-            onPress={() => setShowSignatureModal(true)}
-            className={`border ${borderInput} rounded-xl ${bgInput} items-center justify-center overflow-hidden`}
-            style={{ height: 80 }}
+            onPress={() => pickPhoto("camera")}
+            className={`flex-1 flex-row items-center justify-center gap-2 border ${borderInput} rounded-xl py-3 ${bgPhotoBtn}`}
           >
-            {signatureData ? (
-              <View className="w-full h-full">
-                <Image
-                  source={{ uri: signatureData }}
-                  style={{ width: "100%", height: 60 }}
-                  resizeMode="contain"
-                />
-                <View
-                  style={{
-                    position: "absolute",
-                    top: 6,
-                    right: 8,
-                  }}
-                >
-                  <Ionicons name="checkmark-circle" size={20} color="#22c55e" />
-                </View>
-              </View>
-            ) : (
-              <View className="items-center gap-1">
-                <Ionicons name="pencil-outline" size={22} color="#94a3b8" />
-                <Text className="font-inter text-sm text-slate-400">
-                  Tap to sign
-                </Text>
-              </View>
-            )}
-          </Pressable>
-          {signatureData && (
-            <Pressable
-              onPress={() => {
-                setSignatureData(null);
-                setValue("signature", undefined);
-              }}
-              className="mt-1 self-end"
-            >
-              <Text className="font-inter text-xs text-red-400">Clear</Text>
-            </Pressable>
-          )}
-
-          {/* Photos */}
-          <Text
-            className={`font-inter-medium text-sm ${textLabel} mb-1.5 mt-5`}
-          >
-            Photos{" "}
-            {requiresPhoto ? (
-              <Text className="font-inter text-red-500">(required)</Text>
-            ) : (
-              <Text
-                className={`font-inter ${isDark ? "text-slate-500" : "text-slate-400"}`}
-              >
-                (optional)
-              </Text>
-            )}
-          </Text>
-          <View className="flex-row gap-3 mb-3">
-            <Pressable
-              onPress={() => pickPhoto("camera")}
-              className={`flex-1 flex-row items-center justify-center gap-2 border ${borderInput} rounded-xl py-3 ${bgPhotoBtn}`}
-            >
-              <Ionicons name="camera-outline" size={18} color="#64748b" />
-              <Text className={`font-inter-medium text-sm ${textPhotoBtn}`}>
-                Take Photo
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => pickPhoto("library")}
-              className={`flex-1 flex-row items-center justify-center gap-2 border ${borderInput} rounded-xl py-3 ${bgPhotoBtn}`}
-            >
-              <Ionicons name="images-outline" size={18} color="#64748b" />
-              <Text className={`font-inter-medium text-sm ${textPhotoBtn}`}>
-                From Library
-              </Text>
-            </Pressable>
-          </View>
-          {photosError && (
-            <Text className="text-xs text-red-500 mb-2">{photosError}</Text>
-          )}
-          {photos.length > 0 && (
-            <View className="flex-row flex-wrap gap-2">
-              {photos.map((uri, index) => (
-                <View key={uri + index} style={{ position: "relative" }}>
-                  <Image
-                    source={{ uri }}
-                    style={{ width: 80, height: 80, borderRadius: 8 }}
-                  />
-                  <Pressable
-                    onPress={() => removePhoto(index)}
-                    style={{
-                      position: "absolute",
-                      top: -6,
-                      right: -6,
-                      backgroundColor: "#ef4444",
-                      borderRadius: 10,
-                      width: 20,
-                      height: 20,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Ionicons name="close" size={12} color="white" />
-                  </Pressable>
-                </View>
-              ))}
-            </View>
-          )}
-
-          {/* Submit Button */}
-          <Pressable
-            className={`mt-8 rounded-xl py-3.5 items-center ${
-              isSubmitting ? "bg-primary-300" : "bg-primary-500"
-            }`}
-            onPress={onSubmit}
-            disabled={isSubmitting}
-          >
-            <Text className="font-inter-semibold text-base text-white">
-              {isSubmitting ? "Submitting…" : "Submit Hours"}
+            <Ionicons name="camera-outline" size={18} color="#64748b" />
+            <Text className={`font-inter-medium text-sm ${textPhotoBtn}`}>
+              Take Photo
             </Text>
           </Pressable>
-        </ScrollView>
+          <Pressable
+            onPress={() => pickPhoto("library")}
+            className={`flex-1 flex-row items-center justify-center gap-2 border ${borderInput} rounded-xl py-3 ${bgPhotoBtn}`}
+          >
+            <Ionicons name="images-outline" size={18} color="#64748b" />
+            <Text className={`font-inter-medium text-sm ${textPhotoBtn}`}>
+              From Library
+            </Text>
+          </Pressable>
+        </View>
+        {photosError && (
+          <Text className="text-xs text-red-500 mb-2">{photosError}</Text>
+        )}
+        {photos.length > 0 && (
+          <View className="flex-row flex-wrap gap-2">
+            {photos.map((uri, index) => (
+              <View key={uri + index} style={{ position: "relative" }}>
+                <Image
+                  source={{ uri }}
+                  style={{ width: 80, height: 80, borderRadius: 8 }}
+                />
+                <Pressable
+                  onPress={() => removePhoto(index)}
+                  style={{
+                    position: "absolute",
+                    top: -6,
+                    right: -6,
+                    backgroundColor: "#ef4444",
+                    borderRadius: 10,
+                    width: 20,
+                    height: 20,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Ionicons name="close" size={12} color="white" />
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Submit Button */}
+        <Pressable
+          className={`mt-8 rounded-xl py-3.5 items-center ${
+            isSubmitting ? "bg-primary-300" : "bg-primary-500"
+          }`}
+          onPress={onSubmit}
+          disabled={isSubmitting}
+        >
+          <Text className="font-inter-semibold text-base text-white">
+            {isSubmitting ? "Submitting…" : "Submit Hours"}
+          </Text>
+        </Pressable>
+      </ScrollView>
 
       {/* Signature Modal */}
       <Modal
