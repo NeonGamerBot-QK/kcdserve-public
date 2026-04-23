@@ -9,7 +9,13 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "https://kcdserver-staging.saahild.com",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "67048438643-36jlrponcuckvjenrc4v983hcf62hn5h.apps.googleusercontent.com",
+        "EXPO_PUBLIC_UMAMI_WEBSITE_ID": "3aa370b6-abd6-4b09-8486-8ff5f1482422",
+        "EXPO_PUBLIC_UMAMI_HOST_URL": "https://cloud.umami.is"
+      }
     },
     "sideload": {
       "distribution": "internal",
@@ -22,6 +28,12 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "https://kcdserver-staging.saahild.com",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "67048438643-36jlrponcuckvjenrc4v983hcf62hn5h.apps.googleusercontent.com",
+        "EXPO_PUBLIC_UMAMI_WEBSITE_ID": "3aa370b6-abd6-4b09-8486-8ff5f1482422",
+        "EXPO_PUBLIC_UMAMI_HOST_URL": "https://cloud.umami.is"
       }
     },
     "production": {

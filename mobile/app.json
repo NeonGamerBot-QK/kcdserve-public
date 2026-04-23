@@ -7,7 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "kcd-mobile",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kcdserve.mobile-staging",
@@ -25,7 +27,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.kcdserve.mobile-staging"
+      "package": "com.neongamerbot.kcdmobile"
     },
     "web": {
       "bundler": "metro",
