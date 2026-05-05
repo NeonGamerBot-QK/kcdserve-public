@@ -2,10 +2,9 @@
 
 Rails.application.routes.draw do
   # Devise authentication routes
-  devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks",
-    registrations: "users/registrations"
-  }
+  devise_controllers = { registrations: "users/registrations" }
+  devise_controllers[:omniauth_callbacks] = "users/omniauth_callbacks" if ENV["GOOGLE_CLIENT_ID"].present?
+  devise_for :users, controllers: devise_controllers
 
   # Public-facing routes
   root "pages#home"
