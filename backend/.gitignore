@@ -38,4 +38,3 @@ config/*.key
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
-
