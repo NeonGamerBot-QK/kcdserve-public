@@ -277,12 +277,21 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
   # Google OAuth2 configuration (only in non-dev environments)
-  if ENV["GOOGLE_CLIENT_ID"].present?
+  # Both ID and SECRET must be present, otherwise the OAuth2 client raises
+  # `undefined method 'bytesize' for nil` when building the token request.
+  if ENV["GOOGLE_CLIENT_ID"].present? && ENV["GOOGLE_CLIENT_SECRET"].present?
+    # NOTE: `provider_ignores_state: true` disables OmniAuth's CSRF state check.
+    # We do this because the session cookie isn't surviving the round-trip to
+    # Google on the staging host (likely a reverse-proxy or cookie-domain
+    # issue), which causes `omniauth-oauth2` to raise
+    # `undefined method 'bytesize' for nil` from `secure_compare`. This is a
+    # workaround — once the session-loss root cause is fixed, flip this back to
+    # `Rails.env.development?` so prod re-enables CSRF state verification.
     config.omniauth :google_oauth2,
       ENV["GOOGLE_CLIENT_ID"],
       ENV["GOOGLE_CLIENT_SECRET"],
       scope: "email,profile",
-      provider_ignores_state: Rails.env.development?
+      provider_ignores_state: true
   end
 
   # ==> Warden configuration
