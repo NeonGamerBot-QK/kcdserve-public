@@ -17,10 +17,15 @@ module Users
     end
 
     def failure
+      error = request.env["omniauth.error"]
       Rails.logger.error "OmniAuth failure: #{failure_message}"
       Rails.logger.error "OmniAuth origin: #{request.env['omniauth.origin']}"
-      Rails.logger.error "OmniAuth error: #{request.env['omniauth.error'].inspect}"
+      Rails.logger.error "OmniAuth error: #{error.inspect}"
+      Rails.logger.error "OmniAuth backtrace: #{error&.backtrace&.first(15)&.join("\n")}"
       Rails.logger.error "OmniAuth strategy: #{request.env['omniauth.error.strategy']&.name}"
+      # Diagnostics for session-loss CSRF failures (nil omniauth.state)
+      Rails.logger.error "OmniAuth session keys: #{session.to_hash.keys.inspect}"
+      Rails.logger.error "OmniAuth cookie names: #{request.cookies.keys.inspect}"
       redirect_to root_path, alert: "Authentication failed: #{failure_message}"
     end
   end
