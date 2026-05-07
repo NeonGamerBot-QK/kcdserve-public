@@ -166,7 +166,7 @@ export default function ActivityScreen() {
   const handleColor = isDark ? "#334155" : "#cbd5e1";
 
   return (
-    <SafeAreaView className={`flex-1 ${bgPage}`}>
+    <SafeAreaView edges={["top"]} className={`flex-1 ${bgPage}`}>
       <TopBar />
 
       <Text

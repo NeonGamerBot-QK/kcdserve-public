@@ -43,7 +43,7 @@ export default function DashboardScreen() {
   const textMuted = isDark ? "text-slate-400" : "text-slate-500";
 
   return (
-    <SafeAreaView className={`flex-1 ${bgPage}`}>
+    <SafeAreaView edges={["top"]} className={`flex-1 ${bgPage}`}>
       <ScrollView
         className="flex-1"
         refreshControl={

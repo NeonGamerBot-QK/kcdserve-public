@@ -280,7 +280,7 @@ export default function EventsScreen() {
   );
 
   return (
-    <SafeAreaView className={`flex-1 ${bgPage}`}>
+    <SafeAreaView edges={["top"]} className={`flex-1 ${bgPage}`}>
       <TopBar />
 
       <Text

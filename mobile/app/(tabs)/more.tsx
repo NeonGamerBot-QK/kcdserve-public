@@ -185,7 +185,7 @@ export default function MoreScreen() {
       : "text-yellow-600";
 
   return (
-    <SafeAreaView className={`flex-1 ${bgPage}`}>
+    <SafeAreaView edges={["top"]} className={`flex-1 ${bgPage}`}>
       <TopBar />
       <ScrollView
         className="flex-1 px-4"
