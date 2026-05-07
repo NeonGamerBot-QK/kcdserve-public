@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post "dev_login", to: "dev_login#create" if Rails.env.development?
   post "dev_promote", to: "dev_login#promote" if Rails.env.development?
   get "dashboard", to: "pages#dashboard"
-  get "feedback", to: "pages#feedback"
+  get "feedback", to: redirect("https://docs.google.com/forms/d/e/1FAIpQLSf57rb2d5icvZG8JrLomiQCs4WMLN8gAhYmrm1IT5Nh7xuvqQ/viewform?usp=publish-editor")
 
   # Volunteer opportunities (public index/show, authenticated actions)
   resources :opportunities, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
