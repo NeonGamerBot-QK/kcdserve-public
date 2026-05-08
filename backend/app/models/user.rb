@@ -77,14 +77,30 @@ class User < ApplicationRecord
     teacher? || admin_or_above?
   end
 
-  # Finds or creates a user from OmniAuth provider data
+  # Finds or creates a user from OmniAuth provider data.
+  # Looks up by provider+uid first, then links an existing email account,
+  # then creates a new account — preventing duplicate-email failures for users
+  # who previously signed in via magic link.
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
+    user = find_by(provider: auth.provider, uid: auth.uid)
+    return user if user
+
+    user = find_by(email: auth.info.email) || new
+    user.provider = auth.provider
+    user.uid     = auth.uid
+    user.email   = auth.info.email
+    user.password = Devise.friendly_token[0, 20] if user.encrypted_password.blank?
+
+    if user.first_name.blank?
       user.first_name = auth.info.first_name || auth.info.name&.split(" ")&.first || "User"
-      user.last_name = auth.info.last_name || auth.info.name&.split(" ")&.last || ""
     end
+    if user.last_name.blank?
+      raw_last = auth.info.last_name || auth.info.name&.split(" ", 2)&.last
+      user.last_name = raw_last.presence || user.first_name
+    end
+
+    user.save
+    user
   end
 
   # Generates a 6-digit login PIN, stores it, and emails it to the user.
