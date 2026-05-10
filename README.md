@@ -20,7 +20,6 @@ Check the README's for the folder u want to run!
 
 Meow (please accept horizons)
 
-
-
 ## Ai usage
-Claude on parts of backend and ui 
+
+Claude on parts of backend and ui
